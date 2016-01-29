@@ -57,6 +57,9 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 	// Jersey Http Request
     private Client _client = Client.create(  );
     
+    /**
+     * {@inheritDoc }
+     */
 	@Override
 	public void store( Notification notification ) 
 	{
@@ -78,6 +81,9 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 			AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
 		}
 	}
+    /**
+     * {@inheritDoc }
+     */
 	@Override
 	public void store( Customer _user )
 	{
@@ -88,7 +94,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 		
 		try 
 		{
-			jsonUser = mapper.writeValueAsString(_user);
+			jsonUser = mapper.writeValueAsString(_user);		
 			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER, _user.getCustomerId( ) ), jsonUser);
 		} 
 		catch (JsonGenerationException | JsonMappingException ex )
@@ -100,6 +106,9 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 			AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
 		}
 	}
+    /**
+     * {@inheritDoc }
+     */
 	@Override
 	public void store( Demand _demand ) 
 	{
