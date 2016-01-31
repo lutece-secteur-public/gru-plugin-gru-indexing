@@ -46,6 +46,14 @@ import com.sun.jersey.api.client.WebResource;
 
 import fr.paris.lutece.plugins.grusupply.business.Demand;
 import fr.paris.lutece.plugins.grusupply.business.Notification;
+import fr.paris.lutece.plugins.grustorage.elastic.business.CustomerDemandDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.ESBackofficeNotificationDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.ESDashboardNotificationDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.ESDemandDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.ESNotificationDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.ESSMSNotificationDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.ESEmailNotificationDTO;
+import fr.paris.lutece.plugins.grustorage.elastic.business.NotificationDemandDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
 import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
@@ -69,8 +77,10 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 		String jsonNotif;
 		try 
 		{
-			jsonNotif = mapper.writeValueAsString(notification);
-			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, notification.getDemandId( ) ), jsonNotif);
+			ESNotificationDTO notifDto = buildNotificationDto(notification, notification.getDemand());
+			
+			jsonNotif = mapper.writeValueAsString(notifDto);
+			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, notification.getDemand().getDemandId( ) ), jsonNotif);
 		} 
 		catch (JsonGenerationException | JsonMappingException ex)
 		{
@@ -85,17 +95,18 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * {@inheritDoc }
      */
 	@Override
-	public void store( Customer _user )
+	public void store( Customer user )
 	{
-		if(_user == null) throw new NullPointerException( );
+		if(user == null) throw new NullPointerException( );
+		
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonUser;
 		
 		try 
 		{
-			jsonUser = mapper.writeValueAsString(_user);		
-			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER, _user.getCustomerId( ) ), jsonUser);
+			jsonUser = mapper.writeValueAsString(user);		
+			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,  user.getCustomerId( ) ), jsonUser);
 		} 
 		catch (JsonGenerationException | JsonMappingException ex )
 		{
@@ -110,17 +121,19 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * {@inheritDoc }
      */
 	@Override
-	public void store( Demand _demand ) 
+	public void store( Demand demand ) 
 	{
-		if(_demand == null) throw new NullPointerException( );
+		if(demand == null) throw new NullPointerException( );
+		
+		ESDemandDTO demandDTO = buildDemandDTO(demand, demand.getCustomer());
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonDemand;
 		
 		try 
 		{
-			jsonDemand = mapper.writeValueAsString(_demand);
-			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, _demand.getUserCid( ) ), jsonDemand );
+			jsonDemand = mapper.writeValueAsString(demandDTO);
+			sentToElastic( getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getCustomer().getCustomerId() ), jsonDemand );
 		} 
 		catch (JsonGenerationException | JsonMappingException ex)
 		{
@@ -131,16 +144,61 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 			AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
 		}
 	}
+	
+	
+	private static ESNotificationDTO buildNotificationDto( Notification notif, Demand demand)
+	{
+	    ESNotificationDTO notifDTO = new ESNotificationDTO();
+		NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf(demand.getDemandId()), String.valueOf(demand.getDemandIdType()));
+		
+		notifDTO.setDateSollicitation(notif.getDateSollicitation());
+		notifDTO.setNotificationDemand( nddto );
+		notifDTO.setUserEmail(new ESEmailNotificationDTO(notif.getUserEmail() ) );
+		notifDTO.setUserDashBoard(new ESDashboardNotificationDTO(notif.getUserDashBoard()));
+		notifDTO.setUserSms(new ESSMSNotificationDTO(notif.getUserSms()));
+		notifDTO.setUserBackOffice(new ESBackofficeNotificationDTO(notif.getUserBackOffice()));
+	    
+		return notifDTO;
+	}
+	/**
+	 * 
+	 * @param demand
+	 * @param customer
+	 * @return
+	 */
+	private static ESDemandDTO buildDemandDTO( Demand demand, Customer customer )
+	{
+		ESDemandDTO demandDTO = new ESDemandDTO();
+		CustomerDemandDTO customerDemand = new CustomerDemandDTO(String.valueOf(demand.getCustomer().getCustomerId()));
+		demandDTO.setCustomerDemand(customerDemand);
+		demandDTO.setDemandId(demand.getDemandId());
+		demandDTO.setDemandIdType(demand.getDemandIdType());
+		demandDTO.setDemandMaxStep(demand.getDemandMaxStep());
+		demandDTO.setDemandUserCurrentStep(demand.getDemandUserCurrentStep());
+		demandDTO.setDemandState(demand.getDemandState());
+		demandDTO.setNotifType(demand.getNotifType());
+		demandDTO.setDateDemand(demand.getDateDemand());
+		demandDTO.setCRMStatus(demand.getCRMStatus());
+		demandDTO.setReference(demand.getReference());
+		demandDTO.setSuggest(customer);
+		
+		return demandDTO;
+	}	
+	
 	/**
 	 * Function which set URI to elasticsearch connexion
 	 * @param strPath
 	 * @param strSpecif
 	 * @return
 	 */
-	private static String getESParam( String strPath, int strSpecif ){
+	private static String getESParam( String strPath, String strSpecif ){
 		return AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
 			   AppPropertiesService.getProperty( strPath)+
-			   String.valueOf( strSpecif );
+			   strSpecif;
+	}
+	private static String getESParam( String strPath, int strSpecif )
+	{
+		return getESParam(strPath, String.valueOf(strSpecif));
 	}
 	/**
 	 * Fonction which insert data into elasticSearch
