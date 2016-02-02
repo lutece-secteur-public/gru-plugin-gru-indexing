@@ -24,7 +24,7 @@
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * StringERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
@@ -49,11 +49,11 @@ public class ESDemandDTO
 {
     // Variables declarations 
 	private CustomerDemandDTO _oCustomerDemand;
-    private int _nDemandId;
-    private int _nDemandIdType;
-    private int _nDemandMaxStep;
-    private int _nDemandUserCurrentStep;
-    private int _nDemandState;
+    private String _strDemandId;
+    private String _strDemandIdType;
+    private String _strDemandMaxStep;
+    private String _strDemandUserCurrentStep;
+    private String _strDemandState;
     private String _strNotifType;
     private String _strDateDemand;
     private int _nCRMStatus;
@@ -83,18 +83,18 @@ public class ESDemandDTO
      * @return The DemandId
      */
     @JsonProperty( "demand_id" )
-    public int getDemandId(  )
+    public String getDemandId(  )
     {
-        return _nDemandId;
+        return _strDemandId;
     }
 
     /**
      * Sets the DemandId
      * @param nDemandId The DemandId
      */
-    public void setDemandId( int nDemandId )
+    public void setDemandId( String nDemandId )
     {
-        _nDemandId = nDemandId;
+        _strDemandId = nDemandId;
     }
 
     /**
@@ -102,18 +102,18 @@ public class ESDemandDTO
      * @return The DemandIdType
      */
     @JsonProperty( "demand_id_type" )
-    public int getDemandIdType(  )
+    public String getDemandIdType(  )
     {
-        return _nDemandIdType;
+        return _strDemandIdType;
     }
 
     /**
      * Sets the DemandIdType
      * @param nDemandIdType The DemandIdType
      */
-    public void setDemandIdType( int nDemandIdType )
+    public void setDemandIdType( String nDemandIdType )
     {
-        _nDemandIdType = nDemandIdType;
+        _strDemandIdType = nDemandIdType;
     }
 
     /**
@@ -121,18 +121,18 @@ public class ESDemandDTO
      * @return The DemandMaxStep
      */
     @JsonProperty( "demand_max_step" )
-    public int getDemandMaxStep(  )
+    public String getDemandMaxStep(  )
     {
-        return _nDemandMaxStep;
+        return _strDemandMaxStep;
     }
 
     /**
      * Sets the DemandMaxStep
      * @param nDemandMaxStep The DemandMaxStep
      */
-    public void setDemandMaxStep( int nDemandMaxStep )
+    public void setDemandMaxStep( String nDemandMaxStep )
     {
-        _nDemandMaxStep = nDemandMaxStep;
+        _strDemandMaxStep = nDemandMaxStep;
     }
 
     /**
@@ -140,18 +140,18 @@ public class ESDemandDTO
      * @return The DemandUserCurrentStep
      */
     @JsonProperty( "demand_user_max_step" )
-    public int getDemandUserCurrentStep(  )
+    public String getDemandUserCurrentStep(  )
     {
-        return _nDemandUserCurrentStep;
+        return _strDemandUserCurrentStep;
     }
 
     /**
      * Sets the DemandUserCurrentStep
      * @param nDemandUserCurrentStep The DemandUserCurrentStep
      */
-    public void setDemandUserCurrentStep( int nDemandUserCurrentStep )
+    public void setDemandUserCurrentStep( String nDemandUserCurrentStep )
     {
-        _nDemandUserCurrentStep = nDemandUserCurrentStep;
+        _strDemandUserCurrentStep = nDemandUserCurrentStep;
     }
 
     /**
@@ -159,18 +159,18 @@ public class ESDemandDTO
      * @return The DemandState
      */
     @JsonProperty( "demand_state" )
-    public int getDemandState(  )
+    public String getDemandState(  )
     {
-        return _nDemandState;
+        return _strDemandState;
     }
 
     /**
      * Sets the DemandState
      * @param nDemandState The DemandState
      */
-    public void setDemandState( int nDemandState )
+    public void setDemandState( String nDemandState )
     {
-        _nDemandState = nDemandState;
+        _strDemandState = nDemandState;
     }
 
     /**
@@ -272,13 +272,14 @@ public class ESDemandDTO
 		ESPayload oPayload = new ESPayload();
 		HashMap<String, String> payload = new HashMap<>();
 		
-		payload.put("user_guid", String.valueOf(customer.getCustomerId()));
+		payload.put("user_cid", String.valueOf(customer.getCustomerId()));
 		payload.put("birthday", customer.getBirthday());
 		payload.put("telephoneNumber", customer.getTelephoneNumber());
 		payload.put("email", customer.getEmail());
 		payload.put("reference", _strReference);
 		
     	oPayload.setElements(payload);
+    	s.setPayload(oPayload);
     	this._oSuggest = s;
 	}
     

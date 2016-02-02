@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.grustorage.elastic.business;
 
+import java.util.HashMap;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
@@ -289,16 +291,33 @@ public class ESCustomerDTO {
 	 * Returns the suggest
 	 */
 	@JsonProperty( "suggest" )
-	public ESSuggestDTO get_oSuggest( )
+	public ESSuggestDTO getSuggest( )
 	{
 		return _oSuggest;
 	}
 	/**
 	 * Sets the suggest
 	 */
-	public void set_oSuggest( ) 
+	public void setSuggest( ) 
 	{
 		ESSuggestDTO s = new ESSuggestDTO( );
+		// input
+		String[ ] input = { _strName, _strFirstName, _strTelephoneNumber, _strEmail };
+		s.setInput(input);
+		// Output
+		s.setOutput(_strName+" "+_strFirstName);
+		// Payload
+		ESPayload oPayload = new ESPayload();
+		HashMap<String, String> payload = new HashMap<>();
+		
+		payload.put("user_cid", String.valueOf(_nCustomerId));
+		payload.put("birthday", _strBirthday);
+		payload.put("telephoneNumber", _strTelephoneNumber);
+		payload.put("email", _strEmail);
+		
+    	oPayload.setElements(payload);
+    	s.setPayload(oPayload);
+    	this._oSuggest = s;
 	
 	
 	}

@@ -35,6 +35,9 @@ package fr.paris.lutece.plugins.grustorage.elastic.business;
 
 import java.util.HashMap;
 
+import org.codehaus.jackson.node.JsonNodeFactory;
+import org.codehaus.jackson.node.ObjectNode;
+
 public class ESPayload 
 {
 	private HashMap<String, String> _oElements;
@@ -47,5 +50,18 @@ public class ESPayload
 	public void setElements(HashMap<String, String> _oElements) 
 	{
 		this._oElements = _oElements;
+	}
+	public String toJson()
+	{
+		if(_oElements == null) throw new NullPointerException();
+		
+		ObjectNode root = new ObjectNode(JsonNodeFactory.instance);
+		root.textNode("");
+		
+		for(String mapKey : _oElements.keySet())
+		{
+			root.put(mapKey, _oElements.get(mapKey));
+		}
+		return root.asText();
 	}
 }

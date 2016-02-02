@@ -41,16 +41,19 @@ public final class GRUElasticsConstants
 {
     // CONSTANTS
     public static final String PLUGIN_NAME = "elasticsearch/";
+	public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete";
 
     // PATHS
     public static final String PATH_ELK_SERVER = "grustorage-elastics.urlElk";
+    public static final String PATH_ELK_PATH = "grustorage-elastics.path";
     public static final String PATH_ELK_TYPE_DEMAND = "grustorage-elastics.pathDemand";
     public static final String PATH_ELK_TYPE_USER = "grustorage-elastics.pathUser";
     public static final String PATH_ELK_TYPE_NOTIFICATION = "grustorage-elastics.pathNotification";
+    public static final String PATH_ELK_SUGGEST = "grustorage-elastics.pathSuggest";
+    public static final String PATH_ELK_SEARCH = "grustorage-elastics.pathSearch";
     
     //STATUS 
     public static final String STATUS_201 = "{" + "\"status\":" + "\"201\"" + "}";
     public static final String STATUS_404 = "{" + "\"status\":" + "\"404\"" + "}";
-
     
 }

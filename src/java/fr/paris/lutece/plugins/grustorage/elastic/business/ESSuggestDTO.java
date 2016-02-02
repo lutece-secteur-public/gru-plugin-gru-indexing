@@ -33,14 +33,12 @@
  */
 package fr.paris.lutece.plugins.grustorage.elastic.business;
 
-import javax.validation.Payload;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class ESSuggestDTO {
 	private String[] _strInput;
 	private String _strOutput;
-	private Payload _oPayload;
+	private ESPayload _oPayload;
 	
 	/**
 	 * Returns the input for autopletion
@@ -81,7 +79,7 @@ public class ESSuggestDTO {
 	 * @return
 	 */
 	@JsonProperty("payload")
-	public Payload getPayload() {
+	public ESPayload getPayload() {
 		return _oPayload;
 	}
 	
@@ -89,7 +87,7 @@ public class ESSuggestDTO {
 	 * Sets the Payload autocompletion
 	 * @param oPayload
 	 */
-	public void setPayload(Payload oPayload) {
+	public void setPayload(ESPayload oPayload) {
 		this._oPayload = oPayload;
 	}
 }
