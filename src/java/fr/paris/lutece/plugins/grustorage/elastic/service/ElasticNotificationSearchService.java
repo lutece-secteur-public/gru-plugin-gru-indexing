@@ -2,8 +2,10 @@ package fr.paris.lutece.plugins.grustorage.elastic.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import fr.paris.lutece.plugins.gru.business.demand.BaseDemand;
@@ -23,18 +25,26 @@ public class ElasticNotificationSearchService implements IDemandService{
 	public Demand getDemand(String strDemandId, String strDemandTypeId, AdminUser user) 
 	{
 		Demand demand = new Demand();
-		String json = ElasticConnexion.formatExactSearch( "demand.demand_type", strDemandId);
+		String json;
 		String uri = ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, GRUElasticsConstants.PATH_ELK_SEARCH);
-		
-		String retour = ElasticConnexion.sentToElastic( uri, json);
-		
-		// JSON Parsing
-		ObjectMapper mapper = new ObjectMapper();
-		ESDemandDTO demandDTO = null;
-		
+		String retour = "";
 		try 
 		{
-			demandDTO = mapper.readValue( retour, ESDemandDTO.class);
+			HashMap<String, String> mapChamps = new HashMap<>();
+			mapChamps.put("demand.demand_id", strDemandId);
+			mapChamps.put("demand.demand_type_id", strDemandTypeId);
+			json = ElasticConnexion.formatFullText( mapChamps);
+			retour = ElasticConnexion.sentToElasticPOST( uri, json);
+			
+			// JSON Parsing
+			ObjectMapper mapper = new ObjectMapper();
+			ESDemandDTO demandDTO = null;
+		
+
+			JsonNode jsonRetour =  mapper.readTree(retour);
+			JsonNode jnode = jsonRetour.findValue("_source");
+	
+			demandDTO = mapper.readValue( jnode.asText(), ESDemandDTO.class);
 			demand = buildDemand(demandDTO);
 		} 
 		catch (IOException ex) 
@@ -51,18 +61,27 @@ public class ElasticNotificationSearchService implements IDemandService{
 	public List<BaseDemand> getDemands(String strCustomerId, AdminUser user) 
 	{
 		List<BaseDemand> base = new ArrayList<>();
-		String json = ElasticConnexion.formatExactSearch( "utilisateur.user_cid", strCustomerId);
+		String json;
+		String retour = "";
 		String uri = ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, GRUElasticsConstants.PATH_ELK_SEARCH );
-		
-		String retour = ElasticConnexion.sentToElastic( uri, json);
-		
-		// JSON Parsing
-		ObjectMapper mapper = new ObjectMapper();
-		ESDemandDTO demandDTO = null;
+	
 		try 
-		{
-			demandDTO = mapper.readValue( retour, ESDemandDTO.class);
-			base.add(buildBaseDemand(demandDTO));
+		{		
+			json = ElasticConnexion.formatExactSearch( "user_cid", strCustomerId);
+			retour = ElasticConnexion.sentToElasticPOST( uri, json);
+			
+			// JSON Parsing
+			ObjectMapper mapper = new ObjectMapper();
+			ESDemandDTO demandDTO = null;
+
+			JsonNode jsonRetour =  mapper.readTree(retour);
+			List<JsonNode> listDemand = jsonRetour.findValues("_source");
+			
+			for(JsonNode jnode: listDemand)
+			{
+				demandDTO = mapper.readValue( jnode.asText(), ESDemandDTO.class);
+				base.add(buildBaseDemand(demandDTO));
+			}
 		} 
 		catch (IOException ex) 
 		{

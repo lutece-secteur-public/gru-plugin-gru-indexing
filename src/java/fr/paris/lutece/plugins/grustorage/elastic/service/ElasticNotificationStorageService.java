@@ -74,7 +74,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 			ESNotificationDTO notifDto = buildNotificationDto(notification, notification.getDemand());
 			
 			jsonNotif = mapper.writeValueAsString(notifDto);
-			ElasticConnexion.sentToElastic( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, notification.getDemand().getDemandId( ) ), jsonNotif);
+			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, notification.getDemand().getDemandId( ) ), jsonNotif);
 		} 
 		catch (JsonGenerationException | JsonMappingException ex)
 		{
@@ -100,7 +100,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 		{
 			ESCustomerDTO cutomerDTO = buildCustomer(user);
 			jsonUser = mapper.writeValueAsString(cutomerDTO);		
-			ElasticConnexion.sentToElastic( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,  user.getCustomerId( ) ), jsonUser);
+			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,  user.getCustomerId( ) ), jsonUser);
 		} 
 		catch (JsonGenerationException | JsonMappingException ex )
 		{
@@ -127,7 +127,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 		try 
 		{
 			jsonDemand = mapper.writeValueAsString(demandDTO);
-			ElasticConnexion.sentToElastic( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getCustomer().getCustomerId() ), jsonDemand );
+			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getCustomer().getCustomerId() ), jsonDemand );
 		} 
 		catch (JsonGenerationException | JsonMappingException ex)
 		{
