@@ -53,7 +53,8 @@ import fr.paris.lutece.plugins.grusupply.business.Customer;
 import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
-public class ElasticNotificationStorageService implements INotificationStorageService{
+public class ElasticNotificationStorageService implements INotificationStorageService
+{
 
     /**
      * {@inheritDoc }
