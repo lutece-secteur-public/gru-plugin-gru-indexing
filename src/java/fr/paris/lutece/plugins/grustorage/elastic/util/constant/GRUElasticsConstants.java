@@ -52,6 +52,7 @@ public final class GRUElasticsConstants
     public static final String PATH_ELK_TYPE_DEMAND = "grustorage-elastics.pathDemand";
     public static final String PATH_ELK_TYPE_USER = "grustorage-elastics.pathUser";
     public static final String PATH_ELK_TYPE_NOTIFICATION = "grustorage-elastics.pathNotification";
+    public static final String PATH_WS_SERVER = "grustorage-elastic.urlWS";
     
     //STATUS 
     public static final String STATUS_201 = "{" + "\"status\":" + "\"201\"" + "}";

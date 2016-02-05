@@ -51,9 +51,11 @@ public class ElasticConnexion {
 	public static String getESParam( String strPath, String strSpecif )
 	{
 		String path = (StringUtils.isNullOrEmpty(strPath)) ? "":AppPropertiesService.getProperty( strPath);
-		return AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
+		String tmp =  AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
 			   AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) +
 			   path + strSpecif;
+		AppLogService.info( "DEBUG INFO : PATH TO ELASTIC :"+tmp );
+		return tmp;
 	}
 	/**
 	 * @param strPath
