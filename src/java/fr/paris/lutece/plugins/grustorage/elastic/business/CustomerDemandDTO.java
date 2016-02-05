@@ -40,6 +40,10 @@ public class CustomerDemandDTO
 	private String _strCid;
 
 	
+	public CustomerDemandDTO() {
+		super();
+	}
+
 	public CustomerDemandDTO(String _strCid) {
 		super();
 		this._strCid = _strCid;
@@ -59,6 +63,7 @@ public class CustomerDemandDTO
 	 * Sets the Customer ID
 	 * @param _strCid
 	 */
+	@JsonProperty("user_cid")
 	public void setCid(String _strCid)
 	{
 		this._strCid = _strCid;

@@ -7,7 +7,9 @@ public class NotificationDemandDTO {
 	private String _strDemandIdType;
 	
 	
-	
+	public NotificationDemandDTO() {
+		super();
+	}
 	public NotificationDemandDTO(String _strDemandId, String _strDemandIdType) {
 		super();
 		this._strDemandId = _strDemandId;
@@ -25,6 +27,7 @@ public class NotificationDemandDTO {
      * Sets the Demand ID
      * @param _strDemandId
      */
+    @JsonProperty( "demande_id" )
 	public void setDemandId(String _strDemandId) {
 		this._strDemandId = _strDemandId;
 	}
@@ -42,6 +45,7 @@ public class NotificationDemandDTO {
      * Sets the Demand ID Type
      * @param _strDemandIdType
      */
+    @JsonProperty( "demande_id_type" )
 	public void setDemandIdType(String _strDemandIdType) {
 		this._strDemandIdType = _strDemandIdType;
 	}

@@ -60,6 +60,31 @@ public class ESCustomerDTO {
 	private String _strTelephoneNumber;
 	private ESSuggestDTO _oSuggest;
 	
+	
+	
+	public ESCustomerDTO() {
+		super();
+	}
+
+	public ESCustomerDTO(int _nCustomerId, String _strName, String _strFirstName, String _strEmail, String _strBirthday,
+			String _strCivility, String _strStreet, String _strCityOfBirth, boolean _bStayConnected, String _strCity,
+			String _strPostalCode, String _strTelephoneNumber, ESSuggestDTO _oSuggest) {
+		super();
+		this._nCustomerId = _nCustomerId;
+		this._strName = _strName;
+		this._strFirstName = _strFirstName;
+		this._strEmail = _strEmail;
+		this._strBirthday = _strBirthday;
+		this._strCivility = _strCivility;
+		this._strStreet = _strStreet;
+		this._strCityOfBirth = _strCityOfBirth;
+		this._bStayConnected = _bStayConnected;
+		this._strCity = _strCity;
+		this._strPostalCode = _strPostalCode;
+		this._strTelephoneNumber = _strTelephoneNumber;
+		this._oSuggest = _oSuggest;
+	}
+
 	/**
 	 * Returns the CustomerId
 	 * @return The CustomerId
@@ -311,6 +336,8 @@ public class ESCustomerDTO {
 		HashMap<String, String> payload = new HashMap<>();
 		
 		payload.put("user_cid", String.valueOf(_nCustomerId));
+		payload.put("last_name", _strName);
+		payload.put("first_name", _strFirstName);
 		payload.put("birthday", _strBirthday);
 		payload.put("telephoneNumber", _strTelephoneNumber);
 		payload.put("email", _strEmail);

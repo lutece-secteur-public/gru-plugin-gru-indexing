@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.grustorage.elastic.business;
 
 import java.util.HashMap;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
@@ -60,9 +61,29 @@ public class ESDemandDTO
     private String _strReference;
     private ESSuggestDTO _oSuggest;
 
+    public ESDemandDTO() {
+		super();
+	}
     
+	public ESDemandDTO(CustomerDemandDTO _oCustomerDemand, String _strDemandId, String _strDemandIdType,
+			String _strDemandMaxStep, String _strDemandUserCurrentStep, String _strDemandState, String _strNotifType,
+			String _strDateDemand, int _nCRMStatus, String _strReference, ESSuggestDTO _oSuggest) {
+		super();
+		this._oCustomerDemand = _oCustomerDemand;
+		this._strDemandId = _strDemandId;
+		this._strDemandIdType = _strDemandIdType;
+		this._strDemandMaxStep = _strDemandMaxStep;
+		this._strDemandUserCurrentStep = _strDemandUserCurrentStep;
+		this._strDemandState = _strDemandState;
+		this._strNotifType = _strNotifType;
+		this._strDateDemand = _strDateDemand;
+		this._nCRMStatus = _nCRMStatus;
+		this._strReference = _strReference;
+		this._oSuggest = _oSuggest;
+	}
 
-    /**
+
+	/**
      * Return the Customer Cid for a Demand
      * @return
      */
@@ -74,6 +95,7 @@ public class ESDemandDTO
      * Sets the Customer Cid for a demand
      * @param _oCustomerDemand
      */
+    @JsonProperty("utilisateur")
 	public void setCustomerDemand(CustomerDemandDTO _oCustomerDemand) {
 		this._oCustomerDemand = _oCustomerDemand;
 	}
@@ -92,6 +114,7 @@ public class ESDemandDTO
      * Sets the DemandId
      * @param nDemandId The DemandId
      */
+    @JsonProperty( "demand_id" )
     public void setDemandId( String nDemandId )
     {
         _strDemandId = nDemandId;
@@ -111,6 +134,7 @@ public class ESDemandDTO
      * Sets the DemandIdType
      * @param nDemandIdType The DemandIdType
      */
+    @JsonProperty( "demand_id_type" )
     public void setDemandIdType( String nDemandIdType )
     {
         _strDemandIdType = nDemandIdType;
@@ -130,6 +154,7 @@ public class ESDemandDTO
      * Sets the DemandMaxStep
      * @param nDemandMaxStep The DemandMaxStep
      */
+    @JsonProperty( "demand_max_step" )
     public void setDemandMaxStep( String nDemandMaxStep )
     {
         _strDemandMaxStep = nDemandMaxStep;
@@ -149,6 +174,7 @@ public class ESDemandDTO
      * Sets the DemandUserCurrentStep
      * @param nDemandUserCurrentStep The DemandUserCurrentStep
      */
+    @JsonProperty( "demand_user_max_step" )
     public void setDemandUserCurrentStep( String nDemandUserCurrentStep )
     {
         _strDemandUserCurrentStep = nDemandUserCurrentStep;
@@ -168,6 +194,7 @@ public class ESDemandDTO
      * Sets the DemandState
      * @param nDemandState The DemandState
      */
+    @JsonProperty( "demand_state" )
     public void setDemandState( String nDemandState )
     {
         _strDemandState = nDemandState;
@@ -187,6 +214,7 @@ public class ESDemandDTO
      * Sets the NotifType
      * @param strNotifType The NotifType
      */
+    @JsonProperty( "notification_type" )
     public void setNotifType( String strNotifType )
     {
         _strNotifType = strNotifType;
@@ -206,6 +234,7 @@ public class ESDemandDTO
      * Sets the DateDemand
      * @param strDateDemand The DateDemand
      */
+    @JsonProperty( "date_demand" )
     public void setDateDemand( String strDateDemand )
     {
         _strDateDemand = strDateDemand;
@@ -225,6 +254,7 @@ public class ESDemandDTO
      * Sets the CRMStatus
      * @param nCRMStatus The CRMStatus
      */
+    @JsonProperty( "crm_status_id" )
     public void setCRMStatus( int nCRMStatus )
     {
         _nCRMStatus = nCRMStatus;
@@ -244,6 +274,7 @@ public class ESDemandDTO
      * Sets the Reference
      * @param strReference The Reference
      */
+    @JsonProperty( "reference" )
     public void setReference( String strReference )
     {
         _strReference = strReference;
@@ -257,6 +288,15 @@ public class ESDemandDTO
 		return _oSuggest;
 	}
 
+    /**
+     * Sets the suggest
+     * @param _oSuggest
+     */
+  	@JsonIgnore
+    public void setSuggest(ESSuggestDTO Suggest)
+    {
+    	_oSuggest = Suggest;
+    }
 	/**
 	 * Sets the suggest
 	 */
@@ -273,6 +313,8 @@ public class ESDemandDTO
 		HashMap<String, String> payload = new HashMap<>();
 		
 		payload.put("user_cid", String.valueOf(customer.getCustomerId()));
+		payload.put("last_name", customer.getName());
+		payload.put("first_name", customer.getFirstName());
 		payload.put("birthday", customer.getBirthday());
 		payload.put("telephoneNumber", customer.getTelephoneNumber());
 		payload.put("email", customer.getEmail());

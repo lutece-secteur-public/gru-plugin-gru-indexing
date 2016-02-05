@@ -4,17 +4,20 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
+import com.mysql.jdbc.StringUtils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 public class ElasticConnexion {
@@ -27,6 +30,10 @@ public class ElasticConnexion {
 		_singleton = new ElasticConnexion();
 	}
 	
+	/**
+	 * Function which make a singleton
+	 * @return
+	 */
 	public ElasticConnexion getInstance( ){
 		if(_singleton == null)
 		{
@@ -34,7 +41,6 @@ public class ElasticConnexion {
 		}
 		return _singleton;
 	}
-	
 	
 	/**
 	 * Function which set URI to elasticsearch connexion
@@ -44,10 +50,10 @@ public class ElasticConnexion {
 	 */
 	public static String getESParam( String strPath, String strSpecif )
 	{
+		String path = (StringUtils.isNullOrEmpty(strPath)) ? "":AppPropertiesService.getProperty( strPath);
 		return AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
 			   AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) +
-			   AppPropertiesService.getProperty( strPath)+
-			   strSpecif;
+			   path + strSpecif;
 	}
 	/**
 	 * @param strPath
@@ -92,7 +98,6 @@ public class ElasticConnexion {
 	 */
 	public static String formatAutoCompleteSearch( String champ ) throws JsonGenerationException, JsonMappingException, IOException
 	{
-
         ObjectMapper mapper = new ObjectMapper();
 		JsonNodeFactory factory = JsonNodeFactory.instance;
 		
@@ -123,6 +128,7 @@ public class ElasticConnexion {
         ObjectMapper mapper = new ObjectMapper();
 		JsonNodeFactory factory = JsonNodeFactory.instance;
 		ObjectNode root = new ObjectNode( factory );
+		ObjectNode tmp = new ObjectNode( factory );
 		
 		ObjectNode filtered =  new ObjectNode( factory );
 		ObjectNode query =  new ObjectNode( factory );
@@ -137,11 +143,19 @@ public class ElasticConnexion {
 		filtered.put( "query", query );
 		filtered.put( "filter", filter );
 		
-		root.put( "query", filtered );
+		tmp.put("filtered", filtered);
+		root.put( "query", tmp );
 		
 		return mapper.writeValueAsString(root);
 	}
-	
+	/**
+	 * Function which make a full text search with any key/value 
+	 * @param map Have to be Key/value
+	 * @return
+	 * @throws JsonGenerationException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public static String formatFullText( Map<String, String> map) throws JsonGenerationException, JsonMappingException, IOException
 	{
 		ObjectMapper mapper = new ObjectMapper();
@@ -165,5 +179,59 @@ public class ElasticConnexion {
 		root.put("query", query);
 		
 		return mapper.writeValueAsString(root);
+	}
+	
+	/**
+	 * Function which make a boolean text search with any key/value 
+	 * @param map Have to be Key/value
+	 * @return
+	 * @throws JsonGenerationException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public static String formatBooleanText( Map<String, String> map) throws JsonGenerationException, JsonMappingException, IOException
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNodeFactory factory = JsonNodeFactory.instance;
+		ObjectNode root = new ObjectNode( factory );
+		ObjectNode bool = new ObjectNode( factory );
+		ObjectNode filter = new ObjectNode( factory );
+		ObjectNode filtered = new ObjectNode( factory );
+		ObjectNode tmptmp = new ObjectNode( factory );
+		
+		ArrayNode must = new ArrayNode(factory);
+		
+		for(String mapKey : map.keySet())
+		{
+			ObjectNode match =  new ObjectNode( factory );
+			ObjectNode tmp =  new ObjectNode( factory );
+			tmp.put(mapKey, map.get(mapKey));
+			match.put("term", tmp);
+			must.add(match);
+		}
+		bool.put("must", must);
+		filter.put("bool", bool);
+		tmptmp.put("filter", filter);
+		filtered.put("filtered", tmptmp);
+		root.put("query", filtered);
+		
+		return mapper.writeValueAsString(root);
+	}
+	/**
+	 * Format a JSON String into a JSON node
+	 * @param strJson
+	 * @return
+	 */
+	public static JsonNode setJsonToJsonTree(String strJson)
+	{
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode tmp = null;
+		try {
+
+	        tmp = mapper.readTree(strJson);
+		} catch (IOException ex) {
+			AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+		}
+		return tmp;
 	}
 }

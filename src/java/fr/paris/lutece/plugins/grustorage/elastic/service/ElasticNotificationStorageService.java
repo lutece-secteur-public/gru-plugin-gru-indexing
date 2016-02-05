@@ -43,14 +43,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import fr.paris.lutece.plugins.grusupply.business.Demand;
 import fr.paris.lutece.plugins.grusupply.business.Notification;
 import fr.paris.lutece.plugins.grustorage.elastic.business.CustomerDemandDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESBackofficeNotificationDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.business.ESCustomerDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESDashboardNotificationDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.business.ESDemandDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.business.ESNotificationDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESSMSNotificationDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESEmailNotificationDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.business.NotificationDemandDTO;
 import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
@@ -177,10 +173,10 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 		
 		notifDTO.setDateSollicitation(notif.getDateSollicitation());
 		notifDTO.setNotificationDemand( nddto );
-		notifDTO.setUserEmail(new ESEmailNotificationDTO(notif.getUserEmail() ) );
-		notifDTO.setUserDashBoard(new ESDashboardNotificationDTO(notif.getUserDashBoard()));
-		notifDTO.setUserSms(new ESSMSNotificationDTO(notif.getUserSms()));
-		notifDTO.setUserBackOffice(new ESBackofficeNotificationDTO(notif.getUserBackOffice()));
+		notifDTO.setUserEmail(notif.getUserEmail( ) );
+		notifDTO.setUserDashBoard(notif.getUserDashBoard());
+		notifDTO.setUserSms(notif.getUserSms());
+		notifDTO.setUserBackOffice(notif.getUserBackOffice());
 	    
 		return notifDTO;
 	}
