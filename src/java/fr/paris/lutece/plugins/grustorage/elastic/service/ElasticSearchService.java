@@ -66,7 +66,7 @@ public class ElasticSearchService implements ISearchService
 	@Override
 	public String getAutoCompleteUrl() 
 	{
-		return GRUElasticsConstants.PLUGIN_NAME+"/"+GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
+		return GRUElasticsConstants.PLUGIN_NAME+GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
 	}
 	
 	/**

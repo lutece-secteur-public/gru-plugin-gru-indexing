@@ -41,7 +41,7 @@ public final class GRUElasticsConstants
 {
     // CONSTANTS
     public static final String PLUGIN_NAME = "elasticsearch/";
-	public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete/";
+	public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete";
 	public static final String PATH_ELASTIC_FIND_USER = "searchuser/";
     public static final String PATH_ELK_SUGGEST = "_suggest";
     public static final String PATH_ELK_SEARCH = "_search";
