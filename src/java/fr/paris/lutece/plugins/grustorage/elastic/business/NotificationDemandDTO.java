@@ -19,7 +19,7 @@ public class NotificationDemandDTO {
 	 * Returns the Demand Id
 	 * @return the Demand ID
 	 */
-    @JsonProperty( "demande_id" )
+    @JsonProperty( "demand_id" )
 	public String getDemandId() {
 		return _strDemandId;
 	}
@@ -27,7 +27,7 @@ public class NotificationDemandDTO {
      * Sets the Demand ID
      * @param _strDemandId
      */
-    @JsonProperty( "demande_id" )
+    @JsonProperty( "demand_id" )
 	public void setDemandId(String _strDemandId) {
 		this._strDemandId = _strDemandId;
 	}
@@ -36,7 +36,7 @@ public class NotificationDemandDTO {
 	 * Return the Demand ID Type
 	 * @return
 	 */
-    @JsonProperty( "demande_id_type" )
+    @JsonProperty( "demand_id_type" )
 	public String getDemandIdType() {
 		return _strDemandIdType;
 	}
@@ -45,7 +45,7 @@ public class NotificationDemandDTO {
      * Sets the Demand ID Type
      * @param _strDemandIdType
      */
-    @JsonProperty( "demande_id_type" )
+    @JsonProperty( "demand_id_type" )
 	public void setDemandIdType(String _strDemandIdType) {
 		this._strDemandIdType = _strDemandIdType;
 	}
