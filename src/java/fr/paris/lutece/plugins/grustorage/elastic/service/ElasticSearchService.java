@@ -13,6 +13,7 @@ import fr.paris.lutece.plugins.grustorage.elastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 public class ElasticSearchService implements ISearchService
@@ -67,7 +68,7 @@ public class ElasticSearchService implements ISearchService
 	@Override
 	public String getAutoCompleteUrl() 
 	{
-		return RestConstants.BASE_PATH+GRUElasticsConstants.PLUGIN_NAME+GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
+		return AppPathService.getProdUrl()+RestConstants.BASE_PATH+GRUElasticsConstants.PLUGIN_NAME+GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
 	}
 	
 	/**
