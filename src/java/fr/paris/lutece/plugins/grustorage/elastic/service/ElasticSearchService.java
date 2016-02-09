@@ -78,6 +78,8 @@ public class ElasticSearchService implements ISearchService
 	 */
 	private static CustomerResult buildCustomerResult(JsonNode node)
 	{
+
+		if(node == null) throw new NullPointerException();
 		CustomerResult customer = new CustomerResult();
 		customer.setId(node.findValue("user_cid").asInt());
 		customer.setLastname(node.findValue("last_name").asText());

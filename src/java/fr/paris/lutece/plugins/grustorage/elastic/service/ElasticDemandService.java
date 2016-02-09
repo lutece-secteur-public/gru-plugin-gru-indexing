@@ -2,7 +2,6 @@ package fr.paris.lutece.plugins.grustorage.elastic.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -55,7 +54,7 @@ public class ElasticDemandService implements IDemandService{
 		{
 			AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
 		}
-		return demand;
+		return demand;		
 	}
 
 	/**
@@ -102,6 +101,8 @@ public class ElasticDemandService implements IDemandService{
 	 */
 	private static BaseDemand buildBaseDemand(ESDemandDTO demand)
 	{
+
+		if(demand == null) throw new NullPointerException();
 		BaseDemand base = new BaseDemand();
 		base.setId(demand.getDemandId());
 		base.setDemandTypeId(demand.getDemandIdType());
@@ -158,23 +159,33 @@ public class ElasticDemandService implements IDemandService{
 	 */
 	private static Notification buildNotification(ESNotificationDTO notification)
 	{
+
+		if(notification == null) throw new NullPointerException();
 		Notification retour = new Notification();
 		Email email = new Email();
-		email.setSenderName(notification.getUserEmail().getSenderName());
-		email.setRecipient(notification.getUserEmail().getRecipient());
-		email.setSubject(notification.getUserEmail().getSubject());
-		email.setMessage(notification.getUserEmail().getMessage());
+		if(notification.getUserEmail() != null)
+		{
+			email.setSenderName(notification.getUserEmail().getSenderName());
+			email.setRecipient(notification.getUserEmail().getRecipient());
+			email.setSubject(notification.getUserEmail().getSubject());
+			email.setMessage(notification.getUserEmail().getMessage());
+		}
 		
 		Sms sms = new Sms();
-		sms.setMessage(notification.getUserSms().getMessage());
-		sms.setPhoneNumber(String.valueOf(notification.getUserSms().getPhoneNumber()));
+		if(notification.getUserEmail() != null)
+		{
+			sms.setMessage(notification.getUserSms().getMessage());
+			sms.setPhoneNumber(String.valueOf(notification.getUserSms().getPhoneNumber()));
+		}
 		
 		UserDashboard uDash = new UserDashboard();
-		uDash.setStatusText(notification.getUserDashBoard().getStatusText());
-		uDash.setSenderName(notification.getUserDashBoard().getSenderName());
-		uDash.setSubject(notification.getUserDashBoard().getSubject());
-		uDash.setMessage(notification.getUserDashBoard().getMessage());
-		
+		if(notification.getUserEmail() != null)
+		{
+			uDash.setStatusText(notification.getUserDashBoard().getStatusText());
+			uDash.setSenderName(notification.getUserDashBoard().getSenderName());
+			uDash.setSubject(notification.getUserDashBoard().getSubject());
+			uDash.setMessage(notification.getUserDashBoard().getMessage());
+		}
 		
 		retour.setTimestamp(1L);
 		retour.setTitle("PAS TROUVE");

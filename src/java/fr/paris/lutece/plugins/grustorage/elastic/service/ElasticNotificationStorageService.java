@@ -71,7 +71,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 			ESNotificationDTO notifDto = buildNotificationDto(notification, notification.getDemand());
 			
 			jsonNotif = mapper.writeValueAsString(notifDto);
-			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, notification.getDemand().getDemandId( ) ), jsonNotif);
+			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, "" ), jsonNotif);
 		} 
 		catch (JsonGenerationException | JsonMappingException ex)
 		{
@@ -124,7 +124,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 		try 
 		{
 			jsonDemand = mapper.writeValueAsString(demandDTO);
-			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getCustomer().getCustomerId() ), jsonDemand );
+			ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, "" ), jsonDemand );
 		} 
 		catch (JsonGenerationException | JsonMappingException ex)
 		{
@@ -143,6 +143,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 	 */
 	private static ESCustomerDTO buildCustomer( Customer customer)
 	{
+		if(customer == null) throw new NullPointerException();
 		ESCustomerDTO customerDTO = new ESCustomerDTO();
 		customerDTO.setCustomerId(customer.getCustomerId());
 		customerDTO.setName(customer.getName());
@@ -169,6 +170,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 	 */
 	private static ESNotificationDTO buildNotificationDto( Notification notif, Demand demand)
 	{
+		if(notif == null || demand == null) throw new NullPointerException();
 	    ESNotificationDTO notifDTO = new ESNotificationDTO();
 		NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf(demand.getDemandId()), String.valueOf(demand.getDemandIdType()));
 		
@@ -190,6 +192,8 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 	 */
 	private static ESDemandDTO buildDemandDTO( Demand demand, Customer customer )
 	{
+
+		if(customer == null || demand == null) throw new NullPointerException();
 		ESDemandDTO demandDTO = new ESDemandDTO();
 		CustomerDemandDTO customerDemand = new CustomerDemandDTO(String.valueOf(demand.getCustomer().getCustomerId()));
 		demandDTO.setCustomerDemand(customerDemand);
