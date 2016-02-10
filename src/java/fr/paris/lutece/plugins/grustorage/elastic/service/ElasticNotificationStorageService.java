@@ -146,7 +146,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         {
             jsonDemand = mapper.writeValueAsString( demandDTO );
             ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( 
-                    GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, "" ), jsonDemand );
+                    GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getReference() ), jsonDemand );
         }
         catch ( JsonGenerationException ex )
         {
