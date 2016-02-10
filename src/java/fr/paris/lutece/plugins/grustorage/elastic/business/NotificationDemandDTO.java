@@ -46,11 +46,11 @@ public class NotificationDemandDTO
         super(  );
     }
 
-    public NotificationDemandDTO( String _strDemandId, String _strDemandIdType )
+    public NotificationDemandDTO( String strDemandId, String strDemandIdType )
     {
         super(  );
-        this._strDemandId = _strDemandId;
-        this._strDemandIdType = _strDemandIdType;
+        this._strDemandId = strDemandId;
+        this._strDemandIdType = strDemandIdType;
     }
 
     /**

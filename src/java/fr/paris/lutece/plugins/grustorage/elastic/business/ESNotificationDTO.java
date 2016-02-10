@@ -66,17 +66,17 @@ public class ESNotificationDTO
         super(  );
     }
 
-    public ESNotificationDTO( NotificationDemandDTO _oNotificationDemand, String _strDateSollicitation,
-        EmailNotification _emailNotification, DashboardNotification _dashBoardNotification,
-        SMSNotification _smsNotification, BackofficeNotification _backOfficeNotification )
+    public ESNotificationDTO( NotificationDemandDTO oNotificationDemand, String strDateSollicitation,
+        EmailNotification emailNotification, DashboardNotification dashBoardNotification,
+        SMSNotification smsNotification, BackofficeNotification backOfficeNotification )
     {
         super(  );
-        this._oNotificationDemand = _oNotificationDemand;
-        this._strDateSollicitation = _strDateSollicitation;
-        this._emailNotification = _emailNotification;
-        this._dashBoardNotification = _dashBoardNotification;
-        this._smsNotification = _smsNotification;
-        this._backOfficeNotification = _backOfficeNotification;
+        this._oNotificationDemand = oNotificationDemand;
+        this._strDateSollicitation = strDateSollicitation;
+        this._emailNotification = emailNotification;
+        this._dashBoardNotification = dashBoardNotification;
+        this._smsNotification = smsNotification;
+        this._backOfficeNotification = backOfficeNotification;
     }
 
     /**

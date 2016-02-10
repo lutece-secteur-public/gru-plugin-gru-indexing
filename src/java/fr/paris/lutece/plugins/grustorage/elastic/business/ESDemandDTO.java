@@ -67,7 +67,7 @@ public class ESDemandDTO
     private String _strDemandUserCurrentStep;
     private String _strDemandState;
     private String _strNotifType;
-    private String _strDateDemand;
+    private int _strDateDemand;
     private int _nCRMStatus;
     private String _strReference;
     private ESSuggestDTO _oSuggest;
@@ -77,22 +77,22 @@ public class ESDemandDTO
         super(  );
     }
 
-    public ESDemandDTO( CustomerDemandDTO _oCustomerDemand, String _strDemandId, String _strDemandIdType,
-        String _strDemandMaxStep, String _strDemandUserCurrentStep, String _strDemandState, String _strNotifType,
-        String _strDateDemand, int _nCRMStatus, String _strReference, ESSuggestDTO _oSuggest )
+    public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandIdType,
+        String strDemandMaxStep, String strDemandUserCurrentStep, String strDemandState, String strNotifType,
+        int strDateDemand, int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
     {
         super(  );
-        this._oCustomerDemand = _oCustomerDemand;
-        this._strDemandId = _strDemandId;
-        this._strDemandIdType = _strDemandIdType;
-        this._strDemandMaxStep = _strDemandMaxStep;
-        this._strDemandUserCurrentStep = _strDemandUserCurrentStep;
-        this._strDemandState = _strDemandState;
-        this._strNotifType = _strNotifType;
-        this._strDateDemand = _strDateDemand;
-        this._nCRMStatus = _nCRMStatus;
-        this._strReference = _strReference;
-        this._oSuggest = _oSuggest;
+        this._oCustomerDemand = oCustomerDemand;
+        this._strDemandId = strDemandId;
+        this._strDemandIdType = strDemandIdType;
+        this._strDemandMaxStep = strDemandMaxStep;
+        this._strDemandUserCurrentStep = strDemandUserCurrentStep;
+        this._strDemandState = strDemandState;
+        this._strNotifType = strNotifType;
+        this._strDateDemand = strDateDemand;
+        this._nCRMStatus = nCRMStatus;
+        this._strReference = strReference;
+        this._oSuggest = oSuggest;
     }
 
     /**
@@ -239,8 +239,8 @@ public class ESDemandDTO
      * Returns the DateDemand
      * @return The DateDemand
      */
-    @JsonProperty( "date_demand" )
-    public String getDateDemand(  )
+    @JsonProperty( "demand_date" )
+    public int getDateDemand(  )
     {
         return _strDateDemand;
     }
@@ -249,8 +249,8 @@ public class ESDemandDTO
      * Sets the DateDemand
      * @param strDateDemand The DateDemand
      */
-    @JsonProperty( "date_demand" )
-    public void setDateDemand( String strDateDemand )
+    @JsonProperty( "demand_date" )
+    public void setDateDemand( int strDateDemand )
     {
         _strDateDemand = strDateDemand;
     }

@@ -53,9 +53,9 @@ public class ESPayload
         return _oElements;
     }
 
-    public void setElements( HashMap<String, String> _oElements )
+    public void setElements( HashMap<String, String> oElements )
     {
-        this._oElements = _oElements;
+        this._oElements = oElements;
     }
 
     public String toJson(  )

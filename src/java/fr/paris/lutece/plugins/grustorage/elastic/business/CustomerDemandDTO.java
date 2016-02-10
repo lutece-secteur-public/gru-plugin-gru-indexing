@@ -45,10 +45,10 @@ public class CustomerDemandDTO
         super(  );
     }
 
-    public CustomerDemandDTO( String _strCid )
+    public CustomerDemandDTO( String strCid )
     {
         super(  );
-        this._strCid = _strCid;
+        this._strCid = strCid;
     }
 
     /**

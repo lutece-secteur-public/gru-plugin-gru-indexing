@@ -78,24 +78,24 @@ public class ESCustomerDTO
         super(  );
     }
 
-    public ESCustomerDTO( int _nCustomerId, String _strName, String _strFirstName, String _strEmail,
-        String _strBirthday, String _strCivility, String _strStreet, String _strCityOfBirth, boolean _bStayConnected,
-        String _strCity, String _strPostalCode, String _strTelephoneNumber, ESSuggestDTO _oSuggest )
+    public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail,
+        String strBirthday, String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected,
+        String strCity, String strPostalCode, String strTelephoneNumber, ESSuggestDTO oSuggest )
     {
         super(  );
-        this._nCustomerId = _nCustomerId;
-        this._strName = _strName;
-        this._strFirstName = _strFirstName;
-        this._strEmail = _strEmail;
-        this._strBirthday = _strBirthday;
-        this._strCivility = _strCivility;
-        this._strStreet = _strStreet;
-        this._strCityOfBirth = _strCityOfBirth;
-        this._bStayConnected = _bStayConnected;
-        this._strCity = _strCity;
-        this._strPostalCode = _strPostalCode;
-        this._strTelephoneNumber = _strTelephoneNumber;
-        this._oSuggest = _oSuggest;
+        this._nCustomerId = nCustomerId;
+        this._strName = strName;
+        this._strFirstName = strFirstName;
+        this._strEmail = strEmail;
+        this._strBirthday = strBirthday;
+        this._strCivility = strCivility;
+        this._strStreet = strStreet;
+        this._strCityOfBirth = strCityOfBirth;
+        this._bStayConnected = bStayConnected;
+        this._strCity = strCity;
+        this._strPostalCode = strPostalCode;
+        this._strTelephoneNumber = strTelephoneNumber;
+        this._oSuggest = oSuggest;
     }
 
     /**
