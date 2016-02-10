@@ -33,35 +33,63 @@
  */
 package fr.paris.lutece.plugins.grustorage.elastic.business;
 
-import java.util.HashMap;
+import fr.paris.lutece.portal.service.util.AppLogService;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
-public class ESPayload 
-{
-	private HashMap<String, String> _oElements;
-	
-	public HashMap<String, String> getElements() 
-	{
-		return _oElements;
-	}
+import java.io.IOException;
 
-	public void setElements(HashMap<String, String> _oElements) 
-	{
-		this._oElements = _oElements;
-	}
-	public String toJson()
-	{
-		if(_oElements == null) throw new NullPointerException();
-		
-		ObjectNode root = new ObjectNode(JsonNodeFactory.instance);
-		root.textNode("");
-		
-		for(String mapKey : _oElements.keySet())
-		{
-			root.put(mapKey, _oElements.get(mapKey));
-		}
-		return root.asText();
-	}
+import java.util.HashMap;
+
+
+public class ESPayload
+{
+    private HashMap<String, String> _oElements;
+
+    public HashMap<String, String> getElements(  )
+    {
+        return _oElements;
+    }
+
+    public void setElements( HashMap<String, String> _oElements )
+    {
+        this._oElements = _oElements;
+    }
+
+    public String toJson(  )
+    {
+        String strRetour = "";
+
+        if ( _oElements == null )
+        {
+            throw new NullPointerException(  );
+        }
+
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper(  );
+            JsonNodeFactory factory = JsonNodeFactory.instance;
+
+            ObjectNode root = new ObjectNode( factory );
+
+            for ( String mapKey : _oElements.keySet(  ) )
+            {
+                root.put( mapKey, _oElements.get( mapKey ) );
+            }
+
+            strRetour = mapper.writeValueAsString( root );
+        }
+        catch ( NullPointerException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+        catch ( IOException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+
+        return strRetour;
+    }
 }

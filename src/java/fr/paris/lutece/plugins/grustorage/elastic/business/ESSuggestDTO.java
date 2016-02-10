@@ -35,59 +35,67 @@ package fr.paris.lutece.plugins.grustorage.elastic.business;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class ESSuggestDTO {
-	private String[] _strInput;
-	private String _strOutput;
-	private ESPayload _oPayload;
-	
-	/**
-	 * Returns the input for autopletion
-	 * @return
-	 */
-	@JsonProperty("input")
-	public String[] getInput() {
-		return _strInput;
-	}
-	
-	/**
-	 * Sets the input for autocompletion
-	 * @param strInput
-	 */
-	public void setInput(String[] strInput) {
-		this._strInput = strInput;
-	}
-	
-	/**
-	 * Returns the Output for autocompletion
-	 * @return
-	 */
-	@JsonProperty("output")
-	public String getOutput() {
-		return _strOutput;
-	}
-	
-	/**
-	 * Sets the Output for autocompletion
-	 * @param strOutput
-	 */
-	public void setOutput(String strOutput) {
-		this._strOutput = strOutput;
-	}
 
-	/**
-	 * Returns the Payload autocompletion
-	 * @return
-	 */
-	@JsonProperty("payload")
-	public ESPayload getPayload() {
-		return _oPayload;
-	}
-	
-	/**
-	 * Sets the Payload autocompletion
-	 * @param oPayload
-	 */
-	public void setPayload(ESPayload oPayload) {
-		this._oPayload = oPayload;
-	}
+public class ESSuggestDTO
+{
+    private String[] _strInput;
+    private String _strOutput;
+    private ESPayload _oPayload;
+
+    /**
+     * Returns the input for autopletion
+     * @return
+     */
+    @JsonProperty( "input" )
+    public String[] getInput(  )
+    {
+        return _strInput;
+    }
+
+    /**
+     * Sets the input for autocompletion
+     * @param strInput
+     */
+    public void setInput( String[] strInput )
+    {
+        this._strInput = strInput;
+    }
+
+    /**
+     * Returns the Output for autocompletion
+     * @return
+     */
+    @JsonProperty( "output" )
+    public String getOutput(  )
+    {
+        return _strOutput;
+    }
+
+    /**
+     * Sets the Output for autocompletion
+     * @param strOutput
+     */
+    public void setOutput( String strOutput )
+    {
+        this._strOutput = strOutput;
+    }
+
+    /**
+     * Returns the Payload autocompletion
+     * @return
+     */
+    @JsonProperty( "payload" )
+    public ESPayload getPayload(  )
+    {
+        return _oPayload;
+    }
+
+    /**
+     * Sets the Payload autocompletion
+     * @param oPayload
+     */
+    public void setPayload( ESPayload oPayload )
+    {
+        this._oPayload = oPayload;
+    }
 }

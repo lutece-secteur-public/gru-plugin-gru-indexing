@@ -35,37 +35,39 @@ package fr.paris.lutece.plugins.grustorage.elastic.business;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class CustomerDemandDTO 
+
+public class CustomerDemandDTO
 {
-	private String _strCid;
+    private String _strCid;
 
-	
-	public CustomerDemandDTO() {
-		super();
-	}
+    public CustomerDemandDTO(  )
+    {
+        super(  );
+    }
 
-	public CustomerDemandDTO(String _strCid) {
-		super();
-		this._strCid = _strCid;
-	}
+    public CustomerDemandDTO( String _strCid )
+    {
+        super(  );
+        this._strCid = _strCid;
+    }
 
-	/**
-	 * Returns the Cutomer ID
-	 * @return
-	 */
-	@JsonProperty("user_cid")
-	public String getCid() 
-	{
-		return _strCid;
-	}
+    /**
+     * Returns the Cutomer ID
+     * @return
+     */
+    @JsonProperty( "user_cid" )
+    public String getCid(  )
+    {
+        return _strCid;
+    }
 
-	/**
-	 * Sets the Customer ID
-	 * @param _strCid
-	 */
-	@JsonProperty("user_cid")
-	public void setCid(String _strCid)
-	{
-		this._strCid = _strCid;
-	}
+    /**
+     * Sets the Customer ID
+     * @param _strCid
+     */
+    @JsonProperty( "user_cid" )
+    public void setCid( String _strCid )
+    {
+        this._strCid = _strCid;
+    }
 }

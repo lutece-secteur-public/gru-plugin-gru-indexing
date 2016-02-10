@@ -33,23 +33,34 @@
  */
 package fr.paris.lutece.plugins.grustorage.elastic.business;
 
-import java.util.HashMap;
+import fr.paris.lutece.plugins.grusupply.business.Customer;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-import fr.paris.lutece.plugins.grusupply.business.Customer;
+import java.util.HashMap;
 
 
 /**
  * This is the business class for the object Demand
  */
-@JsonPropertyOrder({"utilisateur","demand_id","demand_id_type","demand_max_step","demand_user_current_step","demand_state","notification_type","date_demande","crm_status_id","reference","suggest"})
+@JsonPropertyOrder( {"utilisateur",
+    "demand_id",
+    "demand_id_type",
+    "demand_max_step",
+    "demand_user_current_step",
+    "demand_state",
+    "notification_type",
+    "date_demande",
+    "crm_status_id",
+    "reference",
+    "suggest"
+} )
 public class ESDemandDTO
 {
     // Variables declarations 
-	private CustomerDemandDTO _oCustomerDemand;
+    private CustomerDemandDTO _oCustomerDemand;
     private String _strDemandId;
     private String _strDemandIdType;
     private String _strDemandMaxStep;
@@ -61,44 +72,48 @@ public class ESDemandDTO
     private String _strReference;
     private ESSuggestDTO _oSuggest;
 
-    public ESDemandDTO() {
-		super();
-	}
-    
-	public ESDemandDTO(CustomerDemandDTO _oCustomerDemand, String _strDemandId, String _strDemandIdType,
-			String _strDemandMaxStep, String _strDemandUserCurrentStep, String _strDemandState, String _strNotifType,
-			String _strDateDemand, int _nCRMStatus, String _strReference, ESSuggestDTO _oSuggest) {
-		super();
-		this._oCustomerDemand = _oCustomerDemand;
-		this._strDemandId = _strDemandId;
-		this._strDemandIdType = _strDemandIdType;
-		this._strDemandMaxStep = _strDemandMaxStep;
-		this._strDemandUserCurrentStep = _strDemandUserCurrentStep;
-		this._strDemandState = _strDemandState;
-		this._strNotifType = _strNotifType;
-		this._strDateDemand = _strDateDemand;
-		this._nCRMStatus = _nCRMStatus;
-		this._strReference = _strReference;
-		this._oSuggest = _oSuggest;
-	}
+    public ESDemandDTO(  )
+    {
+        super(  );
+    }
 
+    public ESDemandDTO( CustomerDemandDTO _oCustomerDemand, String _strDemandId, String _strDemandIdType,
+        String _strDemandMaxStep, String _strDemandUserCurrentStep, String _strDemandState, String _strNotifType,
+        String _strDateDemand, int _nCRMStatus, String _strReference, ESSuggestDTO _oSuggest )
+    {
+        super(  );
+        this._oCustomerDemand = _oCustomerDemand;
+        this._strDemandId = _strDemandId;
+        this._strDemandIdType = _strDemandIdType;
+        this._strDemandMaxStep = _strDemandMaxStep;
+        this._strDemandUserCurrentStep = _strDemandUserCurrentStep;
+        this._strDemandState = _strDemandState;
+        this._strNotifType = _strNotifType;
+        this._strDateDemand = _strDateDemand;
+        this._nCRMStatus = _nCRMStatus;
+        this._strReference = _strReference;
+        this._oSuggest = _oSuggest;
+    }
 
-	/**
-     * Return the Customer Cid for a Demand
-     * @return
-     */
-    @JsonProperty("utilisateur")
-    public CustomerDemandDTO getCustomerDemand() {
-		return _oCustomerDemand;
-	}
+    /**
+    * Return the Customer Cid for a Demand
+    * @return
+    */
+    @JsonProperty( "utilisateur" )
+    public CustomerDemandDTO getCustomerDemand(  )
+    {
+        return _oCustomerDemand;
+    }
+
     /**
      * Sets the Customer Cid for a demand
      * @param _oCustomerDemand
      */
-    @JsonProperty("utilisateur")
-	public void setCustomerDemand(CustomerDemandDTO _oCustomerDemand) {
-		this._oCustomerDemand = _oCustomerDemand;
-	}
+    @JsonProperty( "utilisateur" )
+    public void setCustomerDemand( CustomerDemandDTO _oCustomerDemand )
+    {
+        this._oCustomerDemand = _oCustomerDemand;
+    }
 
     /**
      * Returns the DemandId
@@ -279,50 +294,54 @@ public class ESDemandDTO
     {
         _strReference = strReference;
     }
+
     /**
      * Return the Suggest
      * @return The suggest
      */
     @JsonProperty( "suggest" )
-	public ESSuggestDTO getSuggest() {
-		return _oSuggest;
-	}
+    public ESSuggestDTO getSuggest(  )
+    {
+        return _oSuggest;
+    }
 
     /**
      * Sets the suggest
      * @param _oSuggest
      */
-  	@JsonIgnore
-    public void setSuggest(ESSuggestDTO Suggest)
+    @JsonIgnore
+    public void setSuggest( ESSuggestDTO Suggest )
     {
-    	_oSuggest = Suggest;
+        _oSuggest = Suggest;
     }
-	/**
-	 * Sets the suggest
-	 */
-	public void setSuggest(Customer customer) 
-	{
-		ESSuggestDTO s = new ESSuggestDTO( );
-		// input
-		String[ ] input = { _strReference };
-		s.setInput(input);
-		// Output
-		s.setOutput(customer.getName()+" "+customer.getFirstName());
-		// Payload
-		ESPayload oPayload = new ESPayload();
-		HashMap<String, String> payload = new HashMap<>();
-		
-		payload.put("user_cid", String.valueOf(customer.getCustomerId()));
-		payload.put("last_name", customer.getName());
-		payload.put("first_name", customer.getFirstName());
-		payload.put("birthday", customer.getBirthday());
-		payload.put("telephoneNumber", customer.getTelephoneNumber());
-		payload.put("email", customer.getEmail());
-		payload.put("reference", _strReference);
-		
-    	oPayload.setElements(payload);
-    	s.setPayload(oPayload);
-    	this._oSuggest = s;
-	}
-    
+
+    /**
+     * Sets the suggest
+     */
+    public void setSuggest( Customer customer )
+    {
+        ESSuggestDTO s = new ESSuggestDTO(  );
+
+        // input
+        String[] input = { _strReference };
+        s.setInput( input );
+        // Output
+        s.setOutput( customer.getName(  ) + " " + customer.getFirstName(  ) );
+
+        // Payload
+        ESPayload oPayload = new ESPayload(  );
+        HashMap<String, String> payload = new HashMap<String, String>(  );
+
+        payload.put( "user_cid", String.valueOf( customer.getCustomerId(  ) ) );
+        payload.put( "last_name", customer.getName(  ) );
+        payload.put( "first_name", customer.getFirstName(  ) );
+        payload.put( "birthday", customer.getBirthday(  ) );
+        payload.put( "telephoneNumber", customer.getTelephoneNumber(  ) );
+        payload.put( "email", customer.getEmail(  ) );
+        payload.put( "reference", _strReference );
+
+        oPayload.setElements( payload );
+        s.setPayload( oPayload );
+        this._oSuggest = s;
+    }
 }

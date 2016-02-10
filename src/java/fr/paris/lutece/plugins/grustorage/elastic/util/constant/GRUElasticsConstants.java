@@ -32,6 +32,8 @@
  * License 1.0
  */
 package fr.paris.lutece.plugins.grustorage.elastic.util.constant;
+
+
 /**
  *
  * GRUElasticsConstants
@@ -41,8 +43,8 @@ public final class GRUElasticsConstants
 {
     // CONSTANTS
     public static final String PLUGIN_NAME = "elasticsearch/";
-	public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete";
-	public static final String PATH_ELASTIC_FIND_USER = "searchuser/";
+    public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete";
+    public static final String PATH_ELASTIC_FIND_USER = "searchuser/";
     public static final String PATH_ELK_SUGGEST = "_suggest";
     public static final String PATH_ELK_SEARCH = "_search";
 
@@ -53,9 +55,8 @@ public final class GRUElasticsConstants
     public static final String PATH_ELK_TYPE_USER = "grustorage-elastics.pathUser";
     public static final String PATH_ELK_TYPE_NOTIFICATION = "grustorage-elastics.pathNotification";
     public static final String PATH_WS_SERVER = "grustorage-elastic.urlWS";
-    
+
     //STATUS 
     public static final String STATUS_201 = "{" + "\"status\":" + "\"201\"" + "}";
     public static final String STATUS_404 = "{" + "\"status\":" + "\"404\"" + "}";
-    
 }

@@ -33,18 +33,25 @@
  */
 package fr.paris.lutece.plugins.grustorage.elastic.business;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
-
 import fr.paris.lutece.plugins.grusupply.business.BackofficeNotification;
 import fr.paris.lutece.plugins.grusupply.business.DashboardNotification;
 import fr.paris.lutece.plugins.grusupply.business.EmailNotification;
 import fr.paris.lutece.plugins.grusupply.business.SMSNotification;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
+
 /**
  * This is the business class for the object Notification
  */
-@JsonPropertyOrder({"demande","user_backoffice","date_sollicitation","user_email","user_dashboard","user_sms"})
+@JsonPropertyOrder( {"demande",
+    "user_backoffice",
+    "date_sollicitation",
+    "user_email",
+    "user_dashboard",
+    "user_sms"
+} )
 public class ESNotificationDTO
 {
     private NotificationDemandDTO _oNotificationDemand;
@@ -54,61 +61,68 @@ public class ESNotificationDTO
     private SMSNotification _smsNotification;
     private BackofficeNotification _backOfficeNotification;
 
-    public ESNotificationDTO() {
-		super();
-	}
+    public ESNotificationDTO(  )
+    {
+        super(  );
+    }
 
-	public ESNotificationDTO(NotificationDemandDTO _oNotificationDemand, String _strDateSollicitation,
-			EmailNotification _emailNotification, DashboardNotification _dashBoardNotification,
-			SMSNotification _smsNotification, BackofficeNotification _backOfficeNotification) {
-		super();
-		this._oNotificationDemand = _oNotificationDemand;
-		this._strDateSollicitation = _strDateSollicitation;
-		this._emailNotification = _emailNotification;
-		this._dashBoardNotification = _dashBoardNotification;
-		this._smsNotification = _smsNotification;
-		this._backOfficeNotification = _backOfficeNotification;
-	}
+    public ESNotificationDTO( NotificationDemandDTO _oNotificationDemand, String _strDateSollicitation,
+        EmailNotification _emailNotification, DashboardNotification _dashBoardNotification,
+        SMSNotification _smsNotification, BackofficeNotification _backOfficeNotification )
+    {
+        super(  );
+        this._oNotificationDemand = _oNotificationDemand;
+        this._strDateSollicitation = _strDateSollicitation;
+        this._emailNotification = _emailNotification;
+        this._dashBoardNotification = _dashBoardNotification;
+        this._smsNotification = _smsNotification;
+        this._backOfficeNotification = _backOfficeNotification;
+    }
 
-	/**
-     * Returns the Demand of Notification
-     * @return
-     */
+    /**
+    * Returns the Demand of Notification
+    * @return
+    */
     @JsonProperty( "demande" )
-	public NotificationDemandDTO getNotificationDemand() {
-		return _oNotificationDemand;
-	}
+    public NotificationDemandDTO getNotificationDemand(  )
+    {
+        return _oNotificationDemand;
+    }
 
     /**
      * Sets the Demand of Notification
      * @param _oNotificationDemand
      */
     @JsonProperty( "demande" )
-	public void setNotificationDemand(NotificationDemandDTO _oNotificationDemand) {
-		this._oNotificationDemand = _oNotificationDemand;
-	}
+    public void setNotificationDemand( NotificationDemandDTO _oNotificationDemand )
+    {
+        this._oNotificationDemand = _oNotificationDemand;
+    }
 
     /**
      * Returns the Date of Sollicitation
      * @return
      */
     @JsonProperty( "date_sollicitation" )
-    public String getDateSollicitation() {
-		return _strDateSollicitation;
-	}
+    public String getDateSollicitation(  )
+    {
+        return _strDateSollicitation;
+    }
+
     /**
-     * Sets the date of sollicitation 
+     * Sets the date of sollicitation
      * @param _strDateSollicitation
      */
     @JsonProperty( "date_sollicitation" )
-	public void setDateSollicitation(String strDateSollicitation) {
-		this._strDateSollicitation = strDateSollicitation;
-	}
+    public void setDateSollicitation( String strDateSollicitation )
+    {
+        this._strDateSollicitation = strDateSollicitation;
+    }
 
-	/**
-     * Returns the EmailNotification
-     * @return The EmailNotification
-     */
+    /**
+    * Returns the EmailNotification
+    * @return The EmailNotification
+    */
     @JsonProperty( "user_email" )
     public EmailNotification getUserEmail(  )
     {
