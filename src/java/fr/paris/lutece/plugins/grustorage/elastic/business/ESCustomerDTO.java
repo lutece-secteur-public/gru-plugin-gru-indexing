@@ -78,9 +78,9 @@ public class ESCustomerDTO
         super(  );
     }
 
-    public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail,
-        String strBirthday, String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected,
-        String strCity, String strPostalCode, String strTelephoneNumber, ESSuggestDTO oSuggest )
+    public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
+        String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity,
+        String strPostalCode, String strTelephoneNumber, ESSuggestDTO oSuggest )
     {
         super(  );
         this._nCustomerId = nCustomerId;
