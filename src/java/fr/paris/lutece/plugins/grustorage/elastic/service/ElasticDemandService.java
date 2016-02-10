@@ -250,7 +250,7 @@ public class ElasticDemandService implements IDemandService
             uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
         }
 
-        retour.setTimestamp( 1L );
+        retour.setTimestamp( notification.getDateSollicitation() );
         retour.setTitle( notification.getUserDashBoard(  ).getStatusText(  ) );
         retour.setSource( "PAS TROUVE" );
         retour.setEmail( email );

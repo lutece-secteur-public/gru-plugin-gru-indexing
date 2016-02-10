@@ -67,7 +67,7 @@ public class ESDemandDTO
     private String _strDemandUserCurrentStep;
     private String _strDemandState;
     private String _strNotifType;
-    private int _strDateDemand;
+    private long _lDateDemand;
     private int _nCRMStatus;
     private String _strReference;
     private ESSuggestDTO _oSuggest;
@@ -79,7 +79,7 @@ public class ESDemandDTO
 
     public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandIdType,
         String strDemandMaxStep, String strDemandUserCurrentStep, String strDemandState, String strNotifType,
-        int strDateDemand, int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
+        long lDateDemand, int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
     {
         super(  );
         this._oCustomerDemand = oCustomerDemand;
@@ -89,7 +89,7 @@ public class ESDemandDTO
         this._strDemandUserCurrentStep = strDemandUserCurrentStep;
         this._strDemandState = strDemandState;
         this._strNotifType = strNotifType;
-        this._strDateDemand = strDateDemand;
+        this._lDateDemand = lDateDemand;
         this._nCRMStatus = nCRMStatus;
         this._strReference = strReference;
         this._oSuggest = oSuggest;
@@ -240,9 +240,9 @@ public class ESDemandDTO
      * @return The DateDemand
      */
     @JsonProperty( "demand_date" )
-    public int getDateDemand(  )
+    public long getDateDemand(  )
     {
-        return _strDateDemand;
+        return _lDateDemand;
     }
 
     /**
@@ -250,9 +250,9 @@ public class ESDemandDTO
      * @param strDateDemand The DateDemand
      */
     @JsonProperty( "demand_date" )
-    public void setDateDemand( int strDateDemand )
+    public void setDateDemand( long lDateDemand )
     {
-        _strDateDemand = strDateDemand;
+        _lDateDemand = lDateDemand;
     }
 
     /**
