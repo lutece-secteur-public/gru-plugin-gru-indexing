@@ -94,9 +94,9 @@ public class ESNotificationDTO
      * @param _oNotificationDemand
      */
     @JsonProperty( "demande" )
-    public void setNotificationDemand( NotificationDemandDTO _oNotificationDemand )
+    public void setNotificationDemand( NotificationDemandDTO oNotificationDemand )
     {
-        this._oNotificationDemand = _oNotificationDemand;
+        this._oNotificationDemand = oNotificationDemand;
     }
 
     /**
@@ -134,9 +134,9 @@ public class ESNotificationDTO
      * @param UserEmail The EmailNotification
      */
     @JsonProperty( "user_email" )
-    public void setUserEmail( EmailNotification UserEmail )
+    public void setUserEmail( EmailNotification userEmail )
     {
-        _emailNotification = UserEmail;
+        _emailNotification = userEmail;
     }
 
     /**
@@ -154,9 +154,9 @@ public class ESNotificationDTO
      * @param UserDashBoard The UserDashBoard
      */
     @JsonProperty( "user_dashboard" )
-    public void setUserDashBoard( DashboardNotification UserDashBoard )
+    public void setUserDashBoard( DashboardNotification userDashBoard )
     {
-        _dashBoardNotification = UserDashBoard;
+        _dashBoardNotification = userDashBoard;
     }
 
     /**
@@ -174,9 +174,9 @@ public class ESNotificationDTO
      * @param UserSms The UserSms
      */
     @JsonProperty( "user_sms" )
-    public void setUserSms( SMSNotification UserSms )
+    public void setUserSms( SMSNotification userSms )
     {
-        _smsNotification = UserSms;
+        _smsNotification = userSms;
     }
 
     /**
@@ -194,8 +194,8 @@ public class ESNotificationDTO
      * @param UserBackOffice The UserBackOffice
      */
     @JsonProperty( "user_backoffice" )
-    public void setUserBackOffice( BackofficeNotification UserBackOffice )
+    public void setUserBackOffice( BackofficeNotification userBackOffice )
     {
-        _backOfficeNotification = UserBackOffice;
+        _backOfficeNotification = userBackOffice;
     }
 }

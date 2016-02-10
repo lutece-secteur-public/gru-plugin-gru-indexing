@@ -49,7 +49,7 @@ public class ESSuggestDTO
     @JsonProperty( "input" )
     public String[] getInput(  )
     {
-        return _strInput;
+        return _strInput.clone();
     }
 
     /**
@@ -58,7 +58,7 @@ public class ESSuggestDTO
      */
     public void setInput( String[] strInput )
     {
-        this._strInput = strInput;
+        this._strInput = strInput.clone();
     }
 
     /**

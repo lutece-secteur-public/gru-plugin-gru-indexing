@@ -110,9 +110,9 @@ public class ESDemandDTO
      * @param _oCustomerDemand
      */
     @JsonProperty( "utilisateur" )
-    public void setCustomerDemand( CustomerDemandDTO _oCustomerDemand )
+    public void setCustomerDemand( CustomerDemandDTO oCustomerDemand )
     {
-        this._oCustomerDemand = _oCustomerDemand;
+        this._oCustomerDemand = oCustomerDemand;
     }
 
     /**
@@ -310,9 +310,9 @@ public class ESDemandDTO
      * @param _oSuggest
      */
     @JsonIgnore
-    public void setSuggest( ESSuggestDTO Suggest )
+    public void setSuggest( ESSuggestDTO suggest )
     {
-        _oSuggest = Suggest;
+        _oSuggest = suggest;
     }
 
     /**

@@ -68,9 +68,9 @@ public class NotificationDemandDTO
      * @param _strDemandId
      */
     @JsonProperty( "demand_id" )
-    public void setDemandId( String _strDemandId )
+    public void setDemandId( String strDemandId )
     {
-        this._strDemandId = _strDemandId;
+        this._strDemandId = strDemandId;
     }
 
     /**
@@ -88,8 +88,8 @@ public class NotificationDemandDTO
      * @param _strDemandIdType
      */
     @JsonProperty( "demand_id_type" )
-    public void setDemandIdType( String _strDemandIdType )
+    public void setDemandIdType( String strDemandIdType )
     {
-        this._strDemandIdType = _strDemandIdType;
+        this._strDemandIdType = strDemandIdType;
     }
 }

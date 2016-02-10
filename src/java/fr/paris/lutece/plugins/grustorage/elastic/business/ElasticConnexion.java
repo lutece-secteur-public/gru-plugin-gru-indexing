@@ -56,10 +56,10 @@ import java.io.IOException;
 import java.util.Map;
 
 
-public class ElasticConnexion
+public final class ElasticConnexion
 {
     private static Client _client = Client.create(  );
-    private ElasticConnexion _singleton = null;
+    private ElasticConnexion _singleton;
 
     private ElasticConnexion(  )
     {

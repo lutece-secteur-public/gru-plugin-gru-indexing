@@ -66,8 +66,8 @@ public class CustomerDemandDTO
      * @param _strCid
      */
     @JsonProperty( "user_cid" )
-    public void setCid( String _strCid )
+    public void setCid( String strCid )
     {
-        this._strCid = _strCid;
+        this._strCid = strCid;
     }
 }
