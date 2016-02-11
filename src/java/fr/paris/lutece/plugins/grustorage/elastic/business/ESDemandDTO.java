@@ -256,7 +256,7 @@ public class ESDemandDTO
      * Returns the Reference
      * @return The Reference
      */
-    @JsonProperty( "reference" )
+    @JsonProperty( "demand_reference" )
     public String getReference(  )
     {
         return _strReference;
@@ -266,7 +266,7 @@ public class ESDemandDTO
      * Sets the Reference
      * @param strReference The Reference
      */
-    @JsonProperty( "reference" )
+    @JsonProperty( "demand_reference" )
     public void setReference( String strReference )
     {
         _strReference = strReference;
