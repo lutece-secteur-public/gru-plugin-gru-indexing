@@ -79,8 +79,8 @@ public class ElasticDemandService implements IDemandService
         try
         {
             HashMap<String, String> mapParam = new HashMap<String, String>(  );
-            mapParam.put( "demande.demand_id", strDemandId );
-            mapParam.put( "demande.demand_id_type", strDemandTypeId );
+            mapParam.put( "demand_id", strDemandId );
+            mapParam.put( "demand_id_type", strDemandTypeId );
 
             json = ElasticConnexion.formatExactSearch( mapParam );
 
