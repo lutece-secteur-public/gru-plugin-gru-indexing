@@ -84,8 +84,6 @@ public class ElasticDemandService implements IDemandService
 
             json = ElasticConnexion.formatExactSearch( mapParam );
 
-            AppLogService.info( "JSON  : " + json );
-            
             retour = ElasticConnexion.sentToElasticPOST( uri, json );
 
             // JSON Parsing
@@ -93,8 +91,6 @@ public class ElasticDemandService implements IDemandService
             JsonNode jnode = jsonRetour.findValue( "_source" );
 
             String tmp = mapper.writeValueAsString( jnode );
-
-            AppLogService.info( "JNODE  : " + tmp );
             ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
             demand = buildDemand( demandDTO );
         }
