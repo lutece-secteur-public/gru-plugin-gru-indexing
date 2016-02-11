@@ -55,7 +55,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 public class ESNotificationDTO
 {
     private NotificationDemandDTO _oNotificationDemand;
-    private long _lDateSollicitation;
+    private long _lDateNotification;
     private EmailNotification _emailNotification;
     private DashboardNotification _dashBoardNotification;
     private SMSNotification _smsNotification;
@@ -72,7 +72,7 @@ public class ESNotificationDTO
     {
         super(  );
         this._oNotificationDemand = oNotificationDemand;
-        this._lDateSollicitation = lDateSollicitation;
+        this._lDateNotification = lDateSollicitation;
         this._emailNotification = emailNotification;
         this._dashBoardNotification = dashBoardNotification;
         this._smsNotification = smsNotification;
@@ -103,20 +103,20 @@ public class ESNotificationDTO
      * Returns the Date of Sollicitation
      * @return
      */
-    @JsonProperty( "date_sollicitation" )
-    public long getDateSollicitation(  )
+    @JsonProperty( "notification_date" )
+    public long getDateNotification(  )
     {
-        return _lDateSollicitation;
+        return _lDateNotification;
     }
 
     /**
      * Sets the date of sollicitation
      * @param _strDateSollicitation
      */
-    @JsonProperty( "date_sollicitation" )
-    public void setDateSollicitation( long lDateSollicitation )
+    @JsonProperty( "notification_date" )
+    public void setDateNotification( long lDateSollicitation )
     {
-        this._lDateSollicitation = lDateSollicitation;
+        this._lDateNotification = lDateSollicitation;
     }
 
     /**

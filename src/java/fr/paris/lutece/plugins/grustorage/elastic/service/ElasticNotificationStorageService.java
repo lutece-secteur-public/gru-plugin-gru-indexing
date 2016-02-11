@@ -209,7 +209,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( demand.getDemandId(  ) ),
                 String.valueOf( demand.getDemandIdType(  ) ) );
 
-        notifDTO.setDateSollicitation( notif.getDateSollicitation(  ) );
+        notifDTO.setDateNotification( notif.getDateNotification(  ) );
         notifDTO.setNotificationDemand( nddto );
         notifDTO.setUserEmail( notif.getUserEmail(  ) );
         notifDTO.setUserDashBoard( notif.getUserDashBoard(  ) );
@@ -242,7 +242,6 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
         demandDTO.setDemandState( String.valueOf( demand.getDemandState(  ) ) );
         demandDTO.setNotifType( demand.getNotifType(  ) );
-        demandDTO.setDateDemand( demand.getDateDemand(  ) );
         demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
         demandDTO.setReference( demand.getReference(  ) );
         demandDTO.setSuggest( customer );

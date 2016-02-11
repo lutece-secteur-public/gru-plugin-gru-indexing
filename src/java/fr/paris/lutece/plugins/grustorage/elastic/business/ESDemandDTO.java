@@ -52,7 +52,6 @@ import java.util.HashMap;
     "demand_user_current_step",
     "demand_state",
     "notification_type",
-    "date_demande",
     "crm_status_id",
     "reference",
     "suggest"
@@ -67,7 +66,6 @@ public class ESDemandDTO
     private String _strDemandUserCurrentStep;
     private String _strDemandState;
     private String _strNotifType;
-    private long _lDateDemand;
     private int _nCRMStatus;
     private String _strReference;
     private ESSuggestDTO _oSuggest;
@@ -79,7 +77,7 @@ public class ESDemandDTO
 
     public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandIdType,
         String strDemandMaxStep, String strDemandUserCurrentStep, String strDemandState, String strNotifType,
-        long lDateDemand, int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
+        int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
     {
         super(  );
         this._oCustomerDemand = oCustomerDemand;
@@ -89,7 +87,6 @@ public class ESDemandDTO
         this._strDemandUserCurrentStep = strDemandUserCurrentStep;
         this._strDemandState = strDemandState;
         this._strNotifType = strNotifType;
-        this._lDateDemand = lDateDemand;
         this._nCRMStatus = nCRMStatus;
         this._strReference = strReference;
         this._oSuggest = oSuggest;
@@ -233,26 +230,6 @@ public class ESDemandDTO
     public void setNotifType( String strNotifType )
     {
         _strNotifType = strNotifType;
-    }
-
-    /**
-     * Returns the DateDemand
-     * @return The DateDemand
-     */
-    @JsonProperty( "demand_date" )
-    public long getDateDemand(  )
-    {
-        return _lDateDemand;
-    }
-
-    /**
-     * Sets the DateDemand
-     * @param strDateDemand The DateDemand
-     */
-    @JsonProperty( "demand_date" )
-    public void setDateDemand( long lDateDemand )
-    {
-        _lDateDemand = lDateDemand;
     }
 
     /**
