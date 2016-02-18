@@ -47,7 +47,7 @@ import java.util.HashMap;
  */
 @JsonPropertyOrder( {"utilisateur",
     "demand_id",
-    "demand_id_type",
+    "demand_type_id",
     "demand_max_step",
     "demand_user_current_step",
     "demand_state",
@@ -65,6 +65,7 @@ public class ESDemandDTO
     private String _strDemandMaxStep;
     private String _strDemandUserCurrentStep;
     private String _strDemandState;
+    private int _nDemandStatus;
     private String _strNotifType;
     private int _nCRMStatus;
     private String _strReference;
@@ -136,7 +137,7 @@ public class ESDemandDTO
      * Returns the DemandIdType
      * @return The DemandIdType
      */
-    @JsonProperty( "demand_id_type" )
+    @JsonProperty( "demand_type_id" )
     public String getDemandIdType(  )
     {
         return _strDemandIdType;
@@ -146,7 +147,7 @@ public class ESDemandDTO
      * Sets the DemandIdType
      * @param nDemandIdType The DemandIdType
      */
-    @JsonProperty( "demand_id_type" )
+    @JsonProperty( "demand_type_id" )
     public void setDemandIdType( String nDemandIdType )
     {
         _strDemandIdType = nDemandIdType;
@@ -231,8 +232,18 @@ public class ESDemandDTO
     {
         _strNotifType = strNotifType;
     }
+    
+    @JsonProperty( "demand_status" )
+    public int getDemandStatus() {
+		return _nDemandStatus;
+	}
 
-    /**
+    @JsonProperty( "demand_status" )
+	public void setDemandStatus(int nDemandStatus) {
+		this._nDemandStatus = nDemandStatus;
+	}
+
+	/**
      * Returns the CRMStatus
      * @return The CRMStatus
      */

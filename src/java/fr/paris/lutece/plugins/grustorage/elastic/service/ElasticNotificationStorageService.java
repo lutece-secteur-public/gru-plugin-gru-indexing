@@ -215,6 +215,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         notifDTO.setUserDashBoard( notif.getUserDashBoard(  ) );
         notifDTO.setUserSms( notif.getUserSms(  ) );
         notifDTO.setUserBackOffice( notif.getUserBackOffice(  ) );
+        
 
         return notifDTO;
     }
@@ -244,6 +245,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         demandDTO.setNotifType( demand.getNotifType(  ) );
         demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
         demandDTO.setReference( demand.getReference(  ) );
+        demandDTO.setDemandStatus( demand.getDemandStatus(  ) );
         demandDTO.setSuggest( customer );
 
         return demandDTO;

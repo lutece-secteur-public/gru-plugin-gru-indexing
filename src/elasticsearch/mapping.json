@@ -184,8 +184,11 @@
 				"demand_max_step": {
 					"type": "long"
 				},
-				"demand_id_type": {
+				"demand_type_id": {
 					"type": "long"
+				},
+				"demand_status": {
+					"type": "int"
 				},
 				"demand_id": {
 					"type": "long"
