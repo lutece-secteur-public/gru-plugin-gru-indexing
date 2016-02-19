@@ -51,6 +51,7 @@ import java.util.HashMap;
     "demand_max_step",
     "demand_user_current_step",
     "demand_state",
+    "demand_status",
     "notification_type",
     "crm_status_id",
     "reference",
@@ -232,21 +233,31 @@ public class ESDemandDTO
     {
         _strNotifType = strNotifType;
     }
-    
-    @JsonProperty( "demand_status" )
-    public int getDemandStatus() {
-		return _nDemandStatus;
-	}
 
-    @JsonProperty( "demand_status" )
-	public void setDemandStatus(int nDemandStatus) {
-		this._nDemandStatus = nDemandStatus;
-	}
-
-	/**
-     * Returns the CRMStatus
-     * @return The CRMStatus
+    /**
+     * Returns the Demand Status
+     * @return
      */
+    @JsonProperty( "demand_status" )
+    public int getDemandStatus(  )
+    {
+        return _nDemandStatus;
+    }
+
+    /**
+     * Gets the Demand Status
+     * @param nDemandStatus
+     */
+    @JsonProperty( "demand_status" )
+    public void setDemandStatus( int nDemandStatus )
+    {
+        this._nDemandStatus = nDemandStatus;
+    }
+
+    /**
+    * Returns the CRMStatus
+    * @return The CRMStatus
+    */
     @JsonProperty( "crm_status_id" )
     public int getCRMStatus(  )
     {
