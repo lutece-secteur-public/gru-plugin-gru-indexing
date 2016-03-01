@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ElasticSearchService implements ISearchService
@@ -63,10 +64,18 @@ public class ElasticSearchService implements ISearchService
         String[] res = strQuery.split( " " );
         String json = "";
 
-        // Gets the name/firstname enter by autocomplete
-        HashMap<String, String> mapChamps = new HashMap<String, String>(  );
-        mapChamps.put( "first_name", res[0] );
-        mapChamps.put( "last_name", res[1] );
+        // Gets the name/firstname entered by autocomplete
+        Map<String, String> mapChamps = new HashMap<String, String>(  );
+
+        if ( res.length >= 1 )
+        {
+            mapChamps.put( "first_name", res[0] );
+        }
+
+        if ( res.length >= 2 )
+        {
+            mapChamps.put( "last_name", res[1] );
+        }
 
         try
         {
