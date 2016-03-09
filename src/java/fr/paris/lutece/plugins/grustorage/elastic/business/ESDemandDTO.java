@@ -62,7 +62,7 @@ public class ESDemandDTO
     // Variables declarations 
     private CustomerDemandDTO _oCustomerDemand;
     private String _strDemandId;
-    private String _strDemandIdType;
+    private String _strDemandTypeId;
     private String _strDemandMaxStep;
     private String _strDemandUserCurrentStep;
     private String _strDemandState;
@@ -84,7 +84,7 @@ public class ESDemandDTO
         super(  );
         this._oCustomerDemand = oCustomerDemand;
         this._strDemandId = strDemandId;
-        this._strDemandIdType = strDemandIdType;
+        this._strDemandTypeId = strDemandIdType;
         this._strDemandMaxStep = strDemandMaxStep;
         this._strDemandUserCurrentStep = strDemandUserCurrentStep;
         this._strDemandState = strDemandState;
@@ -139,9 +139,9 @@ public class ESDemandDTO
      * @return The DemandIdType
      */
     @JsonProperty( "demand_type_id" )
-    public String getDemandIdType(  )
+    public String getDemandTypeId(  )
     {
-        return _strDemandIdType;
+        return _strDemandTypeId;
     }
 
     /**
@@ -149,9 +149,9 @@ public class ESDemandDTO
      * @param nDemandIdType The DemandIdType
      */
     @JsonProperty( "demand_type_id" )
-    public void setDemandIdType( String nDemandIdType )
+    public void setDemandTypeId( String nDemandIdType )
     {
-        _strDemandIdType = nDemandIdType;
+        _strDemandTypeId = nDemandIdType;
     }
 
     /**

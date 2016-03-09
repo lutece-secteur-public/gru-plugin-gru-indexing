@@ -156,7 +156,7 @@ public class ElasticDemandService implements IDemandService
 
         try{
             base.setId( demand.getDemandId(  ) );
-            base.setDemandTypeId( demand.getDemandIdType(  ) );
+            base.setDemandTypeId( demand.getDemandTypeId(  ) );
             base.setReference( demand.getReference(  ) );
             base.setStatus( demand.getDemandStatus(  ) );
         }
@@ -191,7 +191,7 @@ public class ElasticDemandService implements IDemandService
 
         HashMap<String, String> mapParam = new HashMap<String, String>(  );
         mapParam.put( "demande.demand_id", demand.getDemandId(  ) );
-        mapParam.put( "demande.demand_type_id", demand.getDemandIdType(  ) );
+        mapParam.put( "demande.demand_type_id", demand.getDemandTypeId(  ) );
 
         json = ElasticConnexion.formatExactSearch( mapParam );
 

@@ -241,7 +241,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
                     demand.getCustomer(  ).getCustomerId(  ) ) );
 	        demandDTO.setCustomerDemand( customerDemand );
 	        demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
-	        demandDTO.setDemandIdType( String.valueOf( demand.getDemandIdType(  ) ) );
+	        demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
 	        demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
 	        demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
 	        demandDTO.setDemandState( String.valueOf( demand.getDemandState(  ) ) );
