@@ -120,7 +120,7 @@
 							"demand_id": {
 								"type": "string"
 							},
-							"demand_id_type": {
+							"demand_type_id": {
 								"type": "string"
 							}
 						}
