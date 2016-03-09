@@ -52,6 +52,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
+import javax.ws.rs.core.Response;
+
 
 public class ElasticNotificationStorageService implements INotificationStorageService
 {
@@ -167,28 +169,29 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param customer
      * @return
      */
-    private static ESCustomerDTO buildCustomer( Customer customer )
+    private ESCustomerDTO buildCustomer( Customer customer )
     {
-        if ( customer == null )
-        {
-            throw new NullPointerException(  );
-        }
-
         ESCustomerDTO customerDTO = new ESCustomerDTO(  );
-        customerDTO.setCustomerId( customer.getCustomerId(  ) );
-        customerDTO.setName( customer.getName(  ) );
-        customerDTO.setFirstName( customer.getFirstName(  ) );
-        customerDTO.setEmail( customer.getEmail(  ) );
-        customerDTO.setBirthday( customer.getBirthday(  ) );
-        customerDTO.setCivility( customer.getCivility(  ) );
-        customerDTO.setStreet( customer.getStreet(  ) );
-        customerDTO.setCityOfBirth( customer.getCityOfBirth(  ) );
-        customerDTO.setStayConnected( customer.getStayConnected(  ) );
-        customerDTO.setCity( customer.getCity(  ) );
-        customerDTO.setPostalCode( customer.getPostalCode(  ) );
-        customerDTO.setTelephoneNumber( customer.getTelephoneNumber(  ) );
-        customerDTO.setSuggest(  );
 
+        try{
+            customerDTO.setCustomerId( customer.getCustomerId(  ) );
+            customerDTO.setName( customer.getName(  ) );
+            customerDTO.setFirstName( customer.getFirstName(  ) );
+            customerDTO.setEmail( customer.getEmail(  ) );
+            customerDTO.setBirthday( customer.getBirthday(  ) );
+            customerDTO.setCivility( customer.getCivility(  ) );
+            customerDTO.setStreet( customer.getStreet(  ) );
+            customerDTO.setCityOfBirth( customer.getCityOfBirth(  ) );
+            customerDTO.setStayConnected( customer.getStayConnected(  ) );
+            customerDTO.setCity( customer.getCity(  ) );
+            customerDTO.setPostalCode( customer.getPostalCode(  ) );
+            customerDTO.setTelephoneNumber( customer.getTelephoneNumber(  ) );
+            customerDTO.setSuggest(  );
+        }
+        catch(NullPointerException ex)
+        {
+        	error("Demand OR Notofocation parsing fail", ex);
+        }
         return customerDTO;
     }
 
@@ -198,24 +201,26 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param demand
      * @return
      */
-    private static ESNotificationDTO buildNotificationDto( Notification notif, Demand demand )
+    private ESNotificationDTO buildNotificationDto( Notification notif, Demand demand )
     {
-        if ( ( notif == null ) || ( demand == null ) )
-        {
-            throw new NullPointerException(  );
-        }
 
         ESNotificationDTO notifDTO = new ESNotificationDTO(  );
-        NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( demand.getDemandId(  ) ),
-                String.valueOf( demand.getDemandIdType(  ) ) );
 
-        notifDTO.setDateNotification( notif.getDateNotification(  ) );
-        notifDTO.setNotificationDemand( nddto );
-        notifDTO.setUserEmail( notif.getUserEmail(  ) );
-        notifDTO.setUserDashBoard( notif.getUserDashBoard(  ) );
-        notifDTO.setUserSms( notif.getUserSms(  ) );
-        notifDTO.setUserBackOffice( notif.getUserBackOffice(  ) );
+        try{
+            NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( demand.getDemandId(  ) ),
+                    String.valueOf( demand.getDemandIdType(  ) ) );
 
+            notifDTO.setDateNotification( notif.getDateNotification(  ) );
+            notifDTO.setNotificationDemand( nddto );
+            notifDTO.setUserEmail( notif.getUserEmail(  ) );
+            notifDTO.setUserDashBoard( notif.getUserDashBoard(  ) );
+            notifDTO.setUserSms( notif.getUserSms(  ) );
+            notifDTO.setUserBackOffice( notif.getUserBackOffice(  ) );
+        }
+        catch(NullPointerException ex)
+        {
+        	error("Demand OR Notofocation parsing fail", ex);
+        }
         return notifDTO;
     }
 
@@ -225,28 +230,53 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param customer
      * @return
      */
-    private static ESDemandDTO buildDemandDTO( Demand demand, Customer customer )
+    private ESDemandDTO buildDemandDTO( Demand demand, Customer customer )
     {
-        if ( ( customer == null ) || ( demand == null ) )
-        {
-            throw new NullPointerException(  );
-        }
+
 
         ESDemandDTO demandDTO = new ESDemandDTO(  );
-        CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-                    demand.getCustomer(  ).getCustomerId(  ) ) );
-        demandDTO.setCustomerDemand( customerDemand );
-        demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
-        demandDTO.setDemandIdType( String.valueOf( demand.getDemandIdType(  ) ) );
-        demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
-        demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
-        demandDTO.setDemandState( String.valueOf( demand.getDemandState(  ) ) );
-        demandDTO.setNotifType( demand.getNotifType(  ) );
-        demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
-        demandDTO.setReference( demand.getReference(  ) );
-        demandDTO.setDemandStatus( demand.getDemandStatus(  ) );
-        demandDTO.setSuggest( customer );
 
+        try{
+            CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
+                    demand.getCustomer(  ).getCustomerId(  ) ) );
+	        demandDTO.setCustomerDemand( customerDemand );
+	        demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
+	        demandDTO.setDemandIdType( String.valueOf( demand.getDemandIdType(  ) ) );
+	        demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
+	        demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
+	        demandDTO.setDemandState( String.valueOf( demand.getDemandState(  ) ) );
+	        demandDTO.setNotifType( demand.getNotifType(  ) );
+	        demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
+	        demandDTO.setReference( demand.getReference(  ) );
+	        demandDTO.setDemandStatus( demand.getDemandStatus(  ) );
+	        demandDTO.setSuggest( customer );
+        }
+        catch(NullPointerException ex)
+        {
+        	error("Demand OR Notofocation parsing fail", ex);
+        }
         return demandDTO;
+    }
+    
+    /**
+     * Build an error response
+     * @param strMessage The error message
+     * @param ex An exception
+     * @return The response
+     */
+    private Response error( String strMessage, Throwable ex )
+    {
+        if ( ex != null )
+        {
+            AppLogService.error( strMessage, ex );
+        }
+        else
+        {
+            AppLogService.error( strMessage );
+        }
+
+        String strError = "{ \"status\": \"Error : " + strMessage + "\" }";
+
+        return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
     }
 }

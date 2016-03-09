@@ -59,6 +59,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
 
 public class ElasticDemandService implements IDemandService
 {
@@ -80,7 +82,7 @@ public class ElasticDemandService implements IDemandService
         {
             HashMap<String, String> mapParam = new HashMap<String, String>(  );
             mapParam.put( "demand_id", strDemandId );
-            mapParam.put( "demand_id_type", strDemandTypeId );
+            mapParam.put( "demand_type_id", strDemandTypeId );
 
             json = ElasticConnexion.formatExactSearch( mapParam );
 
@@ -148,19 +150,20 @@ public class ElasticDemandService implements IDemandService
      * @param demand
      * @return
      */
-    private static BaseDemand buildBaseDemand( ESDemandDTO demand )
+    private BaseDemand buildBaseDemand( ESDemandDTO demand )
     {
-        if ( demand == null )
-        {
-            throw new NullPointerException(  );
-        }
-
         BaseDemand base = new BaseDemand(  );
-        base.setId( demand.getDemandId(  ) );
-        base.setDemandTypeId( demand.getDemandIdType(  ) );
-        base.setReference( demand.getReference(  ) );
-        base.setStatus( demand.getCRMStatus(  ) );
 
+        try{
+            base.setId( demand.getDemandId(  ) );
+            base.setDemandTypeId( demand.getDemandIdType(  ) );
+            base.setReference( demand.getReference(  ) );
+            base.setStatus( demand.getCRMStatus(  ) );
+        }
+        catch(NullPointerException ex)
+        {
+        	error("Demand DTO Parsing failure", null);
+        }
         return base;
     }
 
@@ -172,7 +175,7 @@ public class ElasticDemandService implements IDemandService
      * @throws JsonMappingException
      * @throws JsonGenerationException
      */
-    private static Demand buildDemand( ESDemandDTO demand )
+    private Demand buildDemand( ESDemandDTO demand )
         throws JsonGenerationException, JsonMappingException, IOException
     {
         // create demand
@@ -215,49 +218,73 @@ public class ElasticDemandService implements IDemandService
      * @param demand
      * @return
      */
-    private static Notification buildNotification( ESNotificationDTO notification )
+    private Notification buildNotification( ESNotificationDTO notification )
     {
-        if ( notification == null )
-        {
-            throw new NullPointerException(  );
-        }
-
         Notification retour = new Notification(  );
-        Email email = new Email(  );
 
-        if ( notification.getUserEmail(  ) != null )
-        {
-            email.setSenderName( notification.getUserEmail(  ).getSenderName(  ) );
-            email.setRecipient( notification.getUserEmail(  ).getRecipient(  ) );
-            email.setSubject( notification.getUserEmail(  ).getSubject(  ) );
-            email.setMessage( notification.getUserEmail(  ).getMessage(  ) );
+        try{
+            Email email = new Email(  );
+
+            if ( notification.getUserEmail(  ) != null )
+            {
+                email.setSenderName( notification.getUserEmail(  ).getSenderName(  ) );
+                email.setRecipient( notification.getUserEmail(  ).getRecipient(  ) );
+                email.setSubject( notification.getUserEmail(  ).getSubject(  ) );
+                email.setMessage( notification.getUserEmail(  ).getMessage(  ) );
+            }
+
+            Sms sms = new Sms(  );
+
+            if ( notification.getUserEmail(  ) != null )
+            {
+                sms.setMessage( notification.getUserSms(  ).getMessage(  ) );
+                sms.setPhoneNumber( String.valueOf( notification.getUserSms(  ).getPhoneNumber(  ) ) );
+            }
+
+            UserDashboard uDash = new UserDashboard(  );
+
+            if ( notification.getUserEmail(  ) != null )
+            {
+                uDash.setStatusText( notification.getUserDashBoard(  ).getStatusText(  ) );
+                uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
+                uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
+                uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
+            }
+
+            retour.setTimestamp( notification.getDateNotification(  ) );
+            retour.setTitle( notification.getUserDashBoard(  ).getStatusText(  ) );
+            retour.setSource( "PAS TROUVE" );
+            retour.setEmail( email );
+            retour.setSms( sms );
+            retour.setUserDashboard( uDash );
+
         }
-
-        Sms sms = new Sms(  );
-
-        if ( notification.getUserEmail(  ) != null )
+        catch(NullPointerException ex)
         {
-            sms.setMessage( notification.getUserSms(  ).getMessage(  ) );
-            sms.setPhoneNumber( String.valueOf( notification.getUserSms(  ).getPhoneNumber(  ) ) );
+        	error("Notification DTO Parsing failure", null);
         }
-
-        UserDashboard uDash = new UserDashboard(  );
-
-        if ( notification.getUserEmail(  ) != null )
-        {
-            uDash.setStatusText( notification.getUserDashBoard(  ).getStatusText(  ) );
-            uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
-            uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
-            uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
-        }
-
-        retour.setTimestamp( notification.getDateNotification(  ) );
-        retour.setTitle( notification.getUserDashBoard(  ).getStatusText(  ) );
-        retour.setSource( "PAS TROUVE" );
-        retour.setEmail( email );
-        retour.setSms( sms );
-        retour.setUserDashboard( uDash );
-
+  
         return retour;
+    } 
+    /**
+     * Build an error response
+     * @param strMessage The error message
+     * @param ex An exception
+     * @return The response
+     */
+    private Response error( String strMessage, Throwable ex )
+    {
+        if ( ex != null )
+        {
+            AppLogService.error( strMessage, ex );
+        }
+        else
+        {
+            AppLogService.error( strMessage );
+        }
+
+        String strError = "{ \"status\": \"Error : " + strMessage + "\" }";
+
+        return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
     }
 }

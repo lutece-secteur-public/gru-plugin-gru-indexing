@@ -44,6 +44,7 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
+import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,20 +129,44 @@ public class ElasticSearchService implements ISearchService
      * @param node
      * @return
      */
-    private static CustomerResult buildCustomerResult( JsonNode node )
+    private CustomerResult buildCustomerResult( JsonNode node )
     {
-        if ( node == null )
-        {
-            throw new NullPointerException(  );
-        }
 
         CustomerResult customer = new CustomerResult(  );
-        customer.setId( node.findValue( "user_cid" ).asInt(  ) );
-        customer.setLastname( node.findValue( "last_name" ).asText(  ) );
-        customer.setFirstname( node.findValue( "first_name" ).asText(  ) );
-        customer.setEmail( node.findValue( "email" ).asText(  ) );
-        customer.setMobilePhone( node.findValue( "telephoneNumber" ).asText(  ) );
 
+
+        try{
+            customer.setId( node.findValue( "user_cid" ).asInt(  ) );
+            customer.setLastname( node.findValue( "last_name" ).asText(  ) );
+            customer.setFirstname( node.findValue( "first_name" ).asText(  ) );
+            customer.setEmail( node.findValue( "email" ).asText(  ) );
+            customer.setMobilePhone( node.findValue( "telephoneNumber" ).asText(  ) );
+        }
+        catch(NullPointerException ex)
+        {
+        	error( "Parsing Customer fail"+ node.toString(), null );
+        }
         return customer;
+    }
+    /**
+     * Build an error response
+     * @param strMessage The error message
+     * @param ex An exception
+     * @return The response
+     */
+    protected Response error( String strMessage, Throwable ex )
+    {
+        if ( ex != null )
+        {
+            AppLogService.error( strMessage, ex );
+        }
+        else
+        {
+            AppLogService.error( strMessage );
+        }
+
+        String strError = "{ \"status\": \"Error : " + strMessage + "\" }";
+
+        return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
     }
 }
