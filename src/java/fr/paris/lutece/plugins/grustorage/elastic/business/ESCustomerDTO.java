@@ -343,10 +343,10 @@ public class ESCustomerDTO
         ESSuggestDTO s = new ESSuggestDTO(  );
 
         // input
-        String[] input = { _strName, _strFirstName, _strTelephoneNumber, _strEmail };
+        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
         s.setInput( input );
         // Output
-        s.setOutput( _strName + " " + _strFirstName );
+        s.setOutput(  _strFirstName+ " " + _strName );
 
         // Payload
         ESPayload oPayload = new ESPayload(  );
