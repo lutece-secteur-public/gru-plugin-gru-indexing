@@ -158,7 +158,7 @@ public class ElasticDemandService implements IDemandService
             base.setId( demand.getDemandId(  ) );
             base.setDemandTypeId( demand.getDemandIdType(  ) );
             base.setReference( demand.getReference(  ) );
-            base.setStatus( demand.getCRMStatus(  ) );
+            base.setStatus( demand.getDemandStatus(  ) );
         }
         catch(NullPointerException ex)
         {
@@ -181,6 +181,7 @@ public class ElasticDemandService implements IDemandService
         // create demand
         Demand base = new Demand( buildBaseDemand( demand ) );
 
+
         // create Notifications
         String json;
         String uri = ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION,
@@ -190,7 +191,7 @@ public class ElasticDemandService implements IDemandService
 
         HashMap<String, String> mapParam = new HashMap<String, String>(  );
         mapParam.put( "demande.demand_id", demand.getDemandId(  ) );
-        mapParam.put( "demande.demand_id_type", demand.getDemandIdType(  ) );
+        mapParam.put( "demande.demand_type_id", demand.getDemandIdType(  ) );
 
         json = ElasticConnexion.formatExactSearch( mapParam );
 
@@ -206,6 +207,9 @@ public class ElasticDemandService implements IDemandService
                 String tmp = mapper.writeValueAsString( jnode );
                 ESNotificationDTO notificationDTO = mapper.readValue( tmp, ESNotificationDTO.class );
                 base.getNotifications(  ).add( buildNotification( notificationDTO ) );
+                
+                base.setStatusForCustomer( notificationDTO.getUserBackOffice(  ).getStatusText(  ) );
+                base.setStatusForGRU( notificationDTO.getUserBackOffice(  ).getStatusText(  ) );
             }
         }
 
