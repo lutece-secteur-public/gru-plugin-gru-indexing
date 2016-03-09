@@ -253,7 +253,8 @@ public final class ElasticConnexion
         ObjectNode root = new ObjectNode( factory );
         ObjectNode query = new ObjectNode( factory );
         ObjectNode bool = new ObjectNode( factory );
-
+        ObjectNode and = new ObjectNode( factory );
+        
         ArrayNode should = new ArrayNode( factory );
 
         for ( String mapKey : map.keySet(  ) )
@@ -266,7 +267,8 @@ public final class ElasticConnexion
         }
 
         bool.put( "should", should );
-        query.put( "bool", bool );
+        and.put( "bool", bool );
+        query.put( "and", and );
         root.put( "query", query );
 
         return mapper.writeValueAsString( root );
