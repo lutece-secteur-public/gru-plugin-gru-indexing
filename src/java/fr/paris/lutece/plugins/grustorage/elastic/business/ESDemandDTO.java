@@ -77,14 +77,14 @@ public class ESDemandDTO
         super(  );
     }
 
-    public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandIdType,
+    public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandTypeId,
         String strDemandMaxStep, String strDemandUserCurrentStep, String strDemandState, String strNotifType,
         int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
     {
         super(  );
         this._oCustomerDemand = oCustomerDemand;
         this._strDemandId = strDemandId;
-        this._strDemandTypeId = strDemandIdType;
+        this._strDemandTypeId = strDemandTypeId;
         this._strDemandMaxStep = strDemandMaxStep;
         this._strDemandUserCurrentStep = strDemandUserCurrentStep;
         this._strDemandState = strDemandState;
@@ -135,8 +135,8 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the DemandIdType
-     * @return The DemandIdType
+     * Returns the DemandTypeId
+     * @return The DemandTypeId
      */
     @JsonProperty( "demand_type_id" )
     public String getDemandTypeId(  )
@@ -145,13 +145,13 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the DemandIdType
-     * @param nDemandIdType The DemandIdType
+     * Sets the DemandTypeId
+     * @param nDemandTypeId The DemandTypeId
      */
     @JsonProperty( "demand_type_id" )
-    public void setDemandTypeId( String nDemandIdType )
+    public void setDemandTypeId( String nDemandTypeId )
     {
-        _strDemandTypeId = nDemandIdType;
+        _strDemandTypeId = nDemandTypeId;
     }
 
     /**

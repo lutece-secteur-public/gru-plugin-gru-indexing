@@ -208,7 +208,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 
         try{
             NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( demand.getDemandId(  ) ),
-                    String.valueOf( demand.getDemandIdType(  ) ) );
+                    String.valueOf( demand.getDemandTypeId(  ) ) );
 
             notifDTO.setDateNotification( notif.getDateNotification(  ) );
             notifDTO.setNotificationDemand( nddto );

@@ -67,7 +67,7 @@
 			"notification": {
 				"dynamic": true,
 				"properties": {
-					"date_sollicitation": {
+					"notification_date": {
 						"type": "date"
 					},
 					"user_backoffice": {

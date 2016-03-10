@@ -39,18 +39,18 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class NotificationDemandDTO
 {
     private String _strDemandId;
-    private String _strDemandIdType;
+    private String _strDemandTypeId;
 
     public NotificationDemandDTO(  )
     {
         super(  );
     }
 
-    public NotificationDemandDTO( String strDemandId, String strDemandIdType )
+    public NotificationDemandDTO( String strDemandId, String strDemandTypeId )
     {
         super(  );
         this._strDemandId = strDemandId;
-        this._strDemandIdType = strDemandIdType;
+        this._strDemandTypeId = strDemandTypeId;
     }
 
     /**
@@ -78,9 +78,9 @@ public class NotificationDemandDTO
      * @return
      */
     @JsonProperty( "demand_type_id" )
-    public String getDemandIdType(  )
+    public String getDemandTypeId(  )
     {
-        return _strDemandIdType;
+        return _strDemandTypeId;
     }
 
     /**
@@ -88,8 +88,8 @@ public class NotificationDemandDTO
      * @param _strDemandIdType
      */
     @JsonProperty( "demand_type_id" )
-    public void setDemandIdType( String strDemandIdType )
+    public void setDemandTypeId( String strDemandTypeId )
     {
-        this._strDemandIdType = strDemandIdType;
+        this._strDemandTypeId = strDemandTypeId;
     }
 }
