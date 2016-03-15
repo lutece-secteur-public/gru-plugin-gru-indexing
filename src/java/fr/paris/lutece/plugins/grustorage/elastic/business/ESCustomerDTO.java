@@ -343,7 +343,8 @@ public class ESCustomerDTO
         ESSuggestDTO s = new ESSuggestDTO(  );
 
         // input
-        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
+//        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
+        String[] input = { _strFirstName, _strName };
         s.setInput( input );
         // Output
         s.setOutput(  _strFirstName+ " " + _strName );
