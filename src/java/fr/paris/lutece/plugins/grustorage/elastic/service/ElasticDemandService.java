@@ -239,7 +239,7 @@ public class ElasticDemandService implements IDemandService
 
             Sms sms = new Sms(  );
 
-            if ( notification.getUserEmail(  ) != null )
+            if ( notification.getUserSms(  ) != null )
             {
                 sms.setMessage( notification.getUserSms(  ).getMessage(  ) );
                 sms.setPhoneNumber( String.valueOf( notification.getUserSms(  ).getPhoneNumber(  ) ) );
@@ -247,7 +247,7 @@ public class ElasticDemandService implements IDemandService
 
             UserDashboard uDash = new UserDashboard(  );
 
-            if ( notification.getUserEmail(  ) != null )
+            if ( notification.getUserDashBoard(  ) != null )
             {
                 uDash.setStatusText( notification.getUserDashBoard(  ).getStatusText(  ) );
                 uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
