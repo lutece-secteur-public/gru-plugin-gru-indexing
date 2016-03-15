@@ -152,7 +152,7 @@ public final class ElasticConnexion
         ObjectNode tmp = new ObjectNode( factory );
         ObjectNode completion = new ObjectNode( factory );
         completion.put( "field", "suggest" );
-        completion.put( "fuzzy", new ObjectNode( factory ) );
+        completion.put( "size", "15" );
 
         tmp.put( "text", champ );
         tmp.put( "completion", completion );
