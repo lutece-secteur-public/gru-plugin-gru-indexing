@@ -54,8 +54,10 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,6 +97,27 @@ public class ElasticDemandService implements IDemandService
             String tmp = mapper.writeValueAsString( jnode );
             ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
             demand = buildDemand( demandDTO );
+             
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            try
+            {
+            	Date firstDate= formatter.parse(demand.getFirstNotificationDate( ));
+            	Date lstDate= formatter.parse( demand.getLastNotificationDate( ));
+            	if( demand.getStatus( ) == Demand.STATUS_CLOSED )
+            	{       	
+            		long lTimeOpened= lstDate.getTime() - firstDate.getTime();  
+            		demand.setTimeOpenedInMs(lTimeOpened);
+            	}
+            	else
+            	{
+            		long lTimeOpened= (new Date()).getTime( ) - firstDate.getTime();  
+              		demand.setTimeOpenedInMs(lTimeOpened);
+            	}         
+            }
+            catch( ParseException ex )
+            {
+          	  AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            }
         }
         catch ( IOException ex )
         {
@@ -106,11 +129,13 @@ public class ElasticDemandService implements IDemandService
 
     /**
     * {@inheritDoc }
+     * 
     */
     @Override
-    public List<BaseDemand> getDemands( String strCustomerId, AdminUser user )
+    public List<BaseDemand> getDemands( String strCustomerId, AdminUser user ) 
     {
         List<BaseDemand> base = new ArrayList<BaseDemand>(  );
+      
         String json;
         String retourES = "";
         String uri = ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND,
@@ -133,7 +158,34 @@ public class ElasticDemandService implements IDemandService
                 {
                     String tmp = mapper.writeValueAsString( jnode );
                     ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
-                    base.add( buildBaseDemand( demandDTO ) );
+                    Demand demand = buildDemand( demandDTO );
+                    
+                    BaseDemand bsDemande= buildBaseDemand( demandDTO );
+                    
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                  try
+                  {
+                	Date firstDate= formatter.parse(demand.getFirstNotificationDate( ));
+                    Date lstDate= formatter.parse( demand.getLastNotificationDate( ));
+                    if( bsDemande.getStatus( ) == Demand.STATUS_CLOSED )
+                    {
+                    	long lTimeOpened= lstDate.getTime() - firstDate.getTime();  
+                        bsDemande.setTimeOpenedInMs(lTimeOpened);
+                    }
+                    else
+                    {
+                    	long lTimeOpened= ( new Date( ) ).getTime( ) - firstDate.getTime( );  
+                        bsDemande.setTimeOpenedInMs(lTimeOpened);
+                    }         
+                    
+                  }
+                  catch( ParseException ex )
+                  {
+                	  
+                	  AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+                  }
+                  
+                    base.add( bsDemande );
                 }
             }
         }
