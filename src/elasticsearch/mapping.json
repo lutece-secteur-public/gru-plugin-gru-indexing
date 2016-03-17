@@ -11,12 +11,14 @@
 					},
 					"last_name": {
 						"type": "string",
+						"analyzer": "folding",
 						"norms": {
 							"enabled": true
 						}
 					},
 					"first_name": {
 						"type": "string",
+						"analyzer": "folding",
 						"norms": {
 							"enabled": true
 						}
