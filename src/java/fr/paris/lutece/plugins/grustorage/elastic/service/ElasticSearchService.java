@@ -60,6 +60,7 @@ public class ElasticSearchService implements ISearchService
     @Override
     public List<CustomerResult> searchCustomer( String strQuery )
     {
+    	AppLogService.debug( " SearchCustomer from elastic " );
         List<CustomerResult> listCustomer = new ArrayList<CustomerResult>(  );
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String[] res = strQuery.split( " " );
@@ -81,6 +82,7 @@ public class ElasticSearchService implements ISearchService
         try
         {
             json = ElasticConnexion.formatFullText( mapChamps );
+            AppLogService.debug( " Json : "+ json );
         }
         catch ( IOException ex )
         {
@@ -99,7 +101,7 @@ public class ElasticSearchService implements ISearchService
                 listCustomer.add( buildCustomerResult( node ) );
             }
         }
-
+        AppLogService.debug( " SearchCustomer from elastic size listCustomer : "+ listCustomer.size( ) );
         return listCustomer;
     }
 
