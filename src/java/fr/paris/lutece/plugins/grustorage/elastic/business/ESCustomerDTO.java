@@ -344,7 +344,7 @@ public class ESCustomerDTO
 
         // input
 //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
-        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName };
+        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber  };
         s.setInput( input );
         // Output
         s.setOutput(  _strFirstName+ " " + _strName );
