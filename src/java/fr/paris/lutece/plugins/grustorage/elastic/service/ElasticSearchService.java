@@ -44,6 +44,8 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+
 import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -60,16 +62,23 @@ public class ElasticSearchService implements ISearchService
     @Override
     public List<CustomerResult> searchCustomer( String strQuery )
     {
-    	AppLogService.debug( " debug: SearchCustomer from elastic " );
     	AppLogService.info( " info :SearchCustomer from elastic " );
-        List<CustomerResult> listCustomer = new ArrayList<CustomerResult>(  );
+    	
+    	AppLogService.info( "strQuery : "+strQuery );
+    	strQuery = new String(strQuery.getBytes(),Charset.forName("UTF-8"));
+    	AppLogService.info( "strQuery utf8 : "+strQuery );
+    	List<CustomerResult> listCustomer = new ArrayList<CustomerResult>(  );
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String[] res = strQuery.split( " " );
         String json = "";
+    	AppLogService.info( " res[0] : "+ res[0] );
+    	AppLogService.info( " res[1] : "+ res[1] );
+    	AppLogService.info( " res[0] utf8 : "+ new String(res[0].getBytes(),Charset.forName("UTF-8")) );
+    	AppLogService.info( " res[1] utf8 : "+ new String(res[1].getBytes(),Charset.forName("UTF-8")) );
 
         // Gets the name/firstname entered by autocomplete
         Map<String, String> mapChamps = new HashMap<String, String>(  );
-
+        
         if ( res.length >= 1 )
         {
             mapChamps.put( "first_name", res[0] );
