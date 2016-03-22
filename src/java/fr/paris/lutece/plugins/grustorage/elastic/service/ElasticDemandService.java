@@ -306,14 +306,15 @@ public class ElasticDemandService implements IDemandService
                 uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
                 uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
                 uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
-
-                retour.setTimestamp( notification.getDateNotification(  ) );
-	            retour.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
-	            retour.setSource( "PAS TROUVE" );
-	            retour.setEmail( email );
-	            retour.setSms( sms );
-	            retour.setUserDashboard( uDash );
             }
+            
+            retour.setTimestamp( notification.getDateNotification(  ) );
+	        retour.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
+	        retour.setSource( "PAS TROUVE" );
+	        retour.setEmail( email );
+	        retour.setSms( sms );
+	        retour.setUserDashboard( uDash );
+          
         }
         catch(NullPointerException ex)
         {
