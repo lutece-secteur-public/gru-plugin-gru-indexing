@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.grustorage.elastic.service;
 
+import fr.paris.lutece.plugins.gru.business.demand.BackOfficeLogging;
 import fr.paris.lutece.plugins.gru.business.demand.BaseDemand;
 import fr.paris.lutece.plugins.gru.business.demand.Demand;
 import fr.paris.lutece.plugins.gru.business.demand.Email;
@@ -306,13 +307,22 @@ public class ElasticDemandService implements IDemandService
                 uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
                 uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
             }
+            
+            BackOfficeLogging  bBackOfficeLogging = new BackOfficeLogging(  );
+
+            if ( notification.getUserBackOffice(  ) != null )
+            {
+            	bBackOfficeLogging.setStatusText( notification.getUserBackOffice(  ).getStatusText(  ) );
+            	bBackOfficeLogging.setMessage( notification.getUserBackOffice(  ).getMessage(  ) );
+            }
 
             retour.setTimestamp( notification.getDateNotification(  ) );
-            retour.setTitle( notification.getUserDashBoard(  ).getStatusText(  ) );
+            retour.setTitle( notification.getUserBackOffice( ).getStatusText(  ) );
             retour.setSource( "PAS TROUVE" );
             retour.setEmail( email );
             retour.setSms( sms );
             retour.setUserDashboard( uDash );
+            retour.setBackOfficeLogging( bBackOfficeLogging );
 
         }
         catch(NullPointerException ex)
