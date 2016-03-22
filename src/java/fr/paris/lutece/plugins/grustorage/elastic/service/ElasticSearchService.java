@@ -62,19 +62,10 @@ public class ElasticSearchService implements ISearchService
     @Override
     public List<CustomerResult> searchCustomer( String strQuery )
     {
-    	AppLogService.info( " info :SearchCustomer from elastic " );
-    	
-    	AppLogService.info( "strQuery : "+strQuery );
-    	strQuery = new String(strQuery.getBytes(),Charset.forName("UTF-8"));
-    	AppLogService.info( "strQuery utf8 : "+strQuery );
     	List<CustomerResult> listCustomer = new ArrayList<CustomerResult>(  );
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String[] res = strQuery.split( " " );
         String json = "";
-    	AppLogService.info( " res[0] : "+ res[0] );
-    	AppLogService.info( " res[1] : "+ res[1] );
-    	AppLogService.info( " res[0] utf8 : "+ new String(res[0].getBytes(),Charset.forName("UTF-8")) );
-    	AppLogService.info( " res[1] utf8 : "+ new String(res[1].getBytes(),Charset.forName("UTF-8")) );
 
         // Gets the name/firstname entered by autocomplete
         Map<String, String> mapChamps = new HashMap<String, String>(  );
@@ -92,8 +83,6 @@ public class ElasticSearchService implements ISearchService
         try
         {
             json = ElasticConnexion.formatFullText( mapChamps );
-            AppLogService.debug( " Json : "+ json );
-            AppLogService.info( " Json : "+ json );
         }
         catch ( IOException ex )
         {
@@ -112,8 +101,6 @@ public class ElasticSearchService implements ISearchService
                 listCustomer.add( buildCustomerResult( node ) );
             }
         }
-        AppLogService.debug( " SearchCustomer from elastic size listCustomer : "+ listCustomer.size( ) );
-        AppLogService.info( " SearchCustomer from elastic size listCustomer : "+ listCustomer.size( ) );
         return listCustomer;
     }
 
