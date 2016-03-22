@@ -306,24 +306,14 @@ public class ElasticDemandService implements IDemandService
                 uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
                 uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
                 uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
+
+                retour.setTimestamp( notification.getDateNotification(  ) );
+	            retour.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
+	            retour.setSource( "PAS TROUVE" );
+	            retour.setEmail( email );
+	            retour.setSms( sms );
+	            retour.setUserDashboard( uDash );
             }
-            
-            BackOfficeLogging  bBackOfficeLogging = new BackOfficeLogging(  );
-
-            if ( notification.getUserBackOffice(  ) != null )
-            {
-            	bBackOfficeLogging.setStatusText( notification.getUserBackOffice(  ).getStatusText(  ) );
-            	bBackOfficeLogging.setMessage( notification.getUserBackOffice(  ).getMessage(  ) );
-            }
-
-            retour.setTimestamp( notification.getDateNotification(  ) );
-            retour.setTitle( notification.getUserBackOffice( ).getStatusText(  ) );
-            retour.setSource( "PAS TROUVE" );
-            retour.setEmail( email );
-            retour.setSms( sms );
-            retour.setUserDashboard( uDash );
-            retour.setBackOfficeLogging( bBackOfficeLogging );
-
         }
         catch(NullPointerException ex)
         {
