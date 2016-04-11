@@ -336,9 +336,10 @@ public class ESDemandDTO
         payload.put( "first_name", customer.getFirstName(  ) );
         payload.put( "birthday", customer.getBirthday(  ) );
         payload.put( "telephoneNumber", customer.getTelephoneNumber(  ) );
+        payload.put( "FixeTelephoneNumber", customer.getFixeTelephoneNumber(  ) );
         payload.put( "email", customer.getEmail(  ) );
         payload.put( "reference", _strReference );
-
+        
         oPayload.setElements( payload );
         s.setPayload( oPayload );
         this._oSuggest = s;

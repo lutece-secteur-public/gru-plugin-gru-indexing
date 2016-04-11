@@ -186,7 +186,9 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             customerDTO.setCity( customer.getCity(  ) );
             customerDTO.setPostalCode( customer.getPostalCode(  ) );
             customerDTO.setTelephoneNumber( customer.getTelephoneNumber(  ) );
+            customerDTO.setFixeTelephoneNumber( customer.getFixeTelephoneNumber(  ) );
             customerDTO.setSuggest(  );
+            
         }
         catch(NullPointerException ex)
         {
@@ -238,7 +240,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 
         try{
             CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-                    demand.getCustomer(  ).getCustomerId(  ) ) );
+            demand.getCustomer(  ).getCustomerId(  ) ) );
 	        demandDTO.setCustomerDemand( customerDemand );
 	        demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
 	        demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
