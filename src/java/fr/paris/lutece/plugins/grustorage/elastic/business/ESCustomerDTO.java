@@ -36,6 +36,8 @@ package fr.paris.lutece.plugins.grustorage.elastic.business;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
+import fr.paris.lutece.portal.service.util.AppLogService;
+
 import java.util.HashMap;
 
 
@@ -424,6 +426,7 @@ public class ESCustomerDTO
     public void setFixedTelephoneNumber( String strFixedPhoneNumber )
     {
         _strFixedPhoneNumber = strFixedPhoneNumber;
+        AppLogService.info("Fixed phone NUmber "+_strFixedPhoneNumber);
     }
 
     /**
@@ -443,7 +446,7 @@ public class ESCustomerDTO
     public void setSuggest(  )
     {
         ESSuggestDTO s = new ESSuggestDTO(  );
-
+        AppLogService.info("Fixed phone NUmber "+_strFixedPhoneNumber);
         // input
 //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
         String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixedPhoneNumber  };
