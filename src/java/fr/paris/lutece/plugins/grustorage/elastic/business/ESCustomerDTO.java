@@ -99,7 +99,7 @@ public class ESCustomerDTO
     private String _strTelephoneNumber;
     
     /** The _str fixe telephone number. */
-    private String _strFixedTelephoneNumber;
+    private String _strFixedPhoneNumber;
     
     /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
@@ -127,11 +127,12 @@ public class ESCustomerDTO
      * @param strCity the str city
      * @param strPostalCode the str postal code
      * @param strTelephoneNumber the str telephone number
+     * @param strFixedPhoneNumber the str telephone number
      * @param oSuggest the o suggest
      */
     public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
         String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity,
-        String strPostalCode, String strTelephoneNumber, String strFixedTelephoneNumber, ESSuggestDTO oSuggest )
+        String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber, ESSuggestDTO oSuggest )
     {
         super(  );
         this._nCustomerId = nCustomerId;
@@ -146,7 +147,7 @@ public class ESCustomerDTO
         this._strCity = strCity;
         this._strPostalCode = strPostalCode;
         this._strTelephoneNumber = strTelephoneNumber;
-        this._strFixedTelephoneNumber = strFixedTelephoneNumber;
+        this._strFixedPhoneNumber = strFixedPhoneNumber;
         this._oSuggest = oSuggest;
     }
 
@@ -412,17 +413,17 @@ public class ESCustomerDTO
     @JsonProperty( "fixed_telephone_number" )
     public String getFixedTelephoneNumber(  )
     {
-        return _strTelephoneNumber;
+        return _strFixedPhoneNumber;
     }
     
     /**
      * Sets the fixed telephone number.
      *
-     * @param strFixedTelephoneNumber the new fixe telephone number
+     * @param strFixedPhoneNumber the new fixe telephone number
      */
-    public void setFixedTelephoneNumber( String strFixedTelephoneNumber )
+    public void setFixedTelephoneNumber( String strFixedPhoneNumber )
     {
-        _strTelephoneNumber = strFixedTelephoneNumber;
+        _strFixedPhoneNumber = strFixedPhoneNumber;
     }
 
     /**
@@ -445,7 +446,7 @@ public class ESCustomerDTO
 
         // input
 //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
-        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixedTelephoneNumber  };
+        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixedPhoneNumber  };
         s.setInput( input );
         // Output
         s.setOutput(  _strFirstName+ " " + _strName );
@@ -459,7 +460,7 @@ public class ESCustomerDTO
         payload.put( "first_name", _strFirstName );
         payload.put( "birthday", _strBirthday );
         payload.put( "telephoneNumber", _strTelephoneNumber );
-        payload.put( "fixed_telephone_number", _strFixedTelephoneNumber );
+        payload.put( "fixed_telephone_number", _strFixedPhoneNumber );
         payload.put( "email", _strEmail );
 
         oPayload.setElements( payload );
