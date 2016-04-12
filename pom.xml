@@ -7,6 +7,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>plugin-grustorageelastic</artifactId>
     <groupId>fr.paris.lutece.plugins</groupId>
     <packaging>lutece-plugin</packaging>
     <version>1.0.2-SNAPSHOT</version>
@@ -71,6 +72,6 @@
       <tag>HEAD</tag>
   </scm>
     
-    <artifactId>plugin-grustorageelastic</artifactId>
+    
 </project>
 
