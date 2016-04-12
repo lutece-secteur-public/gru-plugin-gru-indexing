@@ -186,7 +186,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             customerDTO.setCity( customer.getCity(  ) );
             customerDTO.setPostalCode( customer.getPostalCode(  ) );
             customerDTO.setTelephoneNumber( customer.getTelephoneNumber(  ) );
-            customerDTO.setFixeTelephoneNumber( customer.getFixeTelephoneNumber(  ) );
+            customerDTO.setFixedTelephoneNumber( customer.getFixedTelephoneNumber(  ) );
             customerDTO.setSuggest(  );
             
         }

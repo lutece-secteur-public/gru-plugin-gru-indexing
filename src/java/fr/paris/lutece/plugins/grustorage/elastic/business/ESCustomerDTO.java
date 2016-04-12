@@ -50,6 +50,7 @@ import java.util.HashMap;
     "stayConnected",
     "street",
     "telephoneNumber",
+    "fixed_telephone_number",
     "city",
     "cityOfBirth",
     "birthday",
@@ -98,7 +99,7 @@ public class ESCustomerDTO
     private String _strTelephoneNumber;
     
     /** The _str fixe telephone number. */
-    private String _strFixeTelephoneNumber;
+    private String _strFixedTelephoneNumber;
     
     /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
@@ -130,7 +131,7 @@ public class ESCustomerDTO
      */
     public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
         String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity,
-        String strPostalCode, String strTelephoneNumber, ESSuggestDTO oSuggest )
+        String strPostalCode, String strTelephoneNumber, String strFixedTelephoneNumber, ESSuggestDTO oSuggest )
     {
         super(  );
         this._nCustomerId = nCustomerId;
@@ -145,7 +146,7 @@ public class ESCustomerDTO
         this._strCity = strCity;
         this._strPostalCode = strPostalCode;
         this._strTelephoneNumber = strTelephoneNumber;
-      //  this._strFixeTelephoneNumber = strFixeTelephoneNumber;
+        this._strFixedTelephoneNumber = strFixedTelephoneNumber;
         this._oSuggest = oSuggest;
     }
 
@@ -404,24 +405,24 @@ public class ESCustomerDTO
     
     
     /**
-     * Gets the fixe telephone number.
+     * Gets the fixed telephone number.
      *
-     * @return the fixe telephone number
+     * @return the fixed telephone number
      */
-    @JsonProperty( "fixeTelephoneNumber" )
-    public String getFixeTelephoneNumber(  )
+    @JsonProperty( "fixed_telephone_number" )
+    public String getFixedTelephoneNumber(  )
     {
         return _strTelephoneNumber;
     }
     
     /**
-     * Sets the fixe telephone number.
+     * Sets the fixed telephone number.
      *
-     * @param strTelephoneNumber the new fixe telephone number
+     * @param strFixedTelephoneNumber the new fixe telephone number
      */
-    public void setFixeTelephoneNumber( String strTelephoneNumber )
+    public void setFixedTelephoneNumber( String strFixedTelephoneNumber )
     {
-        _strTelephoneNumber = strTelephoneNumber;
+        _strTelephoneNumber = strFixedTelephoneNumber;
     }
 
     /**
@@ -444,7 +445,7 @@ public class ESCustomerDTO
 
         // input
 //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
-        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixeTelephoneNumber  };
+        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixedTelephoneNumber  };
         s.setInput( input );
         // Output
         s.setOutput(  _strFirstName+ " " + _strName );
@@ -458,7 +459,7 @@ public class ESCustomerDTO
         payload.put( "first_name", _strFirstName );
         payload.put( "birthday", _strBirthday );
         payload.put( "telephoneNumber", _strTelephoneNumber );
-        payload.put( "FixeTelephoneNumber", _strFixeTelephoneNumber );
+        payload.put( "fixed_telephone_number", _strFixedTelephoneNumber );
         payload.put( "email", _strEmail );
 
         oPayload.setElements( payload );
