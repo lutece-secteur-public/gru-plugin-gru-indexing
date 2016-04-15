@@ -31,12 +31,12 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorage.elastic.service;
+package fr.paris.lutece.plugins.grustorageelastic.service;
 
 import fr.paris.lutece.plugins.gru.service.search.CustomerResult;
 import fr.paris.lutece.plugins.gru.service.search.ISearchService;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;

@@ -31,15 +31,14 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorage.elastic.business;
+package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.mysql.jdbc.StringUtils;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
@@ -52,7 +51,6 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
-
 import java.util.Map;
 
 
@@ -130,6 +128,14 @@ public final class ElasticConnexion
     {
         WebResource resource = _client.resource( uri );
         ClientResponse response = resource.post( ClientResponse.class, json );
+
+        return response.getEntity( String.class );
+    }
+    
+    public static String sentToElasticDELETE( String uri )
+    {
+        WebResource resource = _client.resource( uri );
+        ClientResponse response = resource.delete( ClientResponse.class );
 
         return response.getEntity( String.class );
     }

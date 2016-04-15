@@ -31,10 +31,10 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorage.elastic.web.rs;
+package fr.paris.lutece.plugins.grustorageelastic.web.rs;
 
-import fr.paris.lutece.plugins.grustorage.elastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
@@ -47,7 +47,6 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
-
 import java.util.List;
 
 import javax.ws.rs.GET;

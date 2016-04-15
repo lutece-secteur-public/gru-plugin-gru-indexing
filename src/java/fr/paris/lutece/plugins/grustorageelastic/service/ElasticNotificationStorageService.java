@@ -31,15 +31,15 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorage.elastic.service;
+package fr.paris.lutece.plugins.grustorageelastic.service;
 
-import fr.paris.lutece.plugins.grustorage.elastic.business.CustomerDemandDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESCustomerDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESDemandDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESNotificationDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorage.elastic.business.NotificationDemandDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grustorageelastic.business.CustomerDemandDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
+import fr.paris.lutece.plugins.grustorageelastic.business.NotificationDemandDTO;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
 import fr.paris.lutece.plugins.grusupply.business.Demand;
 import fr.paris.lutece.plugins.grusupply.business.Notification;
@@ -127,6 +127,41 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
     }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void update( Customer user )
+    {
+        if ( user == null )
+        {
+            throw new NullPointerException(  );
+        }
+
+        ObjectMapper mapper = new ObjectMapper(  );
+        String jsonUser;
+
+        try
+        {
+            ESCustomerDTO cutomerDTO = buildCustomer( user );
+            jsonUser =  "{\"doc\":" + mapper.writeValueAsString( cutomerDTO ) + "}";
+            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
+                    user.getCustomerId(  ) ) + "/_update", jsonUser );
+        }
+        catch ( JsonGenerationException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+        catch ( JsonMappingException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+        catch ( IOException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+    }
 
     /**
      * {@inheritDoc }
@@ -163,6 +198,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
     }
+    
 
     /**
      * Build a cutomer to an esCustomerSTO

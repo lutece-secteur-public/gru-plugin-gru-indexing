@@ -31,9 +31,8 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorage.elastic.service;
+package fr.paris.lutece.plugins.grustorageelastic.service;
 
-import fr.paris.lutece.plugins.gru.business.demand.BackOfficeLogging;
 import fr.paris.lutece.plugins.gru.business.demand.BaseDemand;
 import fr.paris.lutece.plugins.gru.business.demand.Demand;
 import fr.paris.lutece.plugins.gru.business.demand.Email;
@@ -41,10 +40,10 @@ import fr.paris.lutece.plugins.gru.business.demand.Notification;
 import fr.paris.lutece.plugins.gru.business.demand.Sms;
 import fr.paris.lutece.plugins.gru.business.demand.UserDashboard;
 import fr.paris.lutece.plugins.gru.service.demand.IDemandService;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESDemandDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ESNotificationDTO;
-import fr.paris.lutece.plugins.grustorage.elastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorage.elastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.util.AppLogService;
 

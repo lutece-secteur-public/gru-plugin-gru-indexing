@@ -38,7 +38,6 @@ import fr.paris.lutece.plugins.grustorageelastic.business.indexer.ESHttp;
 import fr.paris.lutece.plugins.grustorageelastic.service.ElasticIndexerService;
 import fr.paris.lutece.plugins.grustorageelastic.util.ElasticIndexerException;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
-import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.util.AppPathService;
@@ -50,13 +49,9 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.util.url.UrlItem;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 
