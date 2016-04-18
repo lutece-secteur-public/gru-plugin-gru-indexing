@@ -36,11 +36,14 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
+import fr.paris.lutece.portal.service.util.AppLogService;
+
 import java.util.HashMap;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * This is the business class for the object Customer
+ * This is the business class for the object Customer.
  */
 @JsonPropertyOrder( {"user_cid",
     "email",
@@ -49,6 +52,7 @@ import java.util.HashMap;
     "stayConnected",
     "street",
     "telephoneNumber",
+    "fixed_telephone_number",
     "city",
     "cityOfBirth",
     "birthday",
@@ -58,29 +62,79 @@ import java.util.HashMap;
 } )
 public class ESCustomerDTO
 {
+    
+    /** The _n customer id. */
     // Variables declarations 
     private int _nCustomerId;
+    
+    /** The _str name. */
     private String _strName;
+    
+    /** The _str first name. */
     private String _strFirstName;
+    
+    /** The _str email. */
     private String _strEmail;
+    
+    /** The _str birthday. */
     private String _strBirthday;
+    
+    /** The _str civility. */
     private String _strCivility;
+    
+    /** The _str street. */
     private String _strStreet;
+    
+    /** The _str city of birth. */
     private String _strCityOfBirth;
+    
+    /** The _b stay connected. */
     private boolean _bStayConnected;
+    
+    /** The _str city. */
     private String _strCity;
+    
+    /** The _str postal code. */
     private String _strPostalCode;
+    
+    /** The _str telephone number. */
     private String _strTelephoneNumber;
+    
+    /** The _str fixe telephone number. */
+    private String _strFixedPhoneNumber;
+    
+    /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
 
+    /**
+     * Instantiates a new ES customer dto.
+     */
     public ESCustomerDTO(  )
     {
         super(  );
     }
 
+    /**
+     * Instantiates a new ES customer dto.
+     *
+     * @param nCustomerId the n customer id
+     * @param strName the str name
+     * @param strFirstName the str first name
+     * @param strEmail the str email
+     * @param strBirthday the str birthday
+     * @param strCivility the str civility
+     * @param strStreet the str street
+     * @param strCityOfBirth the str city of birth
+     * @param bStayConnected the b stay connected
+     * @param strCity the str city
+     * @param strPostalCode the str postal code
+     * @param strTelephoneNumber the str telephone number
+     * @param strFixedPhoneNumber the str telephone number
+     * @param oSuggest the o suggest
+     */
     public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
         String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity,
-        String strPostalCode, String strTelephoneNumber, ESSuggestDTO oSuggest )
+        String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber, ESSuggestDTO oSuggest )
     {
         super(  );
         this._nCustomerId = nCustomerId;
@@ -95,11 +149,13 @@ public class ESCustomerDTO
         this._strCity = strCity;
         this._strPostalCode = strPostalCode;
         this._strTelephoneNumber = strTelephoneNumber;
+        this._strFixedPhoneNumber = strFixedPhoneNumber;
         this._oSuggest = oSuggest;
     }
 
     /**
-     * Returns the CustomerId
+     * Returns the CustomerId.
+     *
      * @return The CustomerId
      */
     @JsonProperty( "user_cid" )
@@ -109,8 +165,9 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the CustomerId
-     * @param CustomerId The CustomerId
+     * Sets the CustomerId.
+     *
+     * @param luserGuid the new customer id
      */
     public void setCustomerId( int luserGuid )
     {
@@ -118,7 +175,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the Name
+     * Returns the Name.
+     *
      * @return The Name
      */
     @JsonProperty( "last_name" )
@@ -128,7 +186,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the Name
+     * Sets the Name.
+     *
      * @param strName The Name
      */
     public void setName( String strName )
@@ -137,7 +196,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the FirstName
+     * Returns the FirstName.
+     *
      * @return The FirstName
      */
     @JsonProperty( "first_name" )
@@ -147,7 +207,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the FirstName
+     * Sets the FirstName.
+     *
      * @param strFirstName The FirstName
      */
     public void setFirstName( String strFirstName )
@@ -156,7 +217,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the Email
+     * Returns the Email.
+     *
      * @return The Email
      */
     @JsonProperty( "email" )
@@ -166,7 +228,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the Email
+     * Sets the Email.
+     *
      * @param strEmail The Email
      */
     public void setEmail( String strEmail )
@@ -175,7 +238,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the Birthday
+     * Returns the Birthday.
+     *
      * @return The Birthday
      */
     @JsonProperty( "birthday" )
@@ -185,7 +249,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the Birthday
+     * Sets the Birthday.
+     *
      * @param strBirthday The Birthday
      */
     public void setBirthday( String strBirthday )
@@ -194,7 +259,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the Civility
+     * Returns the Civility.
+     *
      * @return The Civility
      */
     @JsonProperty( "civility" )
@@ -204,7 +270,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the Civility
+     * Sets the Civility.
+     *
      * @param strCivility The Civility
      */
     public void setCivility( String strCivility )
@@ -213,7 +280,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the Street
+     * Returns the Street.
+     *
      * @return The Street
      */
     @JsonProperty( "street" )
@@ -223,7 +291,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the Street
+     * Sets the Street.
+     *
      * @param strStreet The Street
      */
     public void setStreet( String strStreet )
@@ -232,7 +301,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the CityOfBirth
+     * Returns the CityOfBirth.
+     *
      * @return The CityOfBirth
      */
     @JsonProperty( "cityOfBirth" )
@@ -242,7 +312,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the CityOfBirth
+     * Sets the CityOfBirth.
+     *
      * @param strCityOfBirth The CityOfBirth
      */
     public void setCityOfBirth( String strCityOfBirth )
@@ -251,7 +322,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the StayConnected
+     * Returns the StayConnected.
+     *
      * @return The StayConnected
      */
     @JsonProperty( "stayConnected" )
@@ -261,8 +333,9 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the StayConnected
-     * @param StayConnected The StayConnected
+     * Sets the StayConnected.
+     *
+     * @param stayConnected the new stay connected
      */
     public void setStayConnected( boolean stayConnected )
     {
@@ -270,7 +343,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the City
+     * Returns the City.
+     *
      * @return The City
      */
     @JsonProperty( "city" )
@@ -280,7 +354,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the City
+     * Sets the City.
+     *
      * @param strCity The City
      */
     public void setCity( String strCity )
@@ -289,7 +364,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the PostalCode
+     * Returns the PostalCode.
+     *
      * @return The PostalCode
      */
     @JsonProperty( "postalCode" )
@@ -299,7 +375,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the PostalCode
+     * Sets the PostalCode.
+     *
      * @param strPostalCode The PostalCode
      */
     public void setPostalCode( String strPostalCode )
@@ -308,7 +385,8 @@ public class ESCustomerDTO
     }
 
     /**
-     * Returns the TelephoneNumber
+     * Returns the TelephoneNumber.
+     *
      * @return The TelephoneNumber
      */
     @JsonProperty( "telephoneNumber" )
@@ -318,16 +396,43 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the TelephoneNumber
+     * Sets the TelephoneNumber.
+     *
      * @param strTelephoneNumber The TelephoneNumber
      */
     public void setTelephoneNumber( String strTelephoneNumber )
     {
         _strTelephoneNumber = strTelephoneNumber;
     }
+    
+    
+    
+    /**
+     * Gets the fixed telephone number.
+     *
+     * @return the fixed telephone number
+     */
+    @JsonProperty( "fixed_telephone_number" )
+    public String getFixedTelephoneNumber(  )
+    {
+        return _strFixedPhoneNumber;
+    }
+    
+    /**
+     * Sets the fixed telephone number.
+     *
+     * @param strFixedPhoneNumber the new fixe telephone number
+     */
+    public void setFixedTelephoneNumber( String strFixedPhoneNumber )
+    {
+        _strFixedPhoneNumber = strFixedPhoneNumber;
+        AppLogService.info("Fixed phone NUmber "+_strFixedPhoneNumber);
+    }
 
     /**
-     * Returns the suggest
+     * Returns the suggest.
+     *
+     * @return the suggest
      */
     @JsonProperty( "suggest" )
     public ESSuggestDTO getSuggest(  )
@@ -336,15 +441,15 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the suggest
+     * Sets the suggest.
      */
     public void setSuggest(  )
     {
         ESSuggestDTO s = new ESSuggestDTO(  );
-
+        AppLogService.info("Fixed phone NUmber "+_strFixedPhoneNumber);
         // input
 //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
-        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber  };
+        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixedPhoneNumber  };
         s.setInput( input );
         // Output
         s.setOutput(  _strFirstName+ " " + _strName );
@@ -358,6 +463,7 @@ public class ESCustomerDTO
         payload.put( "first_name", _strFirstName );
         payload.put( "birthday", _strBirthday );
         payload.put( "telephoneNumber", _strTelephoneNumber );
+        payload.put( "fixed_telephone_number", _strFixedPhoneNumber );
         payload.put( "email", _strEmail );
 
         oPayload.setElements( payload );

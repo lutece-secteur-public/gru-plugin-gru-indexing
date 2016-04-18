@@ -7,8 +7,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-grustorageelastic</artifactId>
+    <groupId>fr.paris.lutece.plugins</groupId>
     <packaging>lutece-plugin</packaging>
     <version>1.0.2-SNAPSHOT</version>
     <name>Lutece GRU using elastic search lugin</name>
@@ -53,8 +53,8 @@
 		</dependency>
 		<dependency>
 			<groupId>fr.paris.lutece.plugins</groupId>
-			<artifactId>module-grusupply-openam</artifactId>
-	  		<version>1.0.0-SNAPSHOT</version>
+			<artifactId>module-customerprovisioning-openam</artifactId>
+	  		<version>[1.0.0-SNAPSHOT,)</version>
 			<type>lutece-plugin</type>
 		</dependency>
 		<dependency>
@@ -76,6 +76,7 @@
         <url>https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</url>
       <tag>HEAD</tag>
   </scm>
+    
     
 </project>
 
