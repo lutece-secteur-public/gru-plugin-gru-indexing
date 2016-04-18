@@ -1,4 +1,4 @@
-<jsp:useBean id="indexing" scope="session" class="fr.paris.lutece.plugins.grustorage.elastic.web.rs.IndexationESJspBean" />
+<jsp:useBean id="indexing" scope="session" class="fr.paris.lutece.plugins.grustorageelastic.web.rs.IndexationESJspBean" />
 <% String strContent = indexing.processController ( request , response ); %>
 
 <%@ page errorPage="../../ErrorPage.jsp" %>
