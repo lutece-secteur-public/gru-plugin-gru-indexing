@@ -7,8 +7,8 @@
     <installation/>
     <changes/>
     <user-guide/>
-    <description>module.grustorageelastic.module.description</description>
-    <provider>module.grustorageelastic.module.provider</provider>
+    <description>grustorageelastic.module.description</description>
+    <provider>grustorageelastic.module.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
     <icon-url>images/admin/skin/plugins/grustorageelastic/modules/elastic/gru-elastics.png</icon-url>
     <copyright>Copyright 2001-2015 Mairie de Paris</copyright>
@@ -18,7 +18,18 @@
     </core-version-dependency>
     <db-pool-required>1</db-pool-required>
 
-	
+ <!-- Admin features parameters -->
+    <admin-features>
+	 <admin-feature>
+            <feature-id>ES_INDEXATION</feature-id>
+            <feature-title>grustorageelastic.adminFeature.IndexerES.name</feature-title>
+            <feature-description>grustorageelastic.IndexerES.description</feature-description>
+            <feature-level>0</feature-level>
+            <feature-url>jsp/admin/plugins/grustorageelastic/IndexerES.jsp</feature-url>
+            <feature-icon-url/>
+        </admin-feature>
+     </admin-features>
+        
 	<filters>
 	<!-- REST security : Comment the filters if you want to test the REST service with the given JSP 
        <filter>
