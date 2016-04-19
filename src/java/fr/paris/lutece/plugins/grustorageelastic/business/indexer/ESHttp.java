@@ -97,10 +97,17 @@ public class ESHttp {
 		
 		URL url = new URL( strUrl );
 	    HttpURLConnection http = (HttpURLConnection)url.openConnection();
-	    if ( http.getResponseCode() == 200 )
+	    try 
 	    {
-	    	res = true;
+		    if ( http.getResponseCode() == 200 )
+		    {
+		    	res = true;
+		    }
 	    }
+	    catch (IOException e )
+	    {
+			AppLogService.error( e.getMessage( ) );
+		}
 	    return res;
 
 	}

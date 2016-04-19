@@ -127,41 +127,6 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
     }
-    
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void update( Customer user )
-    {
-        if ( user == null )
-        {
-            throw new NullPointerException(  );
-        }
-
-        ObjectMapper mapper = new ObjectMapper(  );
-        String jsonUser;
-
-        try
-        {
-            ESCustomerDTO cutomerDTO = buildCustomer( user );
-            jsonUser =  "{\"doc\":" + mapper.writeValueAsString( cutomerDTO ) + "}";
-            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
-                    user.getCustomerId(  ) ) + "/_update", jsonUser );
-        }
-        catch ( JsonGenerationException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-        }
-        catch ( JsonMappingException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-        }
-        catch ( IOException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-        }
-    }
 
     /**
      * {@inheritDoc }
@@ -232,7 +197,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         }
         return customerDTO;
     }
-
+    
     /**
      * Buid a Notification to an esNotificationDTO
      * @param notif

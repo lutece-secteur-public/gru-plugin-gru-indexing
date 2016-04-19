@@ -33,18 +33,22 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
+import fr.paris.lutece.plugins.gru.business.customer.Customer;
 import fr.paris.lutece.plugins.gru.service.search.CustomerResult;
 import fr.paris.lutece.plugins.gru.service.search.ISearchService;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grusupply.service.StorageService;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.JsonMappingException;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import javax.ws.rs.core.Response;
 
@@ -103,6 +107,34 @@ public class ElasticSearchService implements ISearchService
         }
         return listCustomer;
     }
+    
+    
+    private fr.paris.lutece.plugins.grusupply.business.Customer searchCustomer( int nCid )
+    {
+        String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
+        String json = "";
+
+        // Gets the name/firstname entered by autocomplete
+        Map<String, String> mapChamps = new HashMap<String, String>(  );
+        
+        mapChamps.put( "user_cid", String.valueOf( nCid ) );
+        try
+        {
+            json = ElasticConnexion.formatFullText( mapChamps );
+        }
+        catch ( IOException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+
+        String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );
+        JsonNode retour = ElasticConnexion.setJsonToJsonTree( jsonRetour );
+
+        JsonNode tmp = retour.findValue( "_source" );
+
+        return buildCustomer( tmp );
+    }
+    
 
     /**
     * {@inheritDoc }
@@ -124,6 +156,23 @@ public class ElasticSearchService implements ISearchService
         return tmp.substring( 0, tmp.length(  ) - 1 ) + RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME +
         GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
     }
+    
+    /**
+     * {@inheritDoc }
+     */
+     @Override
+    public void updateCustomer ( Customer user )
+    {
+    	 fr.paris.lutece.plugins.grusupply.business.Customer grusupplyCustomer = searchCustomer( user.getId( ) );
+    	
+		 grusupplyCustomer.setName( user.getLastname(  ) );
+		 grusupplyCustomer.setFirstName( user.getFirstname(  ) );
+		 grusupplyCustomer.setEmail( user.getEmail(  ) );
+		 grusupplyCustomer.setTelephoneNumber( user.getMobilePhone(  ) );
+		 grusupplyCustomer.setFixedTelephoneNumber( user.getFixedPhoneNumber(  ) );
+             	 
+		 StorageService.instance(  ).store( grusupplyCustomer );
+    }
 
     /**
      * Build a CustomerResult from a node
@@ -142,6 +191,33 @@ public class ElasticSearchService implements ISearchService
             customer.setFirstname( node.findValue( "first_name" ).asText(  ) );
             customer.setEmail( node.findValue( "email" ).asText(  ) );
             customer.setMobilePhone( node.findValue( "telephoneNumber" ).asText(  ) );
+        }
+        catch(NullPointerException ex)
+        {
+        	error( "Parsing Customer fail"+ node.toString(), null );
+        }
+        return customer;
+    }
+    
+    private fr.paris.lutece.plugins.grusupply.business.Customer buildCustomer( JsonNode node )
+    {
+    	fr.paris.lutece.plugins.grusupply.business.Customer customer = new fr.paris.lutece.plugins.grusupply.business.Customer(  );
+
+
+        try{
+            customer.setCustomerId( node.findValue( "user_cid" ).asInt(  ) );
+            customer.setName( node.findValue( "last_name" ).asText(  ) );
+            customer.setFirstName( node.findValue( "first_name" ).asText(  ) );
+            customer.setEmail( node.findValue( "email" ).asText(  ) );
+            customer.setTelephoneNumber( node.findValue( "telephoneNumber" ).asText(  ) );
+            customer.setFixedTelephoneNumber( node.findValue( "fixed_telephone_number" ).asText(  ) );
+            customer.setBirthday( node.findValue( "birthday" ).asText(  ) );
+            customer.setCity( node.findValue( "city" ).asText(  ) );
+            customer.setStreet( node.findValue( "street" ).asText(  ) );
+            customer.setCityOfBirth( node.findValue( "cityOfBirth" ).asText(  ) );
+            customer.setCivility( node.findValue( "civility" ).asText(  ) );
+            customer.setPostalCode( node.findValue( "postalCode" ).asText(  ) );
+            customer.setStayConnected( node.findValue( "stayConnected" ).asBoolean( ) );
         }
         catch(NullPointerException ex)
         {
