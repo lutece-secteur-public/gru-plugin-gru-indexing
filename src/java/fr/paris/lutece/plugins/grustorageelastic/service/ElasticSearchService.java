@@ -36,17 +36,18 @@ package fr.paris.lutece.plugins.grustorageelastic.service;
 import fr.paris.lutece.plugins.gru.business.customer.Customer;
 import fr.paris.lutece.plugins.gru.service.search.CustomerResult;
 import fr.paris.lutece.plugins.gru.service.search.ISearchService;
-import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.service.StorageService;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
-import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
+
+import com.mysql.jdbc.StringUtils;
 
 import java.io.IOException;
 
@@ -160,7 +161,7 @@ public class ElasticSearchService implements ISearchService
     /**
      * {@inheritDoc }
      */
-     @Override
+    @Override
     public void updateCustomer ( Customer user )
     {
     	 fr.paris.lutece.plugins.grusupply.business.Customer grusupplyCustomer = searchCustomer( user.getId( ) );
@@ -172,6 +173,18 @@ public class ElasticSearchService implements ISearchService
 		 grusupplyCustomer.setFixedTelephoneNumber( user.getFixedPhoneNumber(  ) );
              	 
 		 StorageService.instance(  ).store( grusupplyCustomer );
+    }
+    
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void deleteCustomer ( int nId )
+    {
+        String url = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
+             AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) + "user/" + nId ;
+        
+        ElasticConnexion.sentToElasticDELETE( url.trim( ) ) ;
     }
 
     /**
