@@ -219,14 +219,14 @@ public class ElasticSearchService implements ISearchService
     {
     	fr.paris.lutece.plugins.grusupply.business.Customer customer = new fr.paris.lutece.plugins.grusupply.business.Customer(  );
 
-
+    	
         try{
             customer.setCustomerId( node.findValue( "user_cid" ).asInt(  ) );
             customer.setName( node.findValue( "last_name" ).asText(  ) );
             customer.setFirstName( node.findValue( "first_name" ).asText(  ) );
             customer.setEmail( node.findValue( "email" ).asText(  ) );
             customer.setTelephoneNumber( node.findValue( "telephoneNumber" ).asText(  ) );
-            customer.setFixedTelephoneNumber( node.findValue( "fixed_telephone_number" ).asText(  ) );
+            //customer.setFixedTelephoneNumber( node.findValue( "fixed_telephone_number" ).asText(  ) );
             customer.setBirthday( node.findValue( "birthday" ).asText(  ) );
             customer.setCity( node.findValue( "city" ).asText(  ) );
             customer.setStreet( node.findValue( "street" ).asText(  ) );
@@ -237,7 +237,7 @@ public class ElasticSearchService implements ISearchService
         }
         catch(NullPointerException ex)
         {
-        	error( "Parsing Customer fail"+ node.toString(), null );
+        	error( "Parsing Customer fail"+ node.toString()+ex.getMessage( ), null );
         }
         return customer;
     }
