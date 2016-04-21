@@ -56,6 +56,11 @@ public class IndexerElasticSearchThread extends Thread
     		ESHttp.setPort(Integer.getInteger( AppPropertiesService.getProperty( GRUElasticsConstants.ES_PORT ) ) );
     		ESHttp.setType( AppPropertiesService.getProperty( GRUElasticsConstants.ES_TYPE ) );
     		
+    		AppLogService.info( "host : "+ ESHttp.getHost() );
+    		AppLogService.info( "Indice : "+ ESHttp.getIndice() );
+    		AppLogService.info( "Port : "+ ESHttp.getPort() );
+    		AppLogService.info( "Type : "+ ESHttp.getType() );
+
     		try 
     		{
     			selectRecordsFromDbUserTable();
@@ -140,6 +145,7 @@ public class IndexerElasticSearchThread extends Thread
 					if ( !ESHttp.indexExist( ) )
 					{
 						_service.addToLog("Index Does not exist !");
+						AppLogService.debug( "ESHttp.indexExist( ) : "+String.valueOf( ESHttp.indexExist( )));
 						_service.setProgress( 100 );
 		    	        _service.setState( IAsynchronousService.STATE_ABORTED );
 		    	        _bRunning = false;
@@ -149,6 +155,7 @@ public class IndexerElasticSearchThread extends Thread
 				catch ( IOException ex)
 				{
 					_service.addToLog("Index Does not exist !");
+					AppLogService.error( "IOException : "+ ex.getMessage());
 					_service.addToLog( ex + " :" + ex.getMessage(  )  );
 					_service.setProgress( 100 );
 	    	        _service.setState( IAsynchronousService.STATE_ABORTED );

@@ -95,6 +95,7 @@ public class ESHttp {
 		
 		String strUrl = getUrl( ) ;
 		
+		AppLogService.debug("url :" + strUrl );
 		URL url = new URL( strUrl );
 	    HttpURLConnection http = (HttpURLConnection)url.openConnection();
 	    try 
@@ -103,6 +104,7 @@ public class ESHttp {
 		    {
 		    	res = true;
 		    }
+		    AppLogService.debug("url :"+strUrl + "response : "+http.getResponseCode());
 	    }
 	    catch (IOException e )
 	    {
