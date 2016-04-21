@@ -40,6 +40,7 @@ import fr.paris.lutece.plugins.grustorageelastic.util.ElasticIndexerException;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
@@ -184,6 +185,7 @@ public class IndexationESJspBean extends  MVCAdminJspBean
     	
     	String json = deserializeString ( br ) ;
 		
+    	AppLogService.debug("uri :" +  _uri.trim( ) );
     	String strResponse = ElasticConnexion.sentToElasticPUT( _uri.trim( ) , json) ;
     	if ( !strResponse.equals( RESPONSE_ES_SUCCEES ))
     	{

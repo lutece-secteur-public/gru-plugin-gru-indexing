@@ -56,11 +56,6 @@ public class IndexerElasticSearchThread extends Thread
     		ESHttp.setPort(Integer.getInteger( AppPropertiesService.getProperty( GRUElasticsConstants.ES_PORT ) ) );
     		ESHttp.setType( AppPropertiesService.getProperty( GRUElasticsConstants.ES_TYPE ) );
     		
-    		AppLogService.info( "host : "+ ESHttp.getHost() );
-    		AppLogService.info( "Indice : "+ ESHttp.getIndice() );
-    		AppLogService.info( "Port : "+ ESHttp.getPort() );
-    		AppLogService.info( "Type : "+ ESHttp.getType() );
-
     		try 
     		{
     			selectRecordsFromDbUserTable();

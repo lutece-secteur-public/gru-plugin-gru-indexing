@@ -15,7 +15,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 public class ESHttp {
 
@@ -80,7 +82,8 @@ public class ESHttp {
 	}
 
 	private static String baseUrl(String string) {
-		baseUrl();
+		//baseUrl();
+		_baseUrl = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) + AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE )+ "/user" ;
 		if (_baseUrl != null) {
 			return _baseUrl + "/" + string;
 		}
@@ -93,7 +96,8 @@ public class ESHttp {
 	{
 		boolean res= false ;
 		
-		String strUrl = getUrl( ) ;
+		String strUrl = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
+	            AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE ) ;
 		
 		AppLogService.debug("url :" + strUrl );
 		URL url = new URL( strUrl );
