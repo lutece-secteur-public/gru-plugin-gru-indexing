@@ -115,6 +115,7 @@ public class ElasticSearchService implements ISearchService
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String json = "";
 
+        AppLogService.info("uri:"+ uri);
         // Gets the name/firstname entered by autocomplete
         Map<String, String> mapChamps = new HashMap<String, String>(  );
         
@@ -122,6 +123,7 @@ public class ElasticSearchService implements ISearchService
         try
         {
             json = ElasticConnexion.formatFullText( mapChamps );
+            AppLogService.info("json:"+ json);
         }
         catch ( IOException ex )
         {
@@ -131,6 +133,7 @@ public class ElasticSearchService implements ISearchService
         String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );
         JsonNode retour = ElasticConnexion.setJsonToJsonTree( jsonRetour );
 
+        AppLogService.info("retour:"+ retour );
         JsonNode tmp = retour.findValue( "_source" );
 
         return buildCustomer( tmp );
@@ -165,7 +168,7 @@ public class ElasticSearchService implements ISearchService
     public void updateCustomer ( Customer user )
     {
     	 fr.paris.lutece.plugins.grusupply.business.Customer grusupplyCustomer = searchCustomer( user.getId( ) );
-    	
+    	 AppLogService.info("grusupplyCustomer found :"+ grusupplyCustomer.getCustomerId()+ "-"+ grusupplyCustomer.getFirstName() + "-"+ grusupplyCustomer.getName( )+"-"+grusupplyCustomer.getCityOfBirth( ));
 		 grusupplyCustomer.setName( user.getLastname(  ) );
 		 grusupplyCustomer.setFirstName( user.getFirstname(  ) );
 		 grusupplyCustomer.setEmail( user.getEmail(  ) );
