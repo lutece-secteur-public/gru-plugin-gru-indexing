@@ -28,13 +28,13 @@
             });
 
             function refresh() {
-                if (new Date().getTime() - time >= 3000)
+                if (new Date().getTime() - time >= 10000)
                     window.location.reload(true);
                 else
-                    setTimeout(refresh, 3000);
+                    setTimeout(refresh, 10000);
             }
 
-            setTimeout(refresh, 3000);
+            setTimeout(refresh, 10000);
         </script>
         
         <#else>          

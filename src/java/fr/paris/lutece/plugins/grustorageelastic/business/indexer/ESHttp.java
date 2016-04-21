@@ -82,8 +82,8 @@ public class ESHttp {
 	}
 
 	private static String baseUrl(String string) {
-		//baseUrl();
-		_baseUrl = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) + AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE )+ "/user" ;
+
+		_baseUrl = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) + AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE )+ "/"+AppPropertiesService.getProperty( GRUElasticsConstants.ES_TYPE ) ;
 		if (_baseUrl != null) {
 			return _baseUrl + "/" + string;
 		}
