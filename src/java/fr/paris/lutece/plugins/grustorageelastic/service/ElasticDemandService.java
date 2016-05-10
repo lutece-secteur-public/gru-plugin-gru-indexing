@@ -293,13 +293,13 @@ public class ElasticDemandService implements IDemandService
     }
 
     /**
-     * Build a Demand from a demandDTO
-     * @param demand
-     * @return
+     * Build a Notification from a ESNotificationDTO
+     * @param notification the ESNotificationDTO
+     * @return the Notification
      */
     private Notification buildNotification( ESNotificationDTO notification )
     {
-        Notification retour = new Notification(  );
+        Notification result = new Notification(  );
 
         try{
             Email email = new Email(  );
@@ -339,13 +339,13 @@ public class ElasticDemandService implements IDemandService
                 backOfficeLogging.setStatusText( backofficeNotification.getStatusText(  ) );
             }
             
-            retour.setTimestamp( notification.getDateNotification(  ) );
-	        retour.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
-	        retour.setSource( "PAS TROUVE" );
-	        retour.setEmail( email );
-	        retour.setSms( sms );
-	        retour.setUserDashboard( uDash );
-	        retour.setBackOfficeLogging( backOfficeLogging );
+            result.setTimestamp( notification.getDateNotification(  ) );
+	        result.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
+	        result.setSource( "PAS TROUVE" );
+	        result.setEmail( email );
+	        result.setSms( sms );
+	        result.setUserDashboard( uDash );
+	        result.setBackOfficeLogging( backOfficeLogging );
           
         }
         catch(NullPointerException ex)
@@ -353,7 +353,7 @@ public class ElasticDemandService implements IDemandService
         	error("Notification DTO Parsing failure", null);
         }
   
-        return retour;
+        return result;
     } 
     /**
      * Build an error response
