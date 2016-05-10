@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
+import fr.paris.lutece.plugins.gru.business.demand.BackOfficeLogging;
 import fr.paris.lutece.plugins.gru.business.demand.BaseDemand;
 import fr.paris.lutece.plugins.gru.business.demand.Demand;
 import fr.paris.lutece.plugins.gru.business.demand.Email;
@@ -44,6 +45,7 @@ import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grusupply.business.BackofficeNotification;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
@@ -57,15 +59,28 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ws.rs.core.Response;
 
 
 public class ElasticDemandService implements IDemandService
 {
+    private static Comparator<Notification> _comparatorNotifications = new Comparator<Notification>(  )
+    {
+        @Override
+        public int compare( Notification notification1, Notification notification2 )
+        {
+            return ( Long.valueOf( notification1.getTimestamp(  ) )
+                         .compareTo( Long.valueOf( notification2.getTimestamp(  ) ) ) );
+        }
+    };
+    
     /**
     * {@inheritDoc }
     */
@@ -250,19 +265,27 @@ public class ElasticDemandService implements IDemandService
         String retourES = ElasticConnexion.sentToElasticPOST( uri, json );
 
         JsonNode jsonRetour = mapper.readTree( retourES );
-        List<JsonNode> listNotification = jsonRetour.findValues( "_source" );
+        List<JsonNode> listJsonNotification = jsonRetour.findValues( "_source" );
+        Set<Notification> setNotification = new TreeSet<Notification>( _comparatorNotifications ); 
 
-        for ( JsonNode jnode : listNotification )
+        for ( JsonNode jnode : listJsonNotification )
         {
             if ( jnode != null )
             {
                 String tmp = mapper.writeValueAsString( jnode );
                 ESNotificationDTO notificationDTO = mapper.readValue( tmp, ESNotificationDTO.class );
-                base.getNotifications(  ).add( buildNotification( notificationDTO ) );
-                
-                base.setStatusForCustomer( notificationDTO.getUserBackOffice(  ).getStatusText(  ) );
-                base.setStatusForGRU( notificationDTO.getUserBackOffice(  ).getStatusText(  ) );
+                setNotification.add( buildNotification( notificationDTO ) );
             }
+        }
+        
+        List<Notification> listNotification = base.getNotifications(  );
+        listNotification.addAll( setNotification );
+        
+        if ( !listNotification.isEmpty(  ) )
+        {
+            Notification lastNotification = listNotification.get( listNotification.size(  ) - 1 ); 
+            base.setAgentStatus( lastNotification.getBackOfficeLogging(  ).getStatusText(  ) );
+            base.setCustomerStatus( lastNotification.getUserDashboard(  ).getStatusText(  ) );
         }
 
         // create action
@@ -307,12 +330,22 @@ public class ElasticDemandService implements IDemandService
                 uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
             }
             
+            BackOfficeLogging backOfficeLogging = new BackOfficeLogging(  );
+            BackofficeNotification backofficeNotification = notification.getUserBackOffice(  );
+            
+            if ( backofficeNotification != null )
+            {
+                backOfficeLogging.setMessage( backofficeNotification.getMessage(  ) );
+                backOfficeLogging.setStatusText( backofficeNotification.getStatusText(  ) );
+            }
+            
             retour.setTimestamp( notification.getDateNotification(  ) );
 	        retour.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
 	        retour.setSource( "PAS TROUVE" );
 	        retour.setEmail( email );
 	        retour.setSms( sms );
 	        retour.setUserDashboard( uDash );
+	        retour.setBackOfficeLogging( backOfficeLogging );
           
         }
         catch(NullPointerException ex)
