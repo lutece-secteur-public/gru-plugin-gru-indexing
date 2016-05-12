@@ -57,6 +57,9 @@
 					"telephoneNumber": {
 						"type": "string"
 					},
+                    "fixed_telephone_number": {
+                        "type": "string"
+                    },
 					"suggest": {
 						"type": "completion",
 						"analyzer": "standard",
@@ -185,6 +188,9 @@
 					"demand_max_step": {
 						"type": "long"
 					},
+					"demand_user_max_step": {
+                        "type": "long"
+                    },
 					"demand_type_id": {
 						"type": "long"
 					},
@@ -218,7 +224,7 @@
 					"crm_status_id": {
 						"type": "long"
 					},
-					"reference": {
+					"demand_reference": {
 						"type": "string"
 					},
 					"suggest": {
