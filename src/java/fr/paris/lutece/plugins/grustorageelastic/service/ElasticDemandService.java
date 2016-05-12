@@ -281,11 +281,29 @@ public class ElasticDemandService implements IDemandService
         List<Notification> listNotification = base.getNotifications(  );
         listNotification.addAll( setNotification );
         
-        if ( !listNotification.isEmpty(  ) )
+        boolean bIsAgentStatusFound = false;
+        boolean bIsCustomerStatusFound = false;
+        
+        for ( int i = listNotification.size(  ) - 1; i >= 0; i-- )
         {
-            Notification lastNotification = listNotification.get( listNotification.size(  ) - 1 ); 
-            base.setAgentStatus( lastNotification.getBackOfficeLogging(  ).getStatusText(  ) );
-            base.setCustomerStatus( lastNotification.getUserDashboard(  ).getStatusText(  ) );
+            Notification notification = listNotification.get( i );
+            
+            if ( !bIsAgentStatusFound && notification.getBackOfficeLogging(  ) != null )
+            {
+                base.setAgentStatus( notification.getBackOfficeLogging(  ).getStatusText(  ) );
+                bIsAgentStatusFound = true;
+            }
+            
+            if ( !bIsCustomerStatusFound && notification.getUserDashboard(  ) != null )
+            {
+                base.setCustomerStatus( notification.getUserDashboard(  ).getStatusText(  ) );
+                bIsCustomerStatusFound = true;
+            }
+            
+            if ( bIsAgentStatusFound && bIsCustomerStatusFound )
+            {
+                break;
+            }
         }
 
         // create action
@@ -320,32 +338,34 @@ public class ElasticDemandService implements IDemandService
                 sms.setPhoneNumber( String.valueOf( notification.getUserSms(  ).getPhoneNumber(  ) ) );
             }
 
-            UserDashboard uDash = new UserDashboard(  );
-
             if ( notification.getUserDashBoard(  ) != null )
             {
+                UserDashboard uDash = new UserDashboard(  );
+                
                 uDash.setStatusText( notification.getUserDashBoard(  ).getStatusText(  ) );
                 uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
                 uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
                 uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
+                
+                result.setUserDashboard( uDash );
             }
             
-            BackOfficeLogging backOfficeLogging = new BackOfficeLogging(  );
             BackofficeNotification backofficeNotification = notification.getUserBackOffice(  );
             
             if ( backofficeNotification != null )
             {
+                BackOfficeLogging backOfficeLogging = new BackOfficeLogging(  );
+                
                 backOfficeLogging.setMessage( backofficeNotification.getMessage(  ) );
                 backOfficeLogging.setStatusText( backofficeNotification.getStatusText(  ) );
+                
+                result.setBackOfficeLogging( backOfficeLogging );
             }
             
             result.setTimestamp( notification.getDateNotification(  ) );
-	        result.setTitle( notification.getUserDashBoard( ).getStatusText(  ) );
 	        result.setSource( "PAS TROUVE" );
 	        result.setEmail( email );
 	        result.setSms( sms );
-	        result.setUserDashboard( uDash );
-	        result.setBackOfficeLogging( backOfficeLogging );
           
         }
         catch(NullPointerException ex)
