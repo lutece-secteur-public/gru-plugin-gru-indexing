@@ -51,9 +51,7 @@ public class IndexerElasticSearchThread extends Thread
             _service.setProgress( 0 );
             _bRunning = true;
 
-    		ESHttp.setHost( AppPropertiesService.getProperty( GRUElasticsConstants.ES_HOST ) );
     		ESHttp.setIndice( AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE ) );
-    		ESHttp.setPort(Integer.getInteger( AppPropertiesService.getProperty( GRUElasticsConstants.ES_PORT ) ) );
     		ESHttp.setType( AppPropertiesService.getProperty( GRUElasticsConstants.ES_TYPE ) );
     		
     		try 

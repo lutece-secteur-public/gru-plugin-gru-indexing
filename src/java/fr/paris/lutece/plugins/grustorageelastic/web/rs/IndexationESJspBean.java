@@ -171,9 +171,7 @@ public class IndexationESJspBean extends  MVCAdminJspBean
     
     private static void setConnexion( )
     {
-    	ESHttp.setHost( AppPropertiesService.getProperty( GRUElasticsConstants.ES_HOST ) );
     	ESHttp.setIndice( AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE ) );
-    	ESHttp.setPort(Integer.getInteger( AppPropertiesService.getProperty( GRUElasticsConstants.ES_PORT ) ) );
     	ESHttp.setType( AppPropertiesService.getProperty( GRUElasticsConstants.ES_TYPE ) );
     	
     }

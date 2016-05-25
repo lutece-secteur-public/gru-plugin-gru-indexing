@@ -50,8 +50,6 @@ public final class GRUElasticsConstants
     public static final String DB_USER ="db.user";
     public static final String DB_PASSWORD	="db.password";
     public static final String DB_SELECT ="db.select";
-    public static final String ES_HOST="es.host";
-    public static final String ES_PORT ="es.port";
     public static final String ES_INDICE= "es.indice";
     public static final String ES_TYPE ="es.type";
 

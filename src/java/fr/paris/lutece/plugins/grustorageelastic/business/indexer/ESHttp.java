@@ -1,19 +1,13 @@
 package fr.paris.lutece.plugins.grustorageelastic.business.indexer;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
@@ -24,10 +18,6 @@ public class ESHttp {
 	private static String _baseUrl;
 	private static String _type;
 	private static String _indice;
-	private static Integer _port;
-	private static String _host;
-	private static String _protocol;
-	private List<String> _bulk;
 
 	private static String execute(String method, String targetURL, String urlParameters) throws IOException {
 		HttpURLConnection connection = null;  
@@ -116,101 +106,6 @@ public class ESHttp {
 		}
 	    return res;
 
-	}
-	
-	private static String getUrl( )
-	{
-		String strType ="";
-		baseUrl();
-		if ( getType()!=null )
-		{
-			strType = "/" + getType() ;
-		}
-		return _baseUrl.replaceAll( strType, StringUtils.EMPTY ) ;
-	}
-	private static void baseUrl() {
-		StringBuilder sb = new StringBuilder();
-		if (getProtocol() == null) {
-			sb.append("http://");
-		}
-		else {
-			sb.append(getProtocol() + "://");
-		}
-		
-		if (getHost() == null) {
-			return;
-		}
-		else {
-			sb.append(getHost());
-		}
-		
-		sb.append(":");
-		if (getPort() == null) {
-			sb.append("9200");
-		}
-		else {
-			sb.append(String.valueOf(getPort()));
-		}
-		
-		sb.append("/");
-		if (getIndice() == null) {
-			return;
-		}
-		else {
-			sb.append(getIndice());
-		}
-		
-		sb.append("/");
-		if (getType() == null) {
-			return;
-		}
-		else {
-			sb.append(getType());
-		}
-		
-		_baseUrl = sb.toString();
-	}
-
-	/**
-	 * @return the _protocol
-	 */
-	public static String getProtocol() {
-		return _protocol;
-	}
-
-	/**
-	 * @param _protocol the _protocol to set
-	 */
-	public static void setProtocol(String protocol) {
-		_protocol = protocol;
-	}
-
-	/**
-	 * @return the _host
-	 */
-	public static String getHost() {
-		return _host;
-	}
-
-	/**
-	 * @param _host the _host to set
-	 */
-	public static void setHost(String host) {
-		_host = host;
-	}
-
-	/**
-	 * @return the _port
-	 */
-	public static Integer getPort() {
-		return _port;
-	}
-
-	/**
-	 * @param _port the _port to set
-	 */
-	public static void setPort(Integer port) {
-		_port = port;
 	}
 
 	/**
