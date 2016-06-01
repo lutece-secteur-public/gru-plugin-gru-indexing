@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
+ * Copyright (c) 2002-2015, Mairie de Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
@@ -33,10 +33,10 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
+import fr.paris.lutece.portal.service.util.AppLogService;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
-
-import fr.paris.lutece.portal.service.util.AppLogService;
 
 import java.util.HashMap;
 
@@ -62,47 +62,46 @@ import java.util.HashMap;
 } )
 public class ESCustomerDTO
 {
-    
     /** The _n customer id. */
     // Variables declarations 
     private int _nCustomerId;
-    
+
     /** The _str name. */
     private String _strName;
-    
+
     /** The _str first name. */
     private String _strFirstName;
-    
+
     /** The _str email. */
     private String _strEmail;
-    
+
     /** The _str birthday. */
     private String _strBirthday;
-    
+
     /** The _str civility. */
     private String _strCivility;
-    
+
     /** The _str street. */
     private String _strStreet;
-    
+
     /** The _str city of birth. */
     private String _strCityOfBirth;
-    
+
     /** The _b stay connected. */
     private boolean _bStayConnected;
-    
+
     /** The _str city. */
     private String _strCity;
-    
+
     /** The _str postal code. */
     private String _strPostalCode;
-    
+
     /** The _str telephone number. */
     private String _strTelephoneNumber;
-    
+
     /** The _str fixe telephone number. */
     private String _strFixedPhoneNumber;
-    
+
     /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
 
@@ -404,9 +403,7 @@ public class ESCustomerDTO
     {
         _strTelephoneNumber = strTelephoneNumber;
     }
-    
-    
-    
+
     /**
      * Gets the fixed telephone number.
      *
@@ -417,7 +414,7 @@ public class ESCustomerDTO
     {
         return _strFixedPhoneNumber;
     }
-    
+
     /**
      * Sets the fixed telephone number.
      *
@@ -426,7 +423,7 @@ public class ESCustomerDTO
     public void setFixedTelephoneNumber( String strFixedPhoneNumber )
     {
         _strFixedPhoneNumber = strFixedPhoneNumber;
-        AppLogService.info("Fixed phone NUmber "+_strFixedPhoneNumber);
+        AppLogService.info( "Fixed phone NUmber " + _strFixedPhoneNumber );
     }
 
     /**
@@ -446,13 +443,19 @@ public class ESCustomerDTO
     public void setSuggest(  )
     {
         ESSuggestDTO s = new ESSuggestDTO(  );
-        AppLogService.info("Fixed phone NUmber "+_strFixedPhoneNumber);
+        AppLogService.info( "Fixed phone NUmber " + _strFixedPhoneNumber );
+
         // input
-//        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
-        String[] input = { _strFirstName, _strName, _strFirstName+" "+_strName, _strName+" "+_strFirstName, _strTelephoneNumber, _strFixedPhoneNumber  };
+        //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
+        String[] input = 
+            {
+                _strFirstName, _strName, _strFirstName + " " + _strName, _strName + " " + _strFirstName,
+                _strTelephoneNumber, _strFixedPhoneNumber,
+            };
+
         s.setInput( input );
         // Output
-        s.setOutput(  _strFirstName+ " " + _strName );
+        s.setOutput( _strFirstName + " " + _strName );
 
         // Payload
         ESPayload oPayload = new ESPayload(  );

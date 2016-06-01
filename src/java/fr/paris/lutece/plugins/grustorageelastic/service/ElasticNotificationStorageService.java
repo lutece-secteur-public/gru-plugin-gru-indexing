@@ -55,10 +55,15 @@ import java.io.IOException;
 import javax.ws.rs.core.Response;
 
 
+/**
+ * The Class ElasticNotificationStorageService.
+ */
 public class ElasticNotificationStorageService implements INotificationStorageService
 {
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param notification the notification
      */
     @Override
     public void store( Notification notification )
@@ -94,7 +99,9 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
     }
 
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param user the user
      */
     @Override
     public void store( Customer user )
@@ -129,7 +136,9 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
     }
 
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param demand the demand
      */
     @Override
     public void store( Demand demand )
@@ -163,18 +172,19 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
     }
-    
 
     /**
-     * Build a cutomer to an esCustomerSTO
-     * @param customer
-     * @return
+     * Build a cutomer to an esCustomerSTO.
+     *
+     * @param customer the customer
+     * @return the ES customer dto
      */
     private ESCustomerDTO buildCustomer( Customer customer )
     {
         ESCustomerDTO customerDTO = new ESCustomerDTO(  );
 
-        try{
+        try
+        {
             customerDTO.setCustomerId( customer.getCustomerId(  ) );
             customerDTO.setName( customer.getName(  ) );
             customerDTO.setFirstName( customer.getFirstName(  ) );
@@ -189,27 +199,28 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             customerDTO.setTelephoneNumber( customer.getTelephoneNumber(  ) );
             customerDTO.setFixedTelephoneNumber( customer.getFixedTelephoneNumber(  ) );
             customerDTO.setSuggest(  );
-            
         }
-        catch(NullPointerException ex)
+        catch ( NullPointerException ex )
         {
-        	error("Demand OR Notofocation parsing fail", ex);
+            error( "Demand OR Notofocation parsing fail", ex );
         }
+
         return customerDTO;
     }
-    
+
     /**
-     * Buid a Notification to an esNotificationDTO
-     * @param notif
-     * @param demand
-     * @return
+     * Buid a Notification to an esNotificationDTO.
+     *
+     * @param notif the notif
+     * @param demand the demand
+     * @return the ES notification dto
      */
     private ESNotificationDTO buildNotificationDto( Notification notif, Demand demand )
     {
-
         ESNotificationDTO notifDTO = new ESNotificationDTO(  );
 
-        try{
+        try
+        {
             NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( demand.getDemandId(  ) ),
                     String.valueOf( demand.getDemandTypeId(  ) ) );
 
@@ -220,49 +231,52 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
             notifDTO.setUserSms( notif.getUserSms(  ) );
             notifDTO.setUserBackOffice( notif.getUserBackOffice(  ) );
         }
-        catch(NullPointerException ex)
+        catch ( NullPointerException ex )
         {
-        	error("Demand OR Notofocation parsing fail", ex);
+            error( "Demand OR Notofocation parsing fail", ex );
         }
+
         return notifDTO;
     }
 
     /**
-     * Build a demand to an esDemandDTO
-     * @param demand
-     * @param customer
-     * @return
+     * Build a demand to an esDemandDTO.
+     *
+     * @param demand the demand
+     * @param customer the customer
+     * @return the ES demand dto
      */
     private ESDemandDTO buildDemandDTO( Demand demand, Customer customer )
     {
-
-
         ESDemandDTO demandDTO = new ESDemandDTO(  );
 
-        try{
-            CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-            demand.getCustomer(  ).getCustomerId(  ) ) );
-	        demandDTO.setCustomerDemand( customerDemand );
-	        demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
-	        demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
-	        demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
-	        demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
-	        demandDTO.setDemandState( String.valueOf( demand.getDemandStatus(  ) ) );
-	        demandDTO.setNotifType( demand.getNotifType(  ) );
-	        demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
-	        demandDTO.setReference( demand.getReference(  ) );
-	        demandDTO.setDemandStatus( demand.getDemandStatus(  ) );
-	        demandDTO.setSuggest( customer );
-        }
-        catch(NullPointerException ex)
+        try
         {
-        	error("Demand OR Notofocation parsing fail", ex);
+            CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
+                        demand.getCustomer(  ).getCustomerId(  ) ) );
+            demandDTO.setCustomerDemand( customerDemand );
+            demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
+            demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
+            demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
+            demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
+            demandDTO.setDemandState( String.valueOf( demand.getDemandStatus(  ) ) );
+            demandDTO.setNotifType( demand.getNotifType(  ) );
+            demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
+            demandDTO.setReference( demand.getReference(  ) );
+            demandDTO.setDemandStatus( demand.getDemandStatus(  ) );
+            demandDTO.setSuggest( customer );
         }
+        catch ( NullPointerException ex )
+        {
+            error( "Demand OR Notofocation parsing fail", ex );
+        }
+
         return demandDTO;
     }
-    
+
     /**
-     * Build an error response
+     * Build an error response.
+     *
      * @param strMessage The error message
      * @param ex An exception
      * @return The response

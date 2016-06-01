@@ -45,36 +45,40 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.JsonMappingException;
-
-import com.mysql.jdbc.StringUtils;
 
 import java.io.IOException;
-
-import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ElasticSearchService.
+ */
 public class ElasticSearchService implements ISearchService
 {
     /**
-    * {@inheritDoc }
-    */
+     * {@inheritDoc }.
+     *
+     * @param strQuery the str query
+     * @return the list
+     */
     @Override
     public List<CustomerResult> searchCustomer( String strQuery )
     {
-    	List<CustomerResult> listCustomer = new ArrayList<CustomerResult>(  );
+        List<CustomerResult> listCustomer = new ArrayList<CustomerResult>(  );
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String[] res = strQuery.split( " " );
         String json = "";
 
         // Gets the name/firstname entered by autocomplete
         Map<String, String> mapChamps = new HashMap<String, String>(  );
-        
+
         if ( res.length >= 1 )
         {
             mapChamps.put( "first_name", res[0] );
@@ -106,24 +110,32 @@ public class ElasticSearchService implements ISearchService
                 listCustomer.add( buildCustomerResult( node ) );
             }
         }
+
         return listCustomer;
     }
-    
-    
+
+    /**
+     * Search customer.
+     *
+     * @param nCid the n cid
+     * @return the fr.paris.lutece.plugins.grusupply.business. customer
+     */
     private fr.paris.lutece.plugins.grusupply.business.Customer searchCustomer( int nCid )
     {
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String json = "";
 
-        AppLogService.info("uri:"+ uri);
+        AppLogService.info( "uri:" + uri );
+
         // Gets the name/firstname entered by autocomplete
         Map<String, String> mapChamps = new HashMap<String, String>(  );
-        
+
         mapChamps.put( "user_cid", String.valueOf( nCid ) );
+
         try
         {
             json = ElasticConnexion.formatFullText( mapChamps );
-            AppLogService.info("json:"+ json);
+            AppLogService.info( "json:" + json );
         }
         catch ( IOException ex )
         {
@@ -133,16 +145,18 @@ public class ElasticSearchService implements ISearchService
         String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );
         JsonNode retour = ElasticConnexion.setJsonToJsonTree( jsonRetour );
 
-        AppLogService.info("retour:"+ retour );
+        AppLogService.info( "retour:" + retour );
+
         JsonNode tmp = retour.findValue( "_source" );
 
         return buildCustomer( tmp );
     }
-    
 
     /**
-    * {@inheritDoc }
-    */
+     * {@inheritDoc }.
+     *
+     * @return true, if is auto complete
+     */
     @Override
     public boolean isAutoComplete(  )
     {
@@ -150,8 +164,10 @@ public class ElasticSearchService implements ISearchService
     }
 
     /**
-    * {@inheritDoc }
-    */
+     * {@inheritDoc }.
+     *
+     * @return the auto complete url
+     */
     @Override
     public String getAutoCompleteUrl(  )
     {
@@ -160,67 +176,80 @@ public class ElasticSearchService implements ISearchService
         return tmp.substring( 0, tmp.length(  ) - 1 ) + RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME +
         GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
     }
-    
+
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param user the user
      */
     @Override
-    public void updateCustomer ( Customer user )
+    public void updateCustomer( Customer user )
     {
-    	 fr.paris.lutece.plugins.grusupply.business.Customer grusupplyCustomer = searchCustomer( user.getId( ) );
-    	 AppLogService.info("grusupplyCustomer found :"+ grusupplyCustomer.getCustomerId()+ "-"+ grusupplyCustomer.getFirstName() + "-"+ grusupplyCustomer.getName( )+"-"+grusupplyCustomer.getCityOfBirth( ));
-		 grusupplyCustomer.setName( user.getLastname(  ) );
-		 grusupplyCustomer.setFirstName( user.getFirstname(  ) );
-		 grusupplyCustomer.setEmail( user.getEmail(  ) );
-		 grusupplyCustomer.setTelephoneNumber( user.getMobilePhone(  ) );
-		 grusupplyCustomer.setFixedTelephoneNumber( user.getFixedPhoneNumber(  ) );
-             	 
-		 StorageService.instance(  ).store( grusupplyCustomer );
-    }
-    
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public void deleteCustomer ( int nId )
-    {
-        String url = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
-             AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) + "user/" + nId ;
-        
-        ElasticConnexion.sentToElasticDELETE( url.trim( ) ) ;
+        fr.paris.lutece.plugins.grusupply.business.Customer grusupplyCustomer = searchCustomer( user.getId(  ) );
+        AppLogService.info( "grusupplyCustomer found :" + grusupplyCustomer.getCustomerId(  ) + "-" +
+            grusupplyCustomer.getFirstName(  ) + "-" + grusupplyCustomer.getName(  ) + "-" +
+            grusupplyCustomer.getCityOfBirth(  ) );
+        grusupplyCustomer.setName( user.getLastname(  ) );
+        grusupplyCustomer.setFirstName( user.getFirstname(  ) );
+        grusupplyCustomer.setEmail( user.getEmail(  ) );
+        grusupplyCustomer.setTelephoneNumber( user.getMobilePhone(  ) );
+        grusupplyCustomer.setFixedTelephoneNumber( user.getFixedPhoneNumber(  ) );
+
+        StorageService.instance(  ).store( grusupplyCustomer );
     }
 
     /**
-     * Build a CustomerResult from a node
-     * @param node
-     * @return
+     * {@inheritDoc }.
+     *
+     * @param nId the n id
+     */
+    @Override
+    public void deleteCustomer( int nId )
+    {
+        String url = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
+            AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) + "user/" + nId;
+
+        ElasticConnexion.sentToElasticDELETE( url.trim(  ) );
+    }
+
+    /**
+     * Build a CustomerResult from a node.
+     *
+     * @param node the node
+     * @return the customer result
      */
     private CustomerResult buildCustomerResult( JsonNode node )
     {
-
         CustomerResult customer = new CustomerResult(  );
 
-
-        try{
+        try
+        {
             customer.setId( node.findValue( "user_cid" ).asInt(  ) );
             customer.setLastname( node.findValue( "last_name" ).asText(  ) );
             customer.setFirstname( node.findValue( "first_name" ).asText(  ) );
             customer.setEmail( node.findValue( "email" ).asText(  ) );
             customer.setMobilePhone( node.findValue( "telephoneNumber" ).asText(  ) );
         }
-        catch(NullPointerException ex)
+        catch ( NullPointerException ex )
         {
-        	error( "Parsing Customer fail"+ node.toString(), null );
+            error( "Parsing Customer fail" + node.toString(  ), null );
         }
+
         return customer;
     }
-    
+
+    /**
+     * Builds the customer.
+     *
+     * @param node the node
+     * @return the fr.paris.lutece.plugins.grusupply.business. customer
+     */
     private fr.paris.lutece.plugins.grusupply.business.Customer buildCustomer( JsonNode node )
     {
-    	fr.paris.lutece.plugins.grusupply.business.Customer customer = new fr.paris.lutece.plugins.grusupply.business.Customer(  );
+        fr.paris.lutece.plugins.grusupply.business.Customer customer = new fr.paris.lutece.plugins.grusupply.business.Customer(  );
 
-    	
-        try{
+        try
+        {
             customer.setCustomerId( node.findValue( "user_cid" ).asInt(  ) );
             customer.setName( node.findValue( "last_name" ).asText(  ) );
             customer.setFirstName( node.findValue( "first_name" ).asText(  ) );
@@ -233,16 +262,19 @@ public class ElasticSearchService implements ISearchService
             customer.setCityOfBirth( node.findValue( "cityOfBirth" ).asText(  ) );
             customer.setCivility( node.findValue( "civility" ).asText(  ) );
             customer.setPostalCode( node.findValue( "postalCode" ).asText(  ) );
-            customer.setStayConnected( node.findValue( "stayConnected" ).asBoolean( ) );
+            customer.setStayConnected( node.findValue( "stayConnected" ).asBoolean(  ) );
         }
-        catch(NullPointerException ex)
+        catch ( NullPointerException ex )
         {
-        	error( "Parsing Customer fail"+ node.toString()+ex.getMessage( ), null );
+            error( "Parsing Customer fail" + node.toString(  ) + ex.getMessage(  ), null );
         }
+
         return customer;
     }
+
     /**
-     * Build an error response
+     * Build an error response.
+     *
      * @param strMessage The error message
      * @param ex An exception
      * @return The response

@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
+ * Copyright (c) 2002-2015, Mairie de Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
@@ -24,7 +24,7 @@
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * StringERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
@@ -43,7 +43,7 @@ import java.util.HashMap;
 
 
 /**
- * This is the business class for the object Demand
+ * The Class ESDemandDTO.
  */
 @JsonPropertyOrder( {"utilisateur",
     "demand_id",
@@ -59,24 +59,62 @@ import java.util.HashMap;
 } )
 public class ESDemandDTO
 {
+    /** The _o customer demand. */
     // Variables declarations 
     private CustomerDemandDTO _oCustomerDemand;
+
+    /** The _str demand id. */
     private String _strDemandId;
+
+    /** The _str demand type id. */
     private String _strDemandTypeId;
+
+    /** The _str demand max step. */
     private String _strDemandMaxStep;
+
+    /** The _str demand user current step. */
     private String _strDemandUserCurrentStep;
+
+    /** The _str demand state. */
     private String _strDemandState;
+
+    /** The _n demand status. */
     private int _nDemandStatus;
+
+    /** The _str notif type. */
     private String _strNotifType;
+
+    /** The _n crm status. */
     private int _nCRMStatus;
+
+    /** The _str reference. */
     private String _strReference;
+
+    /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
 
+    /**
+     * Instantiates a new ES demand dto.
+     */
     public ESDemandDTO(  )
     {
         super(  );
     }
 
+    /**
+     * Instantiates a new ES demand dto.
+     *
+     * @param oCustomerDemand the o customer demand
+     * @param strDemandId the str demand id
+     * @param strDemandTypeId the str demand type id
+     * @param strDemandMaxStep the str demand max step
+     * @param strDemandUserCurrentStep the str demand user current step
+     * @param strDemandState the str demand state
+     * @param strNotifType the str notif type
+     * @param nCRMStatus the n crm status
+     * @param strReference the str reference
+     * @param oSuggest the o suggest
+     */
     public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandTypeId,
         String strDemandMaxStep, String strDemandUserCurrentStep, String strDemandState, String strNotifType,
         int nCRMStatus, String strReference, ESSuggestDTO oSuggest )
@@ -95,9 +133,10 @@ public class ESDemandDTO
     }
 
     /**
-    * Return the Customer Cid for a Demand
-    * @return
-    */
+     * Gets the customer demand.
+     *
+     * @return the customer demand
+     */
     @JsonProperty( "utilisateur" )
     public CustomerDemandDTO getCustomerDemand(  )
     {
@@ -105,8 +144,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the Customer Cid for a demand
-     * @param _oCustomerDemand
+     * Sets the customer demand.
+     *
+     * @param oCustomerDemand the new customer demand
      */
     @JsonProperty( "utilisateur" )
     public void setCustomerDemand( CustomerDemandDTO oCustomerDemand )
@@ -115,8 +155,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the DemandId
-     * @return The DemandId
+     * Gets the demand id.
+     *
+     * @return the demand id
      */
     @JsonProperty( "demand_id" )
     public String getDemandId(  )
@@ -125,8 +166,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the DemandId
-     * @param nDemandId The DemandId
+     * Sets the demand id.
+     *
+     * @param nDemandId the new demand id
      */
     @JsonProperty( "demand_id" )
     public void setDemandId( String nDemandId )
@@ -135,8 +177,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the DemandTypeId
-     * @return The DemandTypeId
+     * Gets the demand type id.
+     *
+     * @return the demand type id
      */
     @JsonProperty( "demand_type_id" )
     public String getDemandTypeId(  )
@@ -145,8 +188,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the DemandTypeId
-     * @param nDemandTypeId The DemandTypeId
+     * Sets the demand type id.
+     *
+     * @param nDemandTypeId the new demand type id
      */
     @JsonProperty( "demand_type_id" )
     public void setDemandTypeId( String nDemandTypeId )
@@ -155,8 +199,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the DemandMaxStep
-     * @return The DemandMaxStep
+     * Gets the demand max step.
+     *
+     * @return the demand max step
      */
     @JsonProperty( "demand_max_step" )
     public String getDemandMaxStep(  )
@@ -165,8 +210,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the DemandMaxStep
-     * @param nDemandMaxStep The DemandMaxStep
+     * Sets the demand max step.
+     *
+     * @param nDemandMaxStep the new demand max step
      */
     @JsonProperty( "demand_max_step" )
     public void setDemandMaxStep( String nDemandMaxStep )
@@ -175,8 +221,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the DemandUserCurrentStep
-     * @return The DemandUserCurrentStep
+     * Gets the demand user current step.
+     *
+     * @return the demand user current step
      */
     @JsonProperty( "demand_user_max_step" )
     public String getDemandUserCurrentStep(  )
@@ -185,8 +232,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the DemandUserCurrentStep
-     * @param nDemandUserCurrentStep The DemandUserCurrentStep
+     * Sets the demand user current step.
+     *
+     * @param nDemandUserCurrentStep the new demand user current step
      */
     @JsonProperty( "demand_user_max_step" )
     public void setDemandUserCurrentStep( String nDemandUserCurrentStep )
@@ -195,8 +243,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the DemandState
-     * @return The DemandState
+     * Gets the demand state.
+     *
+     * @return the demand state
      */
     @JsonProperty( "demand_state" )
     public String getDemandState(  )
@@ -205,8 +254,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the DemandState
-     * @param nDemandState The DemandState
+     * Sets the demand state.
+     *
+     * @param nDemandState the new demand state
      */
     @JsonProperty( "demand_state" )
     public void setDemandState( String nDemandState )
@@ -215,8 +265,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the NotifType
-     * @return The NotifType
+     * Gets the notif type.
+     *
+     * @return the notif type
      */
     @JsonProperty( "notification_type" )
     public String getNotifType(  )
@@ -225,8 +276,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the NotifType
-     * @param strNotifType The NotifType
+     * Sets the notif type.
+     *
+     * @param strNotifType the new notif type
      */
     @JsonProperty( "notification_type" )
     public void setNotifType( String strNotifType )
@@ -235,8 +287,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the Demand Status
-     * @return
+     * Gets the demand status.
+     *
+     * @return the demand status
      */
     @JsonProperty( "demand_status" )
     public int getDemandStatus(  )
@@ -245,8 +298,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Gets the Demand Status
-     * @param nDemandStatus
+     * Sets the demand status.
+     *
+     * @param nDemandStatus the new demand status
      */
     @JsonProperty( "demand_status" )
     public void setDemandStatus( int nDemandStatus )
@@ -255,9 +309,10 @@ public class ESDemandDTO
     }
 
     /**
-    * Returns the CRMStatus
-    * @return The CRMStatus
-    */
+     * Gets the CRM status.
+     *
+     * @return the CRM status
+     */
     @JsonProperty( "crm_status_id" )
     public int getCRMStatus(  )
     {
@@ -265,8 +320,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the CRMStatus
-     * @param nCRMStatus The CRMStatus
+     * Sets the CRM status.
+     *
+     * @param nCRMStatus the new CRM status
      */
     @JsonProperty( "crm_status_id" )
     public void setCRMStatus( int nCRMStatus )
@@ -275,8 +331,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Returns the Reference
-     * @return The Reference
+     * Gets the reference.
+     *
+     * @return the reference
      */
     @JsonProperty( "demand_reference" )
     public String getReference(  )
@@ -285,8 +342,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the Reference
-     * @param strReference The Reference
+     * Sets the reference.
+     *
+     * @param strReference the new reference
      */
     @JsonProperty( "demand_reference" )
     public void setReference( String strReference )
@@ -295,8 +353,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Return the Suggest
-     * @return The suggest
+     * Gets the suggest.
+     *
+     * @return the suggest
      */
     @JsonProperty( "suggest" )
     public ESSuggestDTO getSuggest(  )
@@ -305,8 +364,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the suggest
-     * @param _oSuggest
+     * Sets the suggest.
+     *
+     * @param suggest the new suggest
      */
     @JsonIgnore
     public void setSuggest( ESSuggestDTO suggest )
@@ -315,7 +375,9 @@ public class ESDemandDTO
     }
 
     /**
-     * Sets the suggest
+     * Sets the suggest.
+     *
+     * @param customer the new suggest
      */
     public void setSuggest( Customer customer )
     {
@@ -339,7 +401,7 @@ public class ESDemandDTO
         payload.put( "FixeTelephoneNumber", customer.getFixedTelephoneNumber(  ) );
         payload.put( "email", customer.getEmail(  ) );
         payload.put( "reference", _strReference );
-        
+
         oPayload.setElements( payload );
         s.setPayload( oPayload );
         this._oSuggest = s;

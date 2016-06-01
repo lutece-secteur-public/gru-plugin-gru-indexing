@@ -36,16 +36,32 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NotificationDemandDTO.
+ */
 public class NotificationDemandDTO
 {
+    /** The _str demand id. */
     private String _strDemandId;
+
+    /** The _str demand type id. */
     private String _strDemandTypeId;
 
+    /**
+     * Instantiates a new notification demand dto.
+     */
     public NotificationDemandDTO(  )
     {
         super(  );
     }
 
+    /**
+     * Instantiates a new notification demand dto.
+     *
+     * @param strDemandId the str demand id
+     * @param strDemandTypeId the str demand type id
+     */
     public NotificationDemandDTO( String strDemandId, String strDemandTypeId )
     {
         super(  );
@@ -54,8 +70,9 @@ public class NotificationDemandDTO
     }
 
     /**
-     * Returns the Demand Id
-     * @return the Demand ID
+     * Gets the demand id.
+     *
+     * @return the demand id
      */
     @JsonProperty( "demand_id" )
     public String getDemandId(  )
@@ -64,8 +81,9 @@ public class NotificationDemandDTO
     }
 
     /**
-     * Sets the Demand ID
-     * @param _strDemandId
+     * Sets the demand id.
+     *
+     * @param strDemandId the new demand id
      */
     @JsonProperty( "demand_id" )
     public void setDemandId( String strDemandId )
@@ -74,8 +92,9 @@ public class NotificationDemandDTO
     }
 
     /**
-     * Return the Demand ID Type
-     * @return
+     * Gets the demand type id.
+     *
+     * @return the demand type id
      */
     @JsonProperty( "demand_type_id" )
     public String getDemandTypeId(  )
@@ -84,8 +103,9 @@ public class NotificationDemandDTO
     }
 
     /**
-     * Sets the Demand ID Type
-     * @param _strDemandIdType
+     * Sets the demand type id.
+     *
+     * @param strDemandTypeId the new demand type id
      */
     @JsonProperty( "demand_type_id" )
     public void setDemandTypeId( String strDemandTypeId )

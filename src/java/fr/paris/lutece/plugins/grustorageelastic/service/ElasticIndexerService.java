@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,7 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
-
-import fr.paris.lutece.plugins.grustorageelastic.service.Threads.IndexerElasticSearchThread;
+import fr.paris.lutece.plugins.grustorageelastic.service.threads.IndexerElasticSearchThread;
 import fr.paris.lutece.plugins.grustorageelastic.util.ElasticIndexerException;
 import fr.paris.lutece.plugins.grustorageelastic.web.rs.AsynchronousService;
 import fr.paris.lutece.plugins.grustorageelastic.web.rs.IAsynchronousService;
@@ -50,7 +49,6 @@ public class ElasticIndexerService extends AsynchronousService implements IAsync
     private static ElasticIndexerService _singleton;
     private static IndexerElasticSearchThread _threadElastic;
 
-    
     /**
      *
      * @return IElasticIndexerService
@@ -59,42 +57,45 @@ public class ElasticIndexerService extends AsynchronousService implements IAsync
     {
         if ( _singleton == null )
         {
-        	_singleton = new ElasticIndexerService( ) ;
+            _singleton = new ElasticIndexerService(  );
         }
 
         return _singleton;
     }
 
     @Override
-    public void indexerES(  ) throws ElasticIndexerException 
+    public void indexerES(  ) throws ElasticIndexerException
     {
         if ( ( ( _threadElastic != null ) && _threadElastic.isRunning(  ) ) )
         {
-            throw new ElasticIndexerException( "Indexer Elastic Search", "The _thread of indexing elastic is already running" );
+            throw new ElasticIndexerException( "Indexer Elastic Search",
+                "The _thread of indexing elastic is already running" );
         }
 
         // Start the thread
-        _threadElastic = new IndexerElasticSearchThread( this );
+        // _threadElastic = new IndexerElasticSearchThread( this );
+        _threadElastic = IndexerElasticSearchThread.getInstance( this );
+
+        _threadElastic.setPriority( Thread.MAX_PRIORITY );
 
         try
         {
-        	_threadElastic.start(  );
+            _threadElastic.start(  );
         }
         catch ( Exception e )
         {
-        	IndexerElasticSearchThread.interrupted();
-        	_threadElastic = null;
+            IndexerElasticSearchThread.interrupted(  );
+            _threadElastic = null;
         }
     }
-     
-    @Override
-    public void killThreads(  ) 
-    {
-    	if( _threadElastic != null ) 
-    	{
-    		IndexerElasticSearchThread.interrupted( );
-    		_threadElastic=null;
-    	}
-    }
 
+    @Override
+    public void killThreads(  )
+    {
+        if ( _threadElastic != null )
+        {
+            IndexerElasticSearchThread.interrupted(  );
+            _threadElastic = null;
+        }
+    }
 }

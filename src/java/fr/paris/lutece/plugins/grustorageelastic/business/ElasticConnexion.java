@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.mysql.jdbc.StringUtils;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -51,22 +52,25 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
+
 import java.util.Map;
 
 
+/**
+ * The Class ElasticConnexion.
+ */
 public final class ElasticConnexion
 {
+    /** The _client. */
     private static Client _client = Client.create(  );
+
+    /** The _singleton. */
     private ElasticConnexion _singleton;
 
-    private ElasticConnexion(  )
-    {
-        _singleton = new ElasticConnexion(  );
-    }
-
     /**
-     * Function which make a singleton
-     * @return
+     * Gets the single instance of ElasticConnexion.
+     *
+     * @return single instance of ElasticConnexion
      */
     public ElasticConnexion getInstance(  )
     {
@@ -79,10 +83,11 @@ public final class ElasticConnexion
     }
 
     /**
-     * Function which set URI to elasticsearch connexion
-     * @param strPath
-     * @param strSpecif
-     * @return
+     * Gets the ES param.
+     *
+     * @param strPath the str path
+     * @param strSpecif the str specif
+     * @return the ES param
      */
     public static String getESParam( String strPath, String strSpecif )
     {
@@ -95,9 +100,11 @@ public final class ElasticConnexion
     }
 
     /**
-     * @param strPath
-     * @param strSpecif
-     * @return
+     * Gets the ES param.
+     *
+     * @param strPath the str path
+     * @param strSpecif the str specif
+     * @return the ES param
      */
     public static String getESParam( String strPath, int strSpecif )
     {
@@ -105,10 +112,11 @@ public final class ElasticConnexion
     }
 
     /**
-     * Fonction which insert data into elasticSearch
-     * @param uri
-     * @param json
-     * @return
+     * Sent to elastic put.
+     *
+     * @param uri the uri
+     * @param json the json
+     * @return the string
      */
     public static String sentToElasticPUT( String uri, String json )
     {
@@ -119,10 +127,11 @@ public final class ElasticConnexion
     }
 
     /**
-     * Fonction which insert data into elasticSearch
-     * @param uri
-     * @param json
-     * @return
+     * Sent to elastic post.
+     *
+     * @param uri the uri
+     * @param json the json
+     * @return the string
      */
     public static String sentToElasticPOST( String uri, String json )
     {
@@ -131,7 +140,13 @@ public final class ElasticConnexion
 
         return response.getEntity( String.class );
     }
-    
+
+    /**
+     * Sent to elastic delete.
+     *
+     * @param uri the uri
+     * @return the string
+     */
     public static String sentToElasticDELETE( String uri )
     {
         WebResource resource = _client.resource( uri );
@@ -141,12 +156,13 @@ public final class ElasticConnexion
     }
 
     /**
-     * Method which permit to search with autocompletion
-     * @param champ
-     * @return
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonGenerationException
+     * Format auto complete search.
+     *
+     * @param champ the champ
+     * @return the string
+     * @throws JsonGenerationException the json generation exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static String formatAutoCompleteSearch( String champ )
         throws JsonGenerationException, JsonMappingException, IOException
@@ -168,13 +184,14 @@ public final class ElasticConnexion
     }
 
     /**
-     * Method which permit to search by exact request
-     * @param key
-     * @param value
-     * @return
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonGenerationException
+     * Format exact search.
+     *
+     * @param strKey the str key
+     * @param strValue the str value
+     * @return the string
+     * @throws JsonGenerationException the json generation exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static String formatExactSearch( String strKey, String strValue )
         throws JsonGenerationException, JsonMappingException, IOException
@@ -204,13 +221,13 @@ public final class ElasticConnexion
     }
 
     /**
-     * Method which permit to search by exact request
-     * @param key
-     * @param value
-     * @return
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonGenerationException
+     * Format exact search.
+     *
+     * @param map the map
+     * @return the string
+     * @throws JsonGenerationException the json generation exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static String formatExactSearch( Map<String, String> map )
         throws JsonGenerationException, JsonMappingException, IOException
@@ -244,12 +261,13 @@ public final class ElasticConnexion
     }
 
     /**
-     * Function which make a full text search with any key/value
-     * @param map Have to be Key/value
-     * @return
-     * @throws JsonGenerationException
-     * @throws JsonMappingException
-     * @throws IOException
+     * Format full text.
+     *
+     * @param map the map
+     * @return the string
+     * @throws JsonGenerationException the json generation exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public static String formatFullText( Map<String, String> map )
         throws JsonGenerationException, JsonMappingException, IOException
@@ -260,7 +278,7 @@ public final class ElasticConnexion
         ObjectNode query = new ObjectNode( factory );
         ObjectNode bool = new ObjectNode( factory );
         ObjectNode and = new ObjectNode( factory );
-        
+
         ArrayNode should = new ArrayNode( factory );
 
         for ( String mapKey : map.keySet(  ) )
@@ -281,9 +299,10 @@ public final class ElasticConnexion
     }
 
     /**
-     * Format a JSON String into a JSON node
-     * @param strJson
-     * @return
+     * Sets the json to json tree.
+     *
+     * @param strJson the str json
+     * @return the json node
      */
     public static JsonNode setJsonToJsonTree( String strJson )
     {

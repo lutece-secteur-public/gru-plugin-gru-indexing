@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,15 +36,25 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ESSuggestDTO.
+ */
 public class ESSuggestDTO
 {
+    /** The _str input. */
     private String[] _strInput;
+
+    /** The _str output. */
     private String _strOutput;
+
+    /** The _o payload. */
     private ESPayload _oPayload;
 
     /**
-     * Returns the input for autopletion
-     * @return
+     * Gets the input.
+     *
+     * @return the input
      */
     @JsonProperty( "input" )
     public String[] getInput(  )
@@ -53,8 +63,9 @@ public class ESSuggestDTO
     }
 
     /**
-     * Sets the input for autocompletion
-     * @param strInput
+     * Sets the input.
+     *
+     * @param strInput the new input
      */
     public void setInput( String[] strInput )
     {
@@ -62,8 +73,9 @@ public class ESSuggestDTO
     }
 
     /**
-     * Returns the Output for autocompletion
-     * @return
+     * Gets the output.
+     *
+     * @return the output
      */
     @JsonProperty( "output" )
     public String getOutput(  )
@@ -72,8 +84,9 @@ public class ESSuggestDTO
     }
 
     /**
-     * Sets the Output for autocompletion
-     * @param strOutput
+     * Sets the output.
+     *
+     * @param strOutput the new output
      */
     public void setOutput( String strOutput )
     {
@@ -81,8 +94,9 @@ public class ESSuggestDTO
     }
 
     /**
-     * Returns the Payload autocompletion
-     * @return
+     * Gets the payload.
+     *
+     * @return the payload
      */
     @JsonProperty( "payload" )
     public ESPayload getPayload(  )
@@ -91,8 +105,9 @@ public class ESSuggestDTO
     }
 
     /**
-     * Sets the Payload autocompletion
-     * @param oPayload
+     * Sets the payload.
+     *
+     * @param oPayload the new payload
      */
     public void setPayload( ESPayload oPayload )
     {

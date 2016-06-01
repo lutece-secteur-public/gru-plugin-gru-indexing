@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,20 +44,40 @@ import java.io.IOException;
 import java.util.HashMap;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ESPayload.
+ */
 public class ESPayload
 {
+    /** The _o elements. */
     private HashMap<String, String> _oElements;
 
+    /**
+     * Gets the elements.
+     *
+     * @return the elements
+     */
     public HashMap<String, String> getElements(  )
     {
         return _oElements;
     }
 
+    /**
+     * Sets the elements.
+     *
+     * @param oElements the o elements
+     */
     public void setElements( HashMap<String, String> oElements )
     {
         this._oElements = oElements;
     }
 
+    /**
+     * To json.
+     *
+     * @return the string
+     */
     public String toJson(  )
     {
         String strRetour = "";

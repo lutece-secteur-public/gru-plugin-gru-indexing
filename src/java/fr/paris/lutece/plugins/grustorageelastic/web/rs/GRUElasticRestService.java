@@ -47,6 +47,7 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -56,9 +57,18 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 
+/**
+ * The Class GRUElasticRestService.
+ */
 @Path( RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME )
 public class GRUElasticRestService
 {
+    /**
+     * Autocomplete.
+     *
+     * @param strQuery the str query
+     * @return the string
+     */
     @GET
     @Path( GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION )
     @Produces( MediaType.APPLICATION_JSON )
@@ -86,12 +96,13 @@ public class GRUElasticRestService
     }
 
     /**
-     * Method which permit to find and format the result of an autocomplete
-     * @param nodeTree
-     * @return
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonGenerationException
+     * Method which permit to find and format the result of an autocomplete.
+     *
+     * @param nodeTree the node tree
+     * @return the info autocomplete
+     * @throws JsonGenerationException the json generation exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private static String getInfoAutocomplete( JsonNode nodeTree )
         throws JsonGenerationException, JsonMappingException, IOException

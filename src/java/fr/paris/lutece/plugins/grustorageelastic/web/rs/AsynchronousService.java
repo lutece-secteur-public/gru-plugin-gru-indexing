@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,14 +33,26 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.web.rs;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AsynchronousService.
+ */
 public class AsynchronousService implements IAsynchronousService
 {
+    /** The _n state. */
     private int _nState;
+
+    /** The _n progress. */
     private int _nProgress;
+
+    /** The _sb logs. */
     private StringBuilder _sbLogs;
 
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param nState the new state
      */
     @Override
     public void setState( int nState )
@@ -49,7 +61,9 @@ public class AsynchronousService implements IAsynchronousService
     }
 
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param nProgress the new progress
      */
     @Override
     public void setProgress( int nProgress )
@@ -58,7 +72,9 @@ public class AsynchronousService implements IAsynchronousService
     }
 
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
+     *
+     * @param strLog the str log
      */
     @Override
     public void addToLog( String strLog )
@@ -72,7 +88,7 @@ public class AsynchronousService implements IAsynchronousService
     }
 
     /**
-     * {@inheritDoc }
+     * {@inheritDoc }.
      */
     @Override
     public void clearLogs(  )
@@ -81,7 +97,8 @@ public class AsynchronousService implements IAsynchronousService
     }
 
     /**
-     * Get the progression value
+     * Get the progression value.
+     *
      * @return The progression value
      */
     @Override
@@ -91,7 +108,8 @@ public class AsynchronousService implements IAsynchronousService
     }
 
     /**
-     * Get the logs
+     * Get the logs.
+     *
      * @return The logs
      */
     @Override
@@ -106,7 +124,8 @@ public class AsynchronousService implements IAsynchronousService
     }
 
     /**
-     * Return true if the process is currently running
+     * Return true if the process is currently running.
+     *
      * @return otherwise false;
      */
     @Override
@@ -114,12 +133,13 @@ public class AsynchronousService implements IAsynchronousService
     {
         return _nState == STATE_RUNNING;
     }
-    
+
+    /* (non-Javadoc)
+     * @see fr.paris.lutece.plugins.grustorageelastic.web.rs.IAsynchronousService#getState()
+     */
     @Override
     public int getState(  )
     {
-        return _nState ;
+        return _nState;
     }
-    
-    
 }

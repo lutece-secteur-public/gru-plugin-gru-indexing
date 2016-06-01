@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,56 +33,76 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.web.rs;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IAsynchronousService.
+ */
 public interface IAsynchronousService
 {
+    /** The state not started. */
     int STATE_NOT_STARTED = 0;
+
+    /** The state running. */
     int STATE_RUNNING = 1;
+
+    /** The state aborted. */
     int STATE_ABORTED = 2;
+
+    /** The state finished. */
     int STATE_FINISHED = 3;
 
     /**
-     * Set the current state of the process
+     * Set the current state of the process.
+     *
      * @param nState The state
      */
     void setState( int nState );
 
     /**
-     * Add some text to the current logs
+     * Add some text to the current logs.
+     *
      * @param strLog the log
      */
     void addToLog( String strLog );
 
     /**
-     * Sets the current progression
+     * Sets the current progression.
+     *
      * @param nProgress The progress value
      */
     void setProgress( int nProgress );
 
     /**
-     * Clear the logs
+     * Clear the logs.
      */
-    void clearLogs( );
-    
-    /**
-     * Get the progression value
-     * @return The progression value
-     */
-    public int getProgress( );
-    /**
-     * Get the logs
-     * @return The logs
-     */
-    public String getLogs( );
+    void clearLogs(  );
 
     /**
-     * Return true if the process is currently running
+     * Get the progression value.
+     *
+     * @return The progression value
+     */
+    int getProgress(  );
+
+    /**
+     * Get the logs.
+     *
+     * @return The logs
+     */
+    String getLogs(  );
+
+    /**
+     * Return true if the process is currently running.
+     *
      * @return otherwise false;
      */
-    public boolean isRunning( );
-    
+    boolean isRunning(  );
+
     /**
-     * 
+     * Gets the state.
+     *
      * @return state service
      */
-    public int getState();
+    int getState(  );
 }

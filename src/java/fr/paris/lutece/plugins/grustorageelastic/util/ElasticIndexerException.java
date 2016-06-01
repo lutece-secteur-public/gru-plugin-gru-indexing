@@ -1,21 +1,61 @@
+/*
+ * Copyright (c) 2002-2015, Mairie de Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
+ *     contributors may be used to endorse or promote products derived from
+ *     this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * License 1.0
+ */
 package fr.paris.lutece.plugins.grustorageelastic.util;
 
+
+/**
+ * The Class ElasticIndexerException.
+ */
 public class ElasticIndexerException extends Exception
 {
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-    private String _strTitleField;
-    private String _strErrorMessage;
-    private boolean _bMandatoryError;
+    /** The _str title field. */
+    private final String _strTitleField;
+
+    /** The _str error message. */
+    private final String _strErrorMessage;
+
+    /** The _b mandatory error. */
+    private final boolean _bMandatoryError;
 
     /**
-     * Creates a new DocumentSaveException
-     * @param strTitleField The title of the filed that caused the error
-     * @param strErrorMessage The error message
+     * Instantiates a new elastic indexer exception.
+     *
+     * @param strTitleField the str title field
+     * @param strErrorMessage the str error message
      */
     public ElasticIndexerException( String strTitleField, String strErrorMessage )
     {
@@ -24,35 +64,33 @@ public class ElasticIndexerException extends Exception
         _bMandatoryError = false;
     }
 
-	public String getTitleField( ) 
-	{
-		return _strTitleField;
-	}
+    /**
+     * Gets the title field.
+     *
+     * @return the title field
+     */
+    public String getTitleField(  )
+    {
+        return _strTitleField;
+    }
 
-	public void setTitleField( String _strTitleField ) 
-	{
-		this._strTitleField = _strTitleField;
-	}
+    /**
+     * Gets the error message.
+     *
+     * @return the error message
+     */
+    public String getErrorMessage(  )
+    {
+        return _strErrorMessage;
+    }
 
-	public String getErrorMessage( )  
-	{
-		return _strErrorMessage;
-	}
-
-	public void setErrorMessage( String _strErrorMessage ) 
-	{
-		this._strErrorMessage = _strErrorMessage;
-	}
-
-	public boolean isMandatoryError( ) 
-	{
-		return _bMandatoryError;
-	}
-
-	public void setMandatoryError( boolean _bMandatoryError )  
-	{
-		this._bMandatoryError = _bMandatoryError;
-	}
-    
-
+    /**
+     * Checks if is mandatory error.
+     *
+     * @return true, if is mandatory error
+     */
+    public boolean isMandatoryError(  )
+    {
+        return _bMandatoryError;
+    }
 }

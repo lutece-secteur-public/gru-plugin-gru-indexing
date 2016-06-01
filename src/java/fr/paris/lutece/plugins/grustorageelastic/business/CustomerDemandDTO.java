@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2013, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,15 +36,27 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 
+/**
+ * The Class CustomerDemandDTO.
+ */
 public class CustomerDemandDTO
 {
+    /** The _str cid. */
     private String _strCid;
 
+    /**
+     * Instantiates a new customer demand dto.
+     */
     public CustomerDemandDTO(  )
     {
         super(  );
     }
 
+    /**
+     * Instantiates a new customer demand dto.
+     *
+     * @param strCid the str cid
+     */
     public CustomerDemandDTO( String strCid )
     {
         super(  );
@@ -52,8 +64,9 @@ public class CustomerDemandDTO
     }
 
     /**
-     * Returns the Cutomer ID
-     * @return
+     * Gets the cid.
+     *
+     * @return the cid
      */
     @JsonProperty( "user_cid" )
     public String getCid(  )
@@ -62,8 +75,9 @@ public class CustomerDemandDTO
     }
 
     /**
-     * Sets the Customer ID
-     * @param _strCid
+     * Sets the cid.
+     *
+     * @param strCid the new cid
      */
     @JsonProperty( "user_cid" )
     public void setCid( String strCid )

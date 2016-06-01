@@ -56,8 +56,10 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -69,21 +71,31 @@ import java.util.TreeSet;
 import javax.ws.rs.core.Response;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ElasticDemandService.
+ */
 public class ElasticDemandService implements IDemandService
 {
+    /** The _comparator notifications. */
     private static Comparator<Notification> _comparatorNotifications = new Comparator<Notification>(  )
-    {
-        @Override
-        public int compare( Notification notification1, Notification notification2 )
         {
-            return ( Long.valueOf( notification1.getTimestamp(  ) )
-                         .compareTo( Long.valueOf( notification2.getTimestamp(  ) ) ) );
-        }
-    };
-    
+            @Override
+            public int compare( Notification notification1, Notification notification2 )
+            {
+                return ( Long.valueOf( notification1.getTimestamp(  ) )
+                             .compareTo( Long.valueOf( notification2.getTimestamp(  ) ) ) );
+            }
+        };
+
     /**
-    * {@inheritDoc }
-    */
+     * {@inheritDoc }.
+     *
+     * @param strDemandId the str demand id
+     * @param strDemandTypeId the str demand type id
+     * @param user the user
+     * @return the demand
+     */
     @Override
     public Demand getDemand( String strDemandId, String strDemandTypeId, AdminUser user )
     {
@@ -112,26 +124,28 @@ public class ElasticDemandService implements IDemandService
             String tmp = mapper.writeValueAsString( jnode );
             ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
             demand = buildDemand( demandDTO );
-             
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+            SimpleDateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
+
             try
             {
-            	Date firstDate= formatter.parse(demand.getFirstNotificationDate( ));
-            	Date lstDate= formatter.parse( demand.getLastNotificationDate( ));
-            	if( demand.getStatus( ) == Demand.STATUS_CLOSED )
-            	{       	
-            		long lTimeOpened= lstDate.getTime() - firstDate.getTime();  
-            		demand.setTimeOpenedInMs(lTimeOpened);
-            	}
-            	else
-            	{
-            		long lTimeOpened= (new Date()).getTime( ) - firstDate.getTime();  
-              		demand.setTimeOpenedInMs(lTimeOpened);
-            	}         
+                Date firstDate = formatter.parse( demand.getFirstNotificationDate(  ) );
+                Date lstDate = formatter.parse( demand.getLastNotificationDate(  ) );
+
+                if ( demand.getStatus(  ) == Demand.STATUS_CLOSED )
+                {
+                    long lTimeOpened = lstDate.getTime(  ) - firstDate.getTime(  );
+                    demand.setTimeOpenedInMs( lTimeOpened );
+                }
+                else
+                {
+                    long lTimeOpened = ( new Date(  ) ).getTime(  ) - firstDate.getTime(  );
+                    demand.setTimeOpenedInMs( lTimeOpened );
+                }
             }
-            catch( ParseException ex )
+            catch ( ParseException ex )
             {
-          	  AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+                AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
             }
         }
         catch ( IOException ex )
@@ -143,14 +157,17 @@ public class ElasticDemandService implements IDemandService
     }
 
     /**
-    * {@inheritDoc }
-     * 
-    */
+     * {@inheritDoc }.
+     *
+     * @param strCustomerId the str customer id
+     * @param user the user
+     * @return the demands
+     */
     @Override
-    public List<BaseDemand> getDemands( String strCustomerId, AdminUser user ) 
+    public List<BaseDemand> getDemands( String strCustomerId, AdminUser user )
     {
         List<BaseDemand> base = new ArrayList<BaseDemand>(  );
-      
+
         String json;
         String retourES = "";
         String uri = ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND,
@@ -174,32 +191,32 @@ public class ElasticDemandService implements IDemandService
                     String tmp = mapper.writeValueAsString( jnode );
                     ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
                     Demand demand = buildDemand( demandDTO );
-                    
-                    BaseDemand bsDemande= buildBaseDemand( demandDTO );
-                    
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                  try
-                  {
-                	Date firstDate= formatter.parse(demand.getFirstNotificationDate( ));
-                    Date lstDate= formatter.parse( demand.getLastNotificationDate( ));
-                    if( bsDemande.getStatus( ) == Demand.STATUS_CLOSED )
+
+                    BaseDemand bsDemande = buildBaseDemand( demandDTO );
+
+                    SimpleDateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
+
+                    try
                     {
-                    	long lTimeOpened= lstDate.getTime() - firstDate.getTime();  
-                        bsDemande.setTimeOpenedInMs(lTimeOpened);
+                        Date firstDate = formatter.parse( demand.getFirstNotificationDate(  ) );
+                        Date lstDate = formatter.parse( demand.getLastNotificationDate(  ) );
+
+                        if ( bsDemande.getStatus(  ) == Demand.STATUS_CLOSED )
+                        {
+                            long lTimeOpened = lstDate.getTime(  ) - firstDate.getTime(  );
+                            bsDemande.setTimeOpenedInMs( lTimeOpened );
+                        }
+                        else
+                        {
+                            long lTimeOpened = ( new Date(  ) ).getTime(  ) - firstDate.getTime(  );
+                            bsDemande.setTimeOpenedInMs( lTimeOpened );
+                        }
                     }
-                    else
+                    catch ( ParseException ex )
                     {
-                    	long lTimeOpened= ( new Date( ) ).getTime( ) - firstDate.getTime( );  
-                        bsDemande.setTimeOpenedInMs(lTimeOpened);
-                    }         
-                    
-                  }
-                  catch( ParseException ex )
-                  {
-                	  
-                	  AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-                  }
-                  
+                        AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+                    }
+
                     base.add( bsDemande );
                 }
             }
@@ -213,41 +230,43 @@ public class ElasticDemandService implements IDemandService
     }
 
     /**
-     * Build a baseDemand from a demand
-     * @param demand
-     * @return
+     * Build a baseDemand from a demand.
+     *
+     * @param demand the demand
+     * @return the base demand
      */
     private BaseDemand buildBaseDemand( ESDemandDTO demand )
     {
         BaseDemand base = new BaseDemand(  );
 
-        try{
+        try
+        {
             base.setId( demand.getDemandId(  ) );
             base.setDemandTypeId( demand.getDemandTypeId(  ) );
             base.setReference( demand.getReference(  ) );
             base.setStatus( demand.getDemandStatus(  ) );
         }
-        catch(NullPointerException ex)
+        catch ( NullPointerException ex )
         {
-        	error("Demand DTO Parsing failure", null);
+            error( "Demand DTO Parsing failure", null );
         }
+
         return base;
     }
 
     /**
-     * Build a Demand from a demandDTO
-     * @param demand
-     * @return
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonGenerationException
+     * Build a Demand from a demandDTO.
+     *
+     * @param demand the demand
+     * @return the demand
+     * @throws JsonGenerationException the json generation exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
      */
-    private Demand buildDemand( ESDemandDTO demand )
-        throws JsonGenerationException, JsonMappingException, IOException
+    private Demand buildDemand( ESDemandDTO demand ) throws JsonGenerationException, JsonMappingException, IOException
     {
         // create demand
         Demand base = new Demand( buildBaseDemand( demand ) );
-
 
         // create Notifications
         String json;
@@ -266,7 +285,7 @@ public class ElasticDemandService implements IDemandService
 
         JsonNode jsonRetour = mapper.readTree( retourES );
         List<JsonNode> listJsonNotification = jsonRetour.findValues( "_source" );
-        Set<Notification> setNotification = new TreeSet<Notification>( _comparatorNotifications ); 
+        Set<Notification> setNotification = new TreeSet<Notification>( _comparatorNotifications );
 
         for ( JsonNode jnode : listJsonNotification )
         {
@@ -277,29 +296,29 @@ public class ElasticDemandService implements IDemandService
                 setNotification.add( buildNotification( notificationDTO ) );
             }
         }
-        
+
         List<Notification> listNotification = base.getNotifications(  );
         listNotification.addAll( setNotification );
-        
+
         boolean bIsAgentStatusFound = false;
         boolean bIsCustomerStatusFound = false;
-        
+
         for ( int i = listNotification.size(  ) - 1; i >= 0; i-- )
         {
             Notification notification = listNotification.get( i );
-            
-            if ( !bIsAgentStatusFound && notification.getBackOfficeLogging(  ) != null )
+
+            if ( !bIsAgentStatusFound && ( notification.getBackOfficeLogging(  ) != null ) )
             {
                 base.setAgentStatus( notification.getBackOfficeLogging(  ).getStatusText(  ) );
                 bIsAgentStatusFound = true;
             }
-            
-            if ( !bIsCustomerStatusFound && notification.getUserDashboard(  ) != null )
+
+            if ( !bIsCustomerStatusFound && ( notification.getUserDashboard(  ) != null ) )
             {
                 base.setCustomerStatus( notification.getUserDashboard(  ).getStatusText(  ) );
                 bIsCustomerStatusFound = true;
             }
-            
+
             if ( bIsAgentStatusFound && bIsCustomerStatusFound )
             {
                 break;
@@ -311,7 +330,8 @@ public class ElasticDemandService implements IDemandService
     }
 
     /**
-     * Build a Notification from a ESNotificationDTO
+     * Build a Notification from a ESNotificationDTO.
+     *
      * @param notification the ESNotificationDTO
      * @return the Notification
      */
@@ -319,7 +339,8 @@ public class ElasticDemandService implements IDemandService
     {
         Notification result = new Notification(  );
 
-        try{
+        try
+        {
             Email email = new Email(  );
 
             if ( notification.getUserEmail(  ) != null )
@@ -341,42 +362,43 @@ public class ElasticDemandService implements IDemandService
             if ( notification.getUserDashBoard(  ) != null )
             {
                 UserDashboard uDash = new UserDashboard(  );
-                
+
                 uDash.setStatusText( notification.getUserDashBoard(  ).getStatusText(  ) );
                 uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
                 uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
                 uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
-                
+
                 result.setUserDashboard( uDash );
             }
-            
+
             BackofficeNotification backofficeNotification = notification.getUserBackOffice(  );
-            
+
             if ( backofficeNotification != null )
             {
                 BackOfficeLogging backOfficeLogging = new BackOfficeLogging(  );
-                
+
                 backOfficeLogging.setMessage( backofficeNotification.getMessage(  ) );
                 backOfficeLogging.setStatusText( backofficeNotification.getStatusText(  ) );
-                
+
                 result.setBackOfficeLogging( backOfficeLogging );
             }
-            
+
             result.setTimestamp( notification.getDateNotification(  ) );
-	        result.setSource( "PAS TROUVE" );
-	        result.setEmail( email );
-	        result.setSms( sms );
-          
+            result.setSource( "PAS TROUVE" );
+            result.setEmail( email );
+            result.setSms( sms );
         }
-        catch(NullPointerException ex)
+        catch ( NullPointerException ex )
         {
-        	error("Notification DTO Parsing failure", null);
+            error( "Notification DTO Parsing failure", null );
         }
-  
+
         return result;
-    } 
+    }
+
     /**
-     * Build an error response
+     * Build an error response.
+     *
      * @param strMessage The error message
      * @param ex An exception
      * @return The response
