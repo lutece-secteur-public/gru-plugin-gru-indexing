@@ -289,7 +289,7 @@ public final class IndexerElasticSearchThread extends Thread
                     _endTime = Calendar.getInstance(  ).getTimeInMillis(  );
                     diffTime = _endTime - _startTime ;
                     allTime += diffTime ;
-                    AppLogService.info( "\n \n CHRONOMETRAGE " + diffTime + " ms" + " \n\n" );
+                 //   AppLogService.info( "\n \n CHRONOMETRAGE " + diffTime + " ms" + " \n\n" );
                     
                     strLogging = "Speed bulking "+2000+" document(s) / "+diffTime+" ms , Total : "+count+" document(s) in "+( allTime / 1000 )+" seconde(s) \n";
                     _startTime = Calendar.getInstance(  ).getTimeInMillis(  );
