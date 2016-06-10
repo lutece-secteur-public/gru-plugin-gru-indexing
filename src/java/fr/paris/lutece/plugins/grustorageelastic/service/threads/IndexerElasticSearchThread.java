@@ -41,6 +41,7 @@ import fr.paris.lutece.plugins.grustorageelastic.web.rs.AsynchronousService;
 import fr.paris.lutece.plugins.grustorageelastic.web.rs.IAsynchronousService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -305,6 +306,9 @@ public final class IndexerElasticSearchThread extends Thread
                 	   AppLogService.info( strBulk );
                    } */
                    countnb = 0;
+                   
+                   
+                   
                     try
                     {
                         if ( !ESHttp.indexExist(  ) )
@@ -318,7 +322,7 @@ public final class IndexerElasticSearchThread extends Thread
                             break;
                         }
                     }
-                    catch ( IOException ex )
+                    catch ( HttpAccessException ex )
                     {
                         _service.addToLog( "Index Does not exist !" );
                         AppLogService.error( "IOException : " + ex.getMessage(  ) );

@@ -35,13 +35,11 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.mysql.jdbc.StringUtils;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.util.httpaccess.HttpAccess;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
@@ -52,7 +50,6 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
-
 import java.util.Map;
 
 
@@ -62,7 +59,7 @@ import java.util.Map;
 public final class ElasticConnexion
 {
     /** The _client. */
-    private static Client _client = Client.create(  );
+    private static  HttpAccess _clientHttp = new HttpAccess(  );
 
     /** The _singleton. */
     private ElasticConnexion _singleton;
@@ -120,10 +117,16 @@ public final class ElasticConnexion
      */
     public static String sentToElasticPUT( String uri, String json )
     {
-        WebResource resource = _client.resource( uri );
-        ClientResponse response = resource.put( ClientResponse.class, json );
-
-        return response.getEntity( String.class );
+    String strReponse="";
+    
+	try {
+		strReponse = _clientHttp.doPutJSON(uri, json, null, null);
+	} catch (HttpAccessException e) {
+		
+		 String strError = "Grustorageelastic - PUT json to ES ' url : " + uri + "' , data : "+json;
+         AppLogService.error( strError + e.getMessage(  ), e );
+	}
+        return strReponse;
     }
 
     /**
@@ -134,11 +137,16 @@ public final class ElasticConnexion
      * @return the string
      */
     public static String sentToElasticPOST( String uri, String json )
-    {
-        WebResource resource = _client.resource( uri );
-        ClientResponse response = resource.post( ClientResponse.class, json );
-
-        return response.getEntity( String.class );
+    {    	
+    	  String strReponse="";    	    
+    		try {
+    			strReponse = _clientHttp.doPostJSON(uri, json, null, null);
+    		} catch (HttpAccessException e) {
+    			
+    			 String strError = "Grustorageelastic - POST json to ES ' url : " + uri + "' , data : "+json;
+    	         AppLogService.error( strError + e.getMessage(  ), e );
+    		}	     
+    	        return strReponse;  
     }
 
     /**
@@ -149,11 +157,16 @@ public final class ElasticConnexion
      */
     public static String sentToElasticDELETE( String uri )
     {
-        WebResource resource = _client.resource( uri );
-        ClientResponse response = resource.delete( ClientResponse.class );
-
-        return response.getEntity( String.class );
-    }
+    	  String strReponse="";    	    
+  		try {
+  			strReponse = _clientHttp.doDelete(uri, null, null, null, null);
+  		} catch (HttpAccessException e) {
+  			
+  			 String strError = "Grustorageelastic - DELETE  to ES ' url : " + uri + "' , data : ";
+  	         AppLogService.error( strError + e.getMessage(  ), e );
+  		}	     
+  	        return strReponse; 
+     }
 
     /**
      * Format auto complete search.

@@ -36,17 +36,14 @@ package fr.paris.lutece.plugins.grustorageelastic.business.indexer;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.util.httpaccess.HttpAccess;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+import net.sf.json.util.JSONUtils;
 
-import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -63,6 +60,7 @@ public final class ESHttp
     /** The _indice. */
     private static String _indice;
 
+    private static  HttpAccess _clientHttp = new HttpAccess(  );
     /**
      * Instantiates a new ES http.
      */
@@ -70,64 +68,8 @@ public final class ESHttp
     {
     }
 
-    /**
-     * Execute.
-     *
-     * @param method the method
-     * @param targetURL the target url
-     * @param urlParameters the url parameters
-     * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    private static String execute( String method, String targetURL, String urlParameters )
-        throws IOException
-    {
-        HttpURLConnection connection = null;
 
-        try
-        {
-            //Create connection
-            URL url = new URL( targetURL );
-            connection = (HttpURLConnection) url.openConnection(  );
-            connection.setRequestMethod( method.toUpperCase(  ) );
-            connection.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
-
-            connection.setRequestProperty( "Content-Length", Integer.toString( urlParameters.getBytes(  ).length ) );
-            connection.setRequestProperty( "Content-Language", "fr-FR" );
-
-            connection.setUseCaches( false );
-            connection.setDoOutput( true );
-
-            //Send request
-            OutputStreamWriter wr = new OutputStreamWriter( connection.getOutputStream(  ), StandardCharsets.UTF_8 );
-            wr.write( urlParameters );
-            wr.flush(  );
-            wr.close(  );
-
-            //Get Response  
-            InputStream is = connection.getInputStream(  );
-            BufferedReader rd = new BufferedReader( new InputStreamReader( is ) );
-            StringBuilder response = new StringBuilder(  ); // or StringBuffer if not Java 5+ 
-            String line;
-
-            while ( ( line = rd.readLine(  ) ) != null )
-            {
-                response.append( line );
-                response.append( '\r' );
-            }
-
-            rd.close(  );
-
-            return response.toString(  );
-        }
-        finally
-        {
-            if ( connection != null )
-            {
-                connection.disconnect(  );
-            }
-        }
-    }
+   
 
     /**
      * Adds the.
@@ -139,21 +81,17 @@ public final class ESHttp
      */
     public static void add( String data ) throws InterruptedException
     {
-        try
-        {
-        	  
-             execute( "POST", baseUrl( ), data );
-        }
-        catch ( IOException e )
-        {
-        	   Thread.sleep( 5000 );
-
-            AppLogService.error( "ERROR BULK DATA : " + e.getMessage( ) );
-            AppLogService.error( e.getMessage() , e );
-            AppLogService.info( "data : " + data );
-/*ElasticSearch send error 400 after 350 000 documents. Done thread sleep to wait for*/
-          //      add( data );
-        }
+    	
+        
+  		try {
+  			 _clientHttp.doPostJSON(baseUrl( ), data, null, null);
+  		} catch (HttpAccessException e) {
+  			
+  		  AppLogService.error( "ERROR BULK DATA : " + e.getMessage( ) );
+          AppLogService.error( e.getMessage() , e );
+          AppLogService.info( "data : " + data );
+  		}	     
+  	 
     }
 
     /**
@@ -175,35 +113,39 @@ public final class ESHttp
      * Index exist.
      *
      * @return true, if successful
+     * @throws HttpAccessException 
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static boolean indexExist(  ) throws IOException
+    public static boolean indexExist(  ) throws HttpAccessException
     {
         boolean res = false;
 
         String strUrl = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
-            AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE );
+            AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH );
 
         AppLogService.debug( "url :" + strUrl );
 
-        URL url = new URL( strUrl );
-        HttpURLConnection http = (HttpURLConnection) url.openConnection(  );
-
-        try
-        {
-            if ( http.getResponseCode(  ) == 200 )
-            {
-                res = true;
-            }
-
-            AppLogService.debug( "url :" + strUrl + "response : " + http.getResponseCode(  ) );
-        }
-        catch ( IOException e )
-        {
-            AppLogService.error( e.getMessage(  ) );
-        }
-
-        return res;
+      
+		String strResponse;
+		try {
+			strResponse = _clientHttp.doGet(strUrl);
+			
+			  if ( JSONUtils.mayBeJSON( strResponse ) )
+		        {
+				  JSONObject  responseJsonObject = (JSONObject) JSONSerializer.toJSON( strResponse );		  
+				
+				  if( responseJsonObject.containsKey( AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ).replace("/", "") ) )
+				  {
+					res = true;
+				  }				  
+			  
+		        }
+			  
+		} catch (HttpAccessException e) {
+			// TODO Auto-generated catch block
+			   AppLogService.error( "Grustorageelastic - Error" ,e);
+		}
+			  return res;
     }
 
     /**

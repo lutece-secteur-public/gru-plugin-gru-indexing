@@ -47,6 +47,7 @@ import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 import fr.paris.lutece.util.url.UrlItem;
 
 import org.json.simple.JSONObject;
@@ -54,7 +55,6 @@ import org.json.simple.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.util.List;
 import java.util.Map;
 
@@ -152,11 +152,12 @@ public class IndexationESJspBean extends MVCAdminJspBean
      *
      * @param request the request
      * @return the string
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws HttpAccessException Signals that an I/O exception has occurred.
+     * @throws IOException 
      */
     @Action( ACTION_INDEXER_ES )
     public String doIndexing( HttpServletRequest request )
-        throws IOException
+        throws HttpAccessException, IOException
     {
         if ( ElasticIndexerService.getService(  ).isRunning(  ) )
         {
@@ -285,10 +286,11 @@ public class IndexationESJspBean extends MVCAdminJspBean
      * @param request the request
      * @return the string
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws HttpAccessException 
      */
     @Action( ACTION_DELETE_INDEX )
     public String doDeleteIndex( HttpServletRequest request )
-        throws IOException
+        throws IOException, HttpAccessException
     {
         setConnexion(  );
 
