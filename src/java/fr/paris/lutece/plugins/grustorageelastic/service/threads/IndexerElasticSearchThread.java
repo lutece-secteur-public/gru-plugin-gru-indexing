@@ -77,7 +77,7 @@ public final class IndexerElasticSearchThread extends Thread
 
     /** The end time. */
     private static long _endTime;
-    private static IndexerElasticSearchThread _singleton;
+  
 
     /**
      * Instantiates a new indexer elastic search thread.
@@ -88,6 +88,7 @@ public final class IndexerElasticSearchThread extends Thread
         setName( THREAD_NAME );
     }
 
+   
     /**
      * Gets the single instance of IndexerElasticSearchThread.
      *
@@ -96,13 +97,10 @@ public final class IndexerElasticSearchThread extends Thread
      */
     public static IndexerElasticSearchThread getInstance( AsynchronousService service )
     {
-        if ( _singleton == null )
-        {
-            _singleton = new IndexerElasticSearchThread(  );
-            _singleton._service = service;
-        }
+    	 IndexerElasticSearchThread _instance = new IndexerElasticSearchThread(  );
+    	  _instance._service = service;
 
-        return _singleton;
+        return _instance;
     }
 
     /**
@@ -114,10 +112,9 @@ public final class IndexerElasticSearchThread extends Thread
     {
     	_bRunning = b;
     }
+    
     /**
      * Constructor.
-     *
-     * @param service the service
      */
 
     /*   public IndexerElasticSearchThread( AsynchronousService service )
@@ -138,7 +135,7 @@ public final class IndexerElasticSearchThread extends Thread
             _service.setState( IAsynchronousService.STATE_RUNNING );
             _service.clearLogs(  );
             _service.setProgress( 0 );
-          //  _bRunning = true;
+           _bRunning = true;
             setBoolRunning( true );
             
             ESHttp.setIndice( AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE ) );
@@ -156,7 +153,7 @@ public final class IndexerElasticSearchThread extends Thread
                 _service.setProgress( 100 );
                 _service.setState( IAsynchronousService.STATE_ABORTED );
                 setBoolRunning( false );
-              
+          
             }
         }
         catch ( Exception ex )
@@ -166,6 +163,7 @@ public final class IndexerElasticSearchThread extends Thread
             _service.setProgress( 100 );
             _service.setState( IAsynchronousService.STATE_ABORTED );
             setBoolRunning( false );
+          
         }
     }
 
@@ -335,7 +333,7 @@ public final class IndexerElasticSearchThread extends Thread
                     try
                     {
                         ESHttp.add( strBulk );
-                        //Thread.sleep( 1200 );
+                      Thread.sleep( 1200 );
                     }
                     catch ( InterruptedException e )
                     {
