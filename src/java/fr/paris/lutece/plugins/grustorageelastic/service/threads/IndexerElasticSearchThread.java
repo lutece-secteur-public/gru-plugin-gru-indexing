@@ -255,6 +255,7 @@ public final class IndexerElasticSearchThread extends Thread
                 input.add( listCustomer.get( j ).getFirstname(  ) + " " + listCustomer.get( j ).getLastname(  ) );
                 input.add( listCustomer.get( j ).getLastname(  ) + " " + listCustomer.get( j ).getFirstname(  ) );
                 input.add( listCustomer.get( j ).getMobilePhone(  ) );
+                input.add( listCustomer.get( j ).getFixedPhoneNumber(  ) );
                 suggest.put( "input", input );
                 suggest.put( "output",
                     listCustomer.get( j ).getFirstname(  ) + " " + listCustomer.get( j ).getLastname(  ) );
