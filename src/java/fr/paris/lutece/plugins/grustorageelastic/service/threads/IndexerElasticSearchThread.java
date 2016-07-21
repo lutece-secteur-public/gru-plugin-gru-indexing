@@ -71,6 +71,7 @@ public final class IndexerElasticSearchThread extends Thread
 
     /** The _service. */
     private static AsynchronousService _service;
+    private static  IndexerElasticSearchThread _instance;
 
     /** The start time. */
     private static long _startTime;
@@ -97,8 +98,14 @@ public final class IndexerElasticSearchThread extends Thread
      */
     public static IndexerElasticSearchThread getInstance( AsynchronousService service )
     {
-    	 IndexerElasticSearchThread _instance = new IndexerElasticSearchThread(  );
-    	  _instance._service = service;
+    	
+    	if( _instance == null )
+    	{
+    	 _instance = new IndexerElasticSearchThread(  );
+       	  _instance._service = service;
+    		
+    	}
+    	
 
         return _instance;
     }
