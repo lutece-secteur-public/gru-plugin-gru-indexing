@@ -50,6 +50,7 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
+
 import java.util.Map;
 
 
@@ -59,7 +60,7 @@ import java.util.Map;
 public final class ElasticConnexion
 {
     /** The _client. */
-    private static  HttpAccess _clientHttp = new HttpAccess(  );
+    private static HttpAccess _clientHttp = new HttpAccess(  );
 
     /** The _singleton. */
     private ElasticConnexion _singleton;
@@ -117,15 +118,18 @@ public final class ElasticConnexion
      */
     public static String sentToElasticPUT( String uri, String json )
     {
-    String strReponse="";
-    
-	try {
-		strReponse = _clientHttp.doPutJSON(uri, json, null, null);
-	} catch (HttpAccessException e) {
-		
-		 String strError = "Grustorageelastic - PUT json to ES ' url : " + uri + "' , data : "+json;
-         AppLogService.error( strError + e.getMessage(  ), e );
-	}
+        String strReponse = "";
+
+        try
+        {
+            strReponse = _clientHttp.doPutJSON( uri, json, null, null );
+        }
+        catch ( HttpAccessException e )
+        {
+            String strError = "Grustorageelastic - PUT json to ES ' url : " + uri + "' , data : " + json;
+            AppLogService.error( strError + e.getMessage(  ), e );
+        }
+
         return strReponse;
     }
 
@@ -137,16 +141,20 @@ public final class ElasticConnexion
      * @return the string
      */
     public static String sentToElasticPOST( String uri, String json )
-    {    	
-    	  String strReponse="";    	    
-    		try {
-    			strReponse = _clientHttp.doPostJSON(uri, json, null, null);
-    		} catch (HttpAccessException e) {
-    			
-    			 String strError = "Grustorageelastic - POST json to ES ' url : " + uri + "' , data : "+json;
-    	         AppLogService.error( strError + e.getMessage(  ), e );
-    		}	     
-    	        return strReponse;  
+    {
+        String strReponse = "";
+
+        try
+        {
+            strReponse = _clientHttp.doPostJSON( uri, json, null, null );
+        }
+        catch ( HttpAccessException e )
+        {
+            String strError = "Grustorageelastic - POST json to ES ' url : " + uri + "' , data : " + json;
+            AppLogService.error( strError + e.getMessage(  ), e );
+        }
+
+        return strReponse;
     }
 
     /**
@@ -157,16 +165,20 @@ public final class ElasticConnexion
      */
     public static String sentToElasticDELETE( String uri )
     {
-    	  String strReponse="";    	    
-  		try {
-  			strReponse = _clientHttp.doDelete(uri, null, null, null, null);
-  		} catch (HttpAccessException e) {
-  			
-  			 String strError = "Grustorageelastic - DELETE  to ES ' url : " + uri + "' , data : ";
-  	         AppLogService.error( strError + e.getMessage(  ), e );
-  		}	     
-  	        return strReponse; 
-     }
+        String strReponse = "";
+
+        try
+        {
+            strReponse = _clientHttp.doDelete( uri, null, null, null, null );
+        }
+        catch ( HttpAccessException e )
+        {
+            String strError = "Grustorageelastic - DELETE  to ES ' url : " + uri + "' , data : ";
+            AppLogService.error( strError + e.getMessage(  ), e );
+        }
+
+        return strReponse;
+    }
 
     /**
      * Format auto complete search.

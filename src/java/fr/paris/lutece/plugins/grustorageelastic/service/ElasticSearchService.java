@@ -66,7 +66,7 @@ public class ElasticSearchService implements ISearchService
     private static final String KEY_CUSTOMER_EMAIL = "email";
     private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
     private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
-    
+
     /**
      * {@inheritDoc }.
      *
@@ -118,7 +118,7 @@ public class ElasticSearchService implements ISearchService
 
         return listCustomer;
     }
-    
+
     /**
      * {@inheritDoc }
      */
@@ -136,7 +136,7 @@ public class ElasticSearchService implements ISearchService
         try
         {
             json = ElasticConnexion.formatFullText( mapFields );
-            
+
             String strESResult = ElasticConnexion.sentToElasticPOST( uri, json );
             JsonNode jsonESResult = ElasticConnexion.setJsonToJsonTree( strESResult );
 

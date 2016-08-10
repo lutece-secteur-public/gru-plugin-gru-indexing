@@ -55,6 +55,7 @@ import org.json.simple.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.util.List;
 import java.util.Map;
 
@@ -153,7 +154,7 @@ public class IndexationESJspBean extends MVCAdminJspBean
      * @param request the request
      * @return the string
      * @throws HttpAccessException Signals that an I/O exception has occurred.
-     * @throws IOException 
+     * @throws IOException
      */
     @Action( ACTION_INDEXER_ES )
     public String doIndexing( HttpServletRequest request )
@@ -286,7 +287,7 @@ public class IndexationESJspBean extends MVCAdminJspBean
      * @param request the request
      * @return the string
      * @throws IOException Signals that an I/O exception has occurred.
-     * @throws HttpAccessException 
+     * @throws HttpAccessException
      */
     @Action( ACTION_DELETE_INDEX )
     public String doDeleteIndex( HttpServletRequest request )

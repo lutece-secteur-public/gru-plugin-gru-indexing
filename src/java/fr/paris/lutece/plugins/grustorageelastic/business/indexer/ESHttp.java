@@ -39,11 +39,9 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.httpaccess.HttpAccess;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
-
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import net.sf.json.util.JSONUtils;
-
 
 
 /**
@@ -59,8 +57,8 @@ public final class ESHttp
 
     /** The _indice. */
     private static String _indice;
+    private static HttpAccess _clientHttp = new HttpAccess(  );
 
-    private static  HttpAccess _clientHttp = new HttpAccess(  );
     /**
      * Instantiates a new ES http.
      */
@@ -68,39 +66,35 @@ public final class ESHttp
     {
     }
 
-
-   
-
     /**
      * Adds the.
      *
-     * 
+     *
      * @param data the data
-  
+    
      * @throws InterruptedException the interrupted exception
      */
     public static void add( String data ) throws InterruptedException
     {
-    	
-        
-  		try {
-  			 _clientHttp.doPostJSON(baseUrl( ), data, null, null);
-  		} catch (HttpAccessException e) {
-  			
-  		  AppLogService.error( "ERROR BULK DATA : " + e.getMessage( ) );
-          AppLogService.error( e.getMessage() , e );
-          AppLogService.info( "data : " + data );
-  		}	     
-  	 
+        try
+        {
+            _clientHttp.doPostJSON( baseUrl(  ), data, null, null );
+        }
+        catch ( HttpAccessException e )
+        {
+            AppLogService.error( "ERROR BULK DATA : " + e.getMessage(  ) );
+            AppLogService.error( e.getMessage(  ), e );
+            AppLogService.info( "data : " + data );
+        }
     }
 
     /**
      * Base url.
      *
-
+    
      * @return the string
      */
-    private static String baseUrl( )
+    private static String baseUrl(  )
     {
         _baseUrl = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
             GRUElasticsConstants.PATH_ELK_BULK;
@@ -113,7 +107,7 @@ public final class ESHttp
      * Index exist.
      *
      * @return true, if successful
-     * @throws HttpAccessException 
+     * @throws HttpAccessException
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static boolean indexExist(  ) throws HttpAccessException
@@ -125,27 +119,30 @@ public final class ESHttp
 
         AppLogService.debug( "url :" + strUrl );
 
-      
-		String strResponse;
-		try {
-			strResponse = _clientHttp.doGet(strUrl);
-			
-			  if ( JSONUtils.mayBeJSON( strResponse ) )
-		        {
-				  JSONObject  responseJsonObject = (JSONObject) JSONSerializer.toJSON( strResponse );		  
-				
-				  if( responseJsonObject.containsKey( AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ).replace("/", "") ) )
-				  {
-					res = true;
-				  }				  
-			  
-		        }
-			  
-		} catch (HttpAccessException e) {
-			// TODO Auto-generated catch block
-			   AppLogService.error( "Grustorageelastic - Error" ,e);
-		}
-			  return res;
+        String strResponse;
+
+        try
+        {
+            strResponse = _clientHttp.doGet( strUrl );
+
+            if ( JSONUtils.mayBeJSON( strResponse ) )
+            {
+                JSONObject responseJsonObject = (JSONObject) JSONSerializer.toJSON( strResponse );
+
+                if ( responseJsonObject.containsKey( AppPropertiesService.getProperty( 
+                                GRUElasticsConstants.PATH_ELK_PATH ).replace( "/", "" ) ) )
+                {
+                    res = true;
+                }
+            }
+        }
+        catch ( HttpAccessException e )
+        {
+            // TODO Auto-generated catch block
+            AppLogService.error( "Grustorageelastic - Error", e );
+        }
+
+        return res;
     }
 
     /**

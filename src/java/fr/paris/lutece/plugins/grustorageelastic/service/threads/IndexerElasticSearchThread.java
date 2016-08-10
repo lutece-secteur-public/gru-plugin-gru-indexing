@@ -47,7 +47,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -71,14 +73,13 @@ public final class IndexerElasticSearchThread extends Thread
 
     /** The _service. */
     private static AsynchronousService _service;
-    private static  IndexerElasticSearchThread _instance;
+    private static IndexerElasticSearchThread _instance;
 
     /** The start time. */
     private static long _startTime;
 
     /** The end time. */
     private static long _endTime;
-  
 
     /**
      * Instantiates a new indexer elastic search thread.
@@ -89,7 +90,6 @@ public final class IndexerElasticSearchThread extends Thread
         setName( THREAD_NAME );
     }
 
-   
     /**
      * Gets the single instance of IndexerElasticSearchThread.
      *
@@ -98,14 +98,11 @@ public final class IndexerElasticSearchThread extends Thread
      */
     public static IndexerElasticSearchThread getInstance( AsynchronousService service )
     {
-    	
-    	if( _instance == null )
-    	{
-    	 _instance = new IndexerElasticSearchThread(  );
-       	  _instance._service = service;
-    		
-    	}
-    	
+        if ( _instance == null )
+        {
+            _instance = new IndexerElasticSearchThread(  );
+            _instance._service = service;
+        }
 
         return _instance;
     }
@@ -115,11 +112,11 @@ public final class IndexerElasticSearchThread extends Thread
      *
      * @param b the new bool running
      */
-    private  static void setBoolRunning( boolean b )
+    private static void setBoolRunning( boolean b )
     {
-    	_bRunning = b;
+        _bRunning = b;
     }
-    
+
     /**
      * Constructor.
      */
@@ -142,9 +139,9 @@ public final class IndexerElasticSearchThread extends Thread
             _service.setState( IAsynchronousService.STATE_RUNNING );
             _service.clearLogs(  );
             _service.setProgress( 0 );
-           _bRunning = true;
+            _bRunning = true;
             setBoolRunning( true );
-            
+
             ESHttp.setIndice( AppPropertiesService.getProperty( GRUElasticsConstants.ES_INDICE ) );
             ESHttp.setType( AppPropertiesService.getProperty( GRUElasticsConstants.ES_TYPE ) );
 
@@ -160,7 +157,6 @@ public final class IndexerElasticSearchThread extends Thread
                 _service.setProgress( 100 );
                 _service.setState( IAsynchronousService.STATE_ABORTED );
                 setBoolRunning( false );
-          
             }
         }
         catch ( Exception ex )
@@ -170,7 +166,6 @@ public final class IndexerElasticSearchThread extends Thread
             _service.setProgress( 100 );
             _service.setState( IAsynchronousService.STATE_ABORTED );
             setBoolRunning( false );
-          
         }
     }
 
@@ -215,15 +210,13 @@ public final class IndexerElasticSearchThread extends Thread
             int countnb = 0;
             String strBulk = "";
 
-        
-
             List<JSONObject> portion = new ArrayList<JSONObject>(  );
 
             int size = listCustomer.size(  );
- 
+
             long allTime = 0;
             long diffTime = 0;
-      
+
             String strLogging = "";
 
             _startTime = Calendar.getInstance(  ).getTimeInMillis(  );
@@ -238,12 +231,12 @@ public final class IndexerElasticSearchThread extends Thread
                 JSONObject suggest = new JSONObject(  );
                 JSONObject payload = new JSONObject(  );
                 JSONArray input = new JSONArray(  );
-                
-            	Random r = new Random();
-    			int cp = 0;
-    			int bday = 0;
-    			cp = 75000 + r.nextInt( 19000 );
-    			bday = 1000 + r.nextInt( 951401617 );
+
+                Random r = new Random(  );
+                int cp = 0;
+                int bday = 0;
+                cp = 75000 + r.nextInt( 19000 );
+                bday = 1000 + r.nextInt( 951401617 );
 
                 json.put( "user_cid", listCustomer.get( j ).getId(  ) );
                 json.put( "email", listCustomer.get( j ).getEmail(  ) );
@@ -286,35 +279,32 @@ public final class IndexerElasticSearchThread extends Thread
                 count++;
                 countnb++;
 
-
-                if ( count > 0 && (  count % 2000  == 0  ||   count+1   >= size )  )
+                if ( ( count > 0 ) && ( ( ( count % 2000 ) == 0 ) || ( ( count + 1 ) >= size ) ) )
                 {
-                  //  AppLogService.info( "\n\n\n\n" );
-                 //   AppLogService.info( "Nombre = " + countnb );
-                   
-                 //   AppLogService.info( "Nombre Total= " + count );
+                    //  AppLogService.info( "\n\n\n\n" );
+                    //   AppLogService.info( "Nombre = " + countnb );
+
+                    //   AppLogService.info( "Nombre Total= " + count );
                     _endTime = Calendar.getInstance(  ).getTimeInMillis(  );
-                    diffTime = _endTime - _startTime ;
-                    allTime += diffTime ;
-                 //   AppLogService.info( "\n \n CHRONOMETRAGE " + diffTime + " ms" + " \n\n" );
-                    
-                    strLogging = "Speed bulking "+2000+" document(s) / "+diffTime+" ms , Total : "+count+" document(s) in "+( allTime / 1000 )+" seconde(s) \n";
+                    diffTime = _endTime - _startTime;
+                    allTime += diffTime;
+                    //   AppLogService.info( "\n \n CHRONOMETRAGE " + diffTime + " ms" + " \n\n" );
+                    strLogging = "Speed bulking " + 2000 + " document(s) / " + diffTime + " ms , Total : " + count +
+                        " document(s) in " + ( allTime / 1000 ) + " seconde(s) \n";
                     _startTime = Calendar.getInstance(  ).getTimeInMillis(  );
-                   // AppLogService.info( "\n\n\n\n" );
+                    // AppLogService.info( "\n\n\n\n" );
 
                     //for bulk and reset
                     strBulk = joinPortionForBulk( portion, "\n" );
-                   
+
                     portion.clear(  );
 
-                  /* if( count < 100 )
-                   {
-                	   AppLogService.info( strBulk );
-                   } */
-                   countnb = 0;
-                   
-                   
-                   
+                    /* if( count < 100 )
+                     {
+                             AppLogService.info( strBulk );
+                     } */
+                    countnb = 0;
+
                     try
                     {
                         if ( !ESHttp.indexExist(  ) )
@@ -341,14 +331,14 @@ public final class IndexerElasticSearchThread extends Thread
                     try
                     {
                         ESHttp.add( strBulk );
-                      Thread.sleep( 1200 );
+                        Thread.sleep( 1200 );
                     }
                     catch ( InterruptedException e )
                     {
                         _service.addToLog( e + " :" + e.getMessage(  ) );
                     }
 
-                  //  _service.addToLog( strBulk );
+                    //  _service.addToLog( strBulk );
                     _service.addToLog( strLogging );
                     _service.setProgress( ( 100 * count ) / size );
                 }
@@ -358,7 +348,8 @@ public final class IndexerElasticSearchThread extends Thread
         if ( _service.getState(  ) != IAsynchronousService.STATE_ABORTED )
         {
             _service.setState( IAsynchronousService.STATE_FINISHED );
-            _service.addToLog( "\nIndexation réussi avec succès. \nTotale : " + listCustomer.size(  ) + " documents." );
+            _service.addToLog( "\nIndexation réussi avec succès. \nTotale : " + listCustomer.size(  ) +
+                " documents." );
             _bRunning = false;
         }
     }
@@ -376,20 +367,20 @@ public final class IndexerElasticSearchThread extends Thread
 
         String loopDelim = "";
 
-        int size = list.size();
+        int size = list.size(  );
+
         for ( int i = 0; i < size; i++ )
         {
-        	
-        	if( i + 1 < size )
-        	{
-        		 sb.append( loopDelim );
-        	}
-        
-             sb.append( list.get( i ).toJSONString(  ) );
-             AppLogService.debug( sb.toString(  ) );
-             loopDelim = delim;
+            if ( ( i + 1 ) < size )
+            {
+                sb.append( loopDelim );
+            }
+
+            sb.append( list.get( i ).toJSONString(  ) );
+            AppLogService.debug( sb.toString(  ) );
+            loopDelim = delim;
         }
-        
+
         /*
         for ( JSONObject s : list )
         {
@@ -398,7 +389,6 @@ public final class IndexerElasticSearchThread extends Thread
             AppLogService.debug( sb.toString(  ) );
             loopDelim = delim;
         } */
-
         return sb.toString(  );
     }
 
