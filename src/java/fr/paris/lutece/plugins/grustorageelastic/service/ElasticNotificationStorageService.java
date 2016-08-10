@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2015, Mairie de Paris
+ * Copyright (c) 2002-2016, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,6 +45,8 @@ import fr.paris.lutece.plugins.grusupply.business.Demand;
 import fr.paris.lutece.plugins.grusupply.business.Notification;
 import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -186,18 +188,18 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         try
         {
             customerDTO.setCustomerId( customer.getCustomerId(  ) );
-            customerDTO.setName( customer.getName(  ) );
-            customerDTO.setFirstName( customer.getFirstName(  ) );
-            customerDTO.setEmail( customer.getEmail(  ) );
-            customerDTO.setBirthday( customer.getBirthday(  ) );
-            customerDTO.setCivility( customer.getCivility(  ) );
-            customerDTO.setStreet( customer.getStreet(  ) );
-            customerDTO.setCityOfBirth( customer.getCityOfBirth(  ) );
+            customerDTO.setName( manageNullValue( customer.getName(  ) ) );
+            customerDTO.setFirstName( manageNullValue( customer.getFirstName(  ) ) );
+            customerDTO.setEmail( manageNullValue( customer.getEmail(  ) ) );
+            customerDTO.setBirthday( manageNullValue( customer.getBirthday(  ) ) );
+            customerDTO.setCivility( manageNullValue( customer.getCivility(  ) ) );
+            customerDTO.setStreet( manageNullValue( customer.getStreet(  ) ) );
+            customerDTO.setCityOfBirth( manageNullValue( customer.getCityOfBirth(  ) ) );
             customerDTO.setStayConnected( customer.getStayConnected(  ) );
-            customerDTO.setCity( customer.getCity(  ) );
-            customerDTO.setPostalCode( customer.getPostalCode(  ) );
-            customerDTO.setTelephoneNumber( customer.getTelephoneNumber(  ) );
-            customerDTO.setFixedTelephoneNumber( customer.getFixedTelephoneNumber(  ) );
+            customerDTO.setCity( manageNullValue( customer.getCity(  ) ) );
+            customerDTO.setPostalCode( manageNullValue( customer.getPostalCode(  ) ) );
+            customerDTO.setTelephoneNumber( manageNullValue( customer.getTelephoneNumber(  ) ) );
+            customerDTO.setFixedTelephoneNumber( manageNullValue( customer.getFixedTelephoneNumber(  ) ) );
             customerDTO.setSuggest(  );
         }
         catch ( NullPointerException ex )
@@ -295,5 +297,15 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         String strError = "{ \"status\": \"Error : " + strMessage + "\" }";
 
         return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
+    }
+
+    /**
+     * Manages the case the specified String is {@code null}
+     * @param strValue the String to manage
+     * @return the correct String when the specified String is {@code null}, {@code strValue} otherwise
+     */
+    private static String manageNullValue( String strValue )
+    {
+        return ( strValue == null ) ? StringUtils.EMPTY : strValue;
     }
 }
