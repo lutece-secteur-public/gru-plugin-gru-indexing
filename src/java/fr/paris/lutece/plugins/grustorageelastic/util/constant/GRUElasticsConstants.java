@@ -44,15 +44,8 @@ public final class GRUElasticsConstants
     // CONSTANTS
     public static final String PLUGIN_NAME = "elasticsearch/";
     public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete";
-    public static final String PATH_ELASTIC_FIND_USER = "searchuser/";
     public static final String PATH_ELK_SUGGEST = "_suggest";
     public static final String PATH_ELK_SEARCH = "_search";
-    public static final String PATH_ELK_BULK = "_bulk";
-    public static final String DB_USER = "db.user";
-    public static final String DB_PASSWORD = "db.password";
-    public static final String DB_SELECT = "db.select";
-    public static final String ES_INDICE = "es.indice";
-    public static final String ES_TYPE = "es.type";
 
     // PATHS
     public static final String PATH_ELK_SERVER = "grustorage-elastics.urlElk";
@@ -60,13 +53,6 @@ public final class GRUElasticsConstants
     public static final String PATH_ELK_TYPE_DEMAND = "grustorage-elastics.pathDemand";
     public static final String PATH_ELK_TYPE_USER = "grustorage-elastics.pathUser";
     public static final String PATH_ELK_TYPE_NOTIFICATION = "grustorage-elastics.pathNotification";
-    public static final String PATH_WS_SERVER = "grustorage-elastic.urlWS";
-    public static final String PATH_DB_DRIVER = "db.driver";
-    public static final String PATH_DB_URL = "db.url";
-
-    //STATUS 
-    public static final String STATUS_201 = "{" + "\"status\":" + "\"201\"" + "}";
-    public static final String STATUS_404 = "{" + "\"status\":" + "\"404\"" + "}";
 
     /**
      * Instantiates a new GRU elastics constants.

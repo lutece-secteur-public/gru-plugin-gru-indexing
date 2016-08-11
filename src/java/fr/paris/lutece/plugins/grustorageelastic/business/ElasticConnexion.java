@@ -92,7 +92,6 @@ public final class ElasticConnexion
         String path = ( StringUtils.isNullOrEmpty( strPath ) ) ? "" : AppPropertiesService.getProperty( strPath );
         String tmp = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
             AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) + path + strSpecif;
-        AppLogService.info( "DEBUG INFO : PATH TO ELASTIC :" + tmp );
 
         return tmp;
     }

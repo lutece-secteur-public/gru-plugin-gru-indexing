@@ -423,7 +423,6 @@ public class ESCustomerDTO
     public void setFixedTelephoneNumber( String strFixedPhoneNumber )
     {
         _strFixedPhoneNumber = strFixedPhoneNumber;
-        AppLogService.info( "Fixed phone NUmber " + _strFixedPhoneNumber );
     }
 
     /**
@@ -443,7 +442,6 @@ public class ESCustomerDTO
     public void setSuggest(  )
     {
         ESSuggestDTO s = new ESSuggestDTO(  );
-        AppLogService.info( "Fixed phone NUmber " + _strFixedPhoneNumber );
 
         // input
         //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
