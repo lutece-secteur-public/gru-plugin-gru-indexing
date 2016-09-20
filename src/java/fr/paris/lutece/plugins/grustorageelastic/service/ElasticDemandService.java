@@ -74,8 +74,7 @@ import javax.ws.rs.core.Response;
  */
 public class ElasticDemandService implements IDemandService
 {
-	
-	/** The _comparator notifications. */
+    /** The _comparator notifications. */
     private static Comparator<Notification> _comparatorNotifications = new Comparator<Notification>(  )
         {
             @Override
@@ -122,9 +121,8 @@ public class ElasticDemandService implements IDemandService
             String tmp = mapper.writeValueAsString( jnode );
             ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
             demand = buildDemand( demandDTO );
- 
-            demand.setTimeOpenedInMs( calculateOpenedTime( demand ) );
 
+            demand.setTimeOpenedInMs( calculateOpenedTime( demand ) );
         }
         catch ( IOException ex )
         {
@@ -170,8 +168,8 @@ public class ElasticDemandService implements IDemandService
                     ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
                     Demand demand = buildDemand( demandDTO );
 
-                    BaseDemand bsDemande = buildBaseDemand( demandDTO );                   
-                    bsDemande.setTimeOpenedInMs( calculateOpenedTime( demand ) );                    
+                    BaseDemand bsDemande = buildBaseDemand( demandDTO );
+                    bsDemande.setTimeOpenedInMs( calculateOpenedTime( demand ) );
                     base.add( bsDemande );
                 }
             }
@@ -373,18 +371,19 @@ public class ElasticDemandService implements IDemandService
 
         return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
     }
-    
+
     /**
      * Return The first notification timestamp of a demand
      * @return The first notification timestamp of a demand
      */
     public long getFirstNotificationTimestamp( Demand demand )
     {
-    	long nTimestamp = 0L;
-    	List<Notification> listNotifications = demand.getNotifications(  );
-    	if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
+        long nTimestamp = 0L;
+        List<Notification> listNotifications = demand.getNotifications(  );
+
+        if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
         {
-            return listNotifications.get( 0 ).getTimestamp( );
+            return listNotifications.get( 0 ).getTimestamp(  );
         }
 
         return nTimestamp;
@@ -396,22 +395,23 @@ public class ElasticDemandService implements IDemandService
      */
     public long getLastNotificationTimestamp( Demand demand )
     {
-    	long nTimestamp = 0L;
-    	List<Notification> listNotifications = demand.getNotifications(  );
-    	if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
+        long nTimestamp = 0L;
+        List<Notification> listNotifications = demand.getNotifications(  );
+
+        if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
         {
-            return listNotifications.get( listNotifications.size(  ) - 1 ).getTimestamp( );
+            return listNotifications.get( listNotifications.size(  ) - 1 ).getTimestamp(  );
         }
 
         return nTimestamp;
     }
-    
+
     /**
      * Calculate the opened time of a demand
      * @param demand the Demand
-     * @return the calculated opened time 
+     * @return the calculated opened time
      */
-    private long calculateOpenedTime(Demand demand)
+    private long calculateOpenedTime( Demand demand )
     {
         long nFirstDate = getFirstNotificationTimestamp( demand );
         long nLastDate = getLastNotificationTimestamp( demand );
@@ -419,16 +419,13 @@ public class ElasticDemandService implements IDemandService
 
         if ( demand.getStatus(  ) == Demand.STATUS_CLOSED )
         {
-        	nTimeOpened = nLastDate - nFirstDate;
-        	
+            nTimeOpened = nLastDate - nFirstDate;
         }
         else
         {
-        	nTimeOpened = ( new Date(  ) ).getTime(  ) - nFirstDate;
-
+            nTimeOpened = ( new Date(  ) ).getTime(  ) - nFirstDate;
         }
+
         return nTimeOpened;
     }
-    
 }
-
