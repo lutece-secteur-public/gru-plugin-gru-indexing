@@ -33,14 +33,14 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
-import fr.paris.lutece.plugins.gru.business.demand.BackOfficeLogging;
-import fr.paris.lutece.plugins.gru.business.demand.BaseDemand;
-import fr.paris.lutece.plugins.gru.business.demand.Demand;
-import fr.paris.lutece.plugins.gru.business.demand.Email;
-import fr.paris.lutece.plugins.gru.business.demand.Notification;
-import fr.paris.lutece.plugins.gru.business.demand.Sms;
-import fr.paris.lutece.plugins.gru.business.demand.UserDashboard;
 import fr.paris.lutece.plugins.gru.service.demand.IDemandService;
+import fr.paris.lutece.plugins.grubusiness.business.demand.BackOfficeLogging;
+import fr.paris.lutece.plugins.grubusiness.business.demand.BaseDemand;
+import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
+import fr.paris.lutece.plugins.grubusiness.business.demand.Email;
+import fr.paris.lutece.plugins.grubusiness.business.demand.Notification;
+import fr.paris.lutece.plugins.grubusiness.business.demand.Sms;
+import fr.paris.lutece.plugins.grubusiness.business.demand.UserDashboard;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
@@ -56,9 +56,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -77,7 +74,8 @@ import javax.ws.rs.core.Response;
  */
 public class ElasticDemandService implements IDemandService
 {
-    /** The _comparator notifications. */
+	
+	/** The _comparator notifications. */
     private static Comparator<Notification> _comparatorNotifications = new Comparator<Notification>(  )
         {
             @Override
@@ -124,29 +122,9 @@ public class ElasticDemandService implements IDemandService
             String tmp = mapper.writeValueAsString( jnode );
             ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
             demand = buildDemand( demandDTO );
+ 
+            demand.setTimeOpenedInMs( calculateOpenedTime( demand ) );
 
-            SimpleDateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
-
-            try
-            {
-                Date firstDate = formatter.parse( demand.getFirstNotificationDate(  ) );
-                Date lstDate = formatter.parse( demand.getLastNotificationDate(  ) );
-
-                if ( demand.getStatus(  ) == Demand.STATUS_CLOSED )
-                {
-                    long lTimeOpened = lstDate.getTime(  ) - firstDate.getTime(  );
-                    demand.setTimeOpenedInMs( lTimeOpened );
-                }
-                else
-                {
-                    long lTimeOpened = ( new Date(  ) ).getTime(  ) - firstDate.getTime(  );
-                    demand.setTimeOpenedInMs( lTimeOpened );
-                }
-            }
-            catch ( ParseException ex )
-            {
-                AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-            }
         }
         catch ( IOException ex )
         {
@@ -192,31 +170,8 @@ public class ElasticDemandService implements IDemandService
                     ESDemandDTO demandDTO = mapper.readValue( tmp, ESDemandDTO.class );
                     Demand demand = buildDemand( demandDTO );
 
-                    BaseDemand bsDemande = buildBaseDemand( demandDTO );
-
-                    SimpleDateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
-
-                    try
-                    {
-                        Date firstDate = formatter.parse( demand.getFirstNotificationDate(  ) );
-                        Date lstDate = formatter.parse( demand.getLastNotificationDate(  ) );
-
-                        if ( bsDemande.getStatus(  ) == Demand.STATUS_CLOSED )
-                        {
-                            long lTimeOpened = lstDate.getTime(  ) - firstDate.getTime(  );
-                            bsDemande.setTimeOpenedInMs( lTimeOpened );
-                        }
-                        else
-                        {
-                            long lTimeOpened = ( new Date(  ) ).getTime(  ) - firstDate.getTime(  );
-                            bsDemande.setTimeOpenedInMs( lTimeOpened );
-                        }
-                    }
-                    catch ( ParseException ex )
-                    {
-                        AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-                    }
-
+                    BaseDemand bsDemande = buildBaseDemand( demandDTO );                   
+                    bsDemande.setTimeOpenedInMs( calculateOpenedTime( demand ) );                    
                     base.add( bsDemande );
                 }
             }
@@ -418,4 +373,62 @@ public class ElasticDemandService implements IDemandService
 
         return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
     }
+    
+    /**
+     * Return The first notification timestamp of a demand
+     * @return The first notification timestamp of a demand
+     */
+    public long getFirstNotificationTimestamp( Demand demand )
+    {
+    	long nTimestamp = 0L;
+    	List<Notification> listNotifications = demand.getNotifications(  );
+    	if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
+        {
+            return listNotifications.get( 0 ).getTimestamp( );
+        }
+
+        return nTimestamp;
+    }
+
+    /**
+     * return the last notification timestamp of a demand
+     * @return The last notification timestamp of a demand
+     */
+    public long getLastNotificationTimestamp( Demand demand )
+    {
+    	long nTimestamp = 0L;
+    	List<Notification> listNotifications = demand.getNotifications(  );
+    	if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
+        {
+            return listNotifications.get( listNotifications.size(  ) - 1 ).getTimestamp( );
+        }
+
+        return nTimestamp;
+    }
+    
+    /**
+     * Calculate the opened time of a demand
+     * @param demand the Demand
+     * @return the calculated opened time 
+     */
+    private long calculateOpenedTime(Demand demand)
+    {
+        long nFirstDate = getFirstNotificationTimestamp( demand );
+        long nLastDate = getLastNotificationTimestamp( demand );
+        long nTimeOpened = 0L;
+
+        if ( demand.getStatus(  ) == Demand.STATUS_CLOSED )
+        {
+        	nTimeOpened = nLastDate - nFirstDate;
+        	
+        }
+        else
+        {
+        	nTimeOpened = ( new Date(  ) ).getTime(  ) - nFirstDate;
+
+        }
+        return nTimeOpened;
+    }
+    
 }
+
