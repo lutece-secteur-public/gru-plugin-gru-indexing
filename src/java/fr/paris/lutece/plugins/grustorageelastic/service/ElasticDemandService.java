@@ -33,23 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.ws.rs.core.Response;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.DeserializationConfig.Feature;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import fr.paris.lutece.plugins.gru.service.demand.IDemandService;
 import fr.paris.lutece.plugins.grubusiness.business.demand.BaseDemand;
 import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
@@ -60,6 +43,24 @@ import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.util.AppLogService;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.DeserializationConfig.Feature;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.ws.rs.core.Response;
 
 
 // TODO: Auto-generated Javadoc
@@ -252,7 +253,7 @@ public class ElasticDemandService implements IDemandService
 
         for ( int i = listNotification.size(  ) - 1; i >= 0; i-- )
         {
-        	NotifyGruGlobalNotification notification = listNotification.get( i );
+            NotifyGruGlobalNotification notification = listNotification.get( i );
 
             if ( !bIsAgentStatusFound && ( notification.getBackofficeLogging(  ) != null ) )
             {
@@ -284,7 +285,7 @@ public class ElasticDemandService implements IDemandService
      */
     private NotifyGruGlobalNotification buildNotification( ESNotificationDTO notification )
     {
-    	NotifyGruGlobalNotification result = new NotifyGruGlobalNotification(  );
+        NotifyGruGlobalNotification result = new NotifyGruGlobalNotification(  );
 
         try
         {

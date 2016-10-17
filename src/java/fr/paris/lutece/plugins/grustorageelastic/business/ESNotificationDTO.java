@@ -34,9 +34,9 @@
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import fr.paris.lutece.plugins.grubusiness.business.notification.BackofficeNotification;
-import fr.paris.lutece.plugins.grubusiness.business.notification.UserDashboardNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.EmailNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.SMSNotification;
+import fr.paris.lutece.plugins.grubusiness.business.notification.UserDashboardNotification;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
@@ -188,7 +188,7 @@ public class ESNotificationDTO
     @JsonProperty( "user_dashboard" )
     public void setUserDashBoard( UserDashboardNotification userDashboardNotification )
     {
-    	_userDashboardNotification = userDashboardNotification;
+        _userDashboardNotification = userDashboardNotification;
     }
 
     /**

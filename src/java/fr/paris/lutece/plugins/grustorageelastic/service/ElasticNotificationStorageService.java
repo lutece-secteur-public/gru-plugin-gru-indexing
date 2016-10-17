@@ -47,6 +47,7 @@ import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
