@@ -33,10 +33,10 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-import fr.paris.lutece.plugins.grusupply.business.BackofficeNotification;
-import fr.paris.lutece.plugins.grusupply.business.DashboardNotification;
-import fr.paris.lutece.plugins.grusupply.business.EmailNotification;
-import fr.paris.lutece.plugins.grusupply.business.SMSNotification;
+import fr.paris.lutece.plugins.grubusiness.business.notification.BackofficeNotification;
+import fr.paris.lutece.plugins.grubusiness.business.notification.UserDashboardNotification;
+import fr.paris.lutece.plugins.grubusiness.business.notification.EmailNotification;
+import fr.paris.lutece.plugins.grubusiness.business.notification.SMSNotification;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
@@ -64,7 +64,7 @@ public class ESNotificationDTO
     private EmailNotification _emailNotification;
 
     /** The _dash board notification. */
-    private DashboardNotification _dashBoardNotification;
+    private UserDashboardNotification _userDashboardNotification;
 
     /** The _sms notification. */
     private SMSNotification _smsNotification;
@@ -86,19 +86,19 @@ public class ESNotificationDTO
      * @param oNotificationDemand the o notification demand
      * @param lDateSollicitation the l date sollicitation
      * @param emailNotification the email notification
-     * @param dashBoardNotification the dash board notification
+     * @param userDashboardNotification the dash board notification
      * @param smsNotification the sms notification
      * @param backOfficeNotification the back office notification
      */
     public ESNotificationDTO( NotificationDemandDTO oNotificationDemand, long lDateSollicitation,
-        EmailNotification emailNotification, DashboardNotification dashBoardNotification,
+        EmailNotification emailNotification, UserDashboardNotification userDashboardNotification,
         SMSNotification smsNotification, BackofficeNotification backOfficeNotification )
     {
         super(  );
         this._oNotificationDemand = oNotificationDemand;
         this._lDateNotification = lDateSollicitation;
         this._emailNotification = emailNotification;
-        this._dashBoardNotification = dashBoardNotification;
+        this._userDashboardNotification = userDashboardNotification;
         this._smsNotification = smsNotification;
         this._backOfficeNotification = backOfficeNotification;
     }
@@ -175,9 +175,9 @@ public class ESNotificationDTO
      * @return the user dash board
      */
     @JsonProperty( "user_dashboard" )
-    public DashboardNotification getUserDashBoard(  )
+    public UserDashboardNotification getUserDashBoard(  )
     {
-        return _dashBoardNotification;
+        return _userDashboardNotification;
     }
 
     /**
@@ -186,9 +186,9 @@ public class ESNotificationDTO
      * @param userDashBoard the new user dash board
      */
     @JsonProperty( "user_dashboard" )
-    public void setUserDashBoard( DashboardNotification userDashBoard )
+    public void setUserDashBoard( UserDashboardNotification userDashboardNotification )
     {
-        _dashBoardNotification = userDashBoard;
+    	_userDashboardNotification = userDashboardNotification;
     }
 
     /**

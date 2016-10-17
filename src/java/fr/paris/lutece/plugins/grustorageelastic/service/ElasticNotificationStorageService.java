@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
+import fr.paris.lutece.plugins.grubusiness.business.notification.NotifyGruGlobalNotification;
 import fr.paris.lutece.plugins.grustorageelastic.business.CustomerDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
@@ -42,12 +43,10 @@ import fr.paris.lutece.plugins.grustorageelastic.business.NotificationDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
 import fr.paris.lutece.plugins.grusupply.business.Demand;
-import fr.paris.lutece.plugins.grusupply.business.Notification;
 import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -68,7 +67,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param notification the notification
      */
     @Override
-    public void store( Notification notification )
+    public void store( NotifyGruGlobalNotification notification )
     {
         if ( notification == null )
         {
@@ -80,7 +79,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 
         try
         {
-            ESNotificationDTO notifDto = buildNotificationDto( notification, notification.getDemand(  ) );
+            ESNotificationDTO notifDto = buildNotificationDto( notification );
 
             jsonNotif = mapper.writeValueAsString( notifDto );
             ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( 
@@ -217,21 +216,21 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param demand the demand
      * @return the ES notification dto
      */
-    private ESNotificationDTO buildNotificationDto( Notification notif, Demand demand )
+    private ESNotificationDTO buildNotificationDto( NotifyGruGlobalNotification notif )
     {
         ESNotificationDTO notifDTO = new ESNotificationDTO(  );
 
         try
         {
-            NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( demand.getDemandId(  ) ),
-                    String.valueOf( demand.getDemandTypeId(  ) ) );
+            NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( notif.getDemandId(  ) ),
+                    String.valueOf( notif.getDemandTypeId(  ) ) );
 
-            notifDTO.setDateNotification( notif.getDateNotification(  ) );
+            notifDTO.setDateNotification( notif.getNotificationDate(  ) );
             notifDTO.setNotificationDemand( nddto );
             notifDTO.setUserEmail( notif.getUserEmail(  ) );
-            notifDTO.setUserDashBoard( notif.getUserDashBoard(  ) );
-            notifDTO.setUserSms( notif.getUserSms(  ) );
-            notifDTO.setUserBackOffice( notif.getUserBackOffice(  ) );
+            notifDTO.setUserDashBoard( notif.getUserDashboard(  ) );
+            notifDTO.setUserSms( notif.getUserSMS(  ) );
+            notifDTO.setUserBackOffice( notif.getBackofficeLogging(  ) );
         }
         catch ( NullPointerException ex )
         {

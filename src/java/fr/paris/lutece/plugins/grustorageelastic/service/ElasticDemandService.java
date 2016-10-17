@@ -33,30 +33,7 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
-import fr.paris.lutece.plugins.gru.service.demand.IDemandService;
-import fr.paris.lutece.plugins.grubusiness.business.demand.BackOfficeLogging;
-import fr.paris.lutece.plugins.grubusiness.business.demand.BaseDemand;
-import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
-import fr.paris.lutece.plugins.grubusiness.business.demand.Email;
-import fr.paris.lutece.plugins.grubusiness.business.demand.Notification;
-import fr.paris.lutece.plugins.grubusiness.business.demand.Sms;
-import fr.paris.lutece.plugins.grubusiness.business.demand.UserDashboard;
-import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
-import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
-import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
-import fr.paris.lutece.plugins.grusupply.business.BackofficeNotification;
-import fr.paris.lutece.portal.business.user.AdminUser;
-import fr.paris.lutece.portal.service.util.AppLogService;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.DeserializationConfig.Feature;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -67,6 +44,23 @@ import java.util.TreeSet;
 
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.DeserializationConfig.Feature;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import fr.paris.lutece.plugins.gru.service.demand.IDemandService;
+import fr.paris.lutece.plugins.grubusiness.business.demand.BaseDemand;
+import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
+import fr.paris.lutece.plugins.grubusiness.business.notification.NotifyGruGlobalNotification;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
+import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.portal.service.util.AppLogService;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -75,13 +69,13 @@ import javax.ws.rs.core.Response;
 public class ElasticDemandService implements IDemandService
 {
     /** The _comparator notifications. */
-    private static Comparator<Notification> _comparatorNotifications = new Comparator<Notification>(  )
+    private static Comparator<NotifyGruGlobalNotification> _comparatorNotifications = new Comparator<NotifyGruGlobalNotification>(  )
         {
             @Override
-            public int compare( Notification notification1, Notification notification2 )
+            public int compare( NotifyGruGlobalNotification notification1, NotifyGruGlobalNotification notification2 )
             {
-                return ( Long.valueOf( notification1.getTimestamp(  ) )
-                             .compareTo( Long.valueOf( notification2.getTimestamp(  ) ) ) );
+                return ( Long.valueOf( notification1.getNotificationDate(  ) )
+                             .compareTo( Long.valueOf( notification2.getNotificationDate(  ) ) ) );
             }
         };
 
@@ -238,7 +232,7 @@ public class ElasticDemandService implements IDemandService
 
         JsonNode jsonRetour = mapper.readTree( retourES );
         List<JsonNode> listJsonNotification = jsonRetour.findValues( "_source" );
-        Set<Notification> setNotification = new TreeSet<Notification>( _comparatorNotifications );
+        Set<NotifyGruGlobalNotification> setNotification = new TreeSet<NotifyGruGlobalNotification>( _comparatorNotifications );
 
         for ( JsonNode jnode : listJsonNotification )
         {
@@ -250,7 +244,7 @@ public class ElasticDemandService implements IDemandService
             }
         }
 
-        List<Notification> listNotification = base.getNotifications(  );
+        List<NotifyGruGlobalNotification> listNotification = base.getNotifications(  );
         listNotification.addAll( setNotification );
 
         boolean bIsAgentStatusFound = false;
@@ -258,11 +252,11 @@ public class ElasticDemandService implements IDemandService
 
         for ( int i = listNotification.size(  ) - 1; i >= 0; i-- )
         {
-            Notification notification = listNotification.get( i );
+        	NotifyGruGlobalNotification notification = listNotification.get( i );
 
-            if ( !bIsAgentStatusFound && ( notification.getBackOfficeLogging(  ) != null ) )
+            if ( !bIsAgentStatusFound && ( notification.getBackofficeLogging(  ) != null ) )
             {
-                base.setAgentStatus( notification.getBackOfficeLogging(  ).getStatusText(  ) );
+                base.setAgentStatus( notification.getBackofficeLogging(  ).getStatusText(  ) );
                 bIsAgentStatusFound = true;
             }
 
@@ -288,58 +282,18 @@ public class ElasticDemandService implements IDemandService
      * @param notification the ESNotificationDTO
      * @return the Notification
      */
-    private Notification buildNotification( ESNotificationDTO notification )
+    private NotifyGruGlobalNotification buildNotification( ESNotificationDTO notification )
     {
-        Notification result = new Notification(  );
+    	NotifyGruGlobalNotification result = new NotifyGruGlobalNotification(  );
 
         try
         {
-            Email email = new Email(  );
+            result.setUserEmail( notification.getUserEmail(  ) );
+            result.setUserSMS( notification.getUserSms(  ) );
+            result.setUserDashboard( notification.getUserDashBoard(  ) );
+            result.setBackofficeLogging( notification.getUserBackOffice(  ) );
 
-            if ( notification.getUserEmail(  ) != null )
-            {
-                email.setSenderName( notification.getUserEmail(  ).getSenderName(  ) );
-                email.setRecipient( notification.getUserEmail(  ).getRecipient(  ) );
-                email.setSubject( notification.getUserEmail(  ).getSubject(  ) );
-                email.setMessage( notification.getUserEmail(  ).getMessage(  ) );
-            }
-
-            Sms sms = new Sms(  );
-
-            if ( notification.getUserSms(  ) != null )
-            {
-                sms.setMessage( notification.getUserSms(  ).getMessage(  ) );
-                sms.setPhoneNumber( String.valueOf( notification.getUserSms(  ).getPhoneNumber(  ) ) );
-            }
-
-            if ( notification.getUserDashBoard(  ) != null )
-            {
-                UserDashboard uDash = new UserDashboard(  );
-
-                uDash.setStatusText( notification.getUserDashBoard(  ).getStatusText(  ) );
-                uDash.setSenderName( notification.getUserDashBoard(  ).getSenderName(  ) );
-                uDash.setSubject( notification.getUserDashBoard(  ).getSubject(  ) );
-                uDash.setMessage( notification.getUserDashBoard(  ).getMessage(  ) );
-
-                result.setUserDashboard( uDash );
-            }
-
-            BackofficeNotification backofficeNotification = notification.getUserBackOffice(  );
-
-            if ( backofficeNotification != null )
-            {
-                BackOfficeLogging backOfficeLogging = new BackOfficeLogging(  );
-
-                backOfficeLogging.setMessage( backofficeNotification.getMessage(  ) );
-                backOfficeLogging.setStatusText( backofficeNotification.getStatusText(  ) );
-
-                result.setBackOfficeLogging( backOfficeLogging );
-            }
-
-            result.setTimestamp( notification.getDateNotification(  ) );
-            result.setSource( "PAS TROUVE" );
-            result.setEmail( email );
-            result.setSms( sms );
+            result.setNotificationDate( notification.getDateNotification(  ) );
         }
         catch ( NullPointerException ex )
         {
@@ -379,11 +333,11 @@ public class ElasticDemandService implements IDemandService
     public long getFirstNotificationTimestamp( Demand demand )
     {
         long nTimestamp = 0L;
-        List<Notification> listNotifications = demand.getNotifications(  );
+        List<NotifyGruGlobalNotification> listNotifications = demand.getNotifications(  );
 
         if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
         {
-            return listNotifications.get( 0 ).getTimestamp(  );
+            return listNotifications.get( 0 ).getNotificationDate(  );
         }
 
         return nTimestamp;
@@ -396,11 +350,11 @@ public class ElasticDemandService implements IDemandService
     public long getLastNotificationTimestamp( Demand demand )
     {
         long nTimestamp = 0L;
-        List<Notification> listNotifications = demand.getNotifications(  );
+        List<NotifyGruGlobalNotification> listNotifications = demand.getNotifications(  );
 
         if ( ( listNotifications != null ) && !listNotifications.isEmpty(  ) )
         {
-            return listNotifications.get( listNotifications.size(  ) - 1 ).getTimestamp(  );
+            return listNotifications.get( listNotifications.size(  ) - 1 ).getNotificationDate(  );
         }
 
         return nTimestamp;
