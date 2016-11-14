@@ -33,8 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-import fr.paris.lutece.portal.service.util.AppLogService;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
@@ -64,7 +62,7 @@ public class ESCustomerDTO
 {
     /** The _n customer id. */
     // Variables declarations 
-    private int _nCustomerId;
+    private String _strCustomerId;
 
     /** The _str name. */
     private String _strName;
@@ -116,27 +114,27 @@ public class ESCustomerDTO
     /**
      * Instantiates a new ES customer dto.
      *
-     * @param nCustomerId the n customer id
-     * @param strName the str name
-     * @param strFirstName the str first name
-     * @param strEmail the str email
-     * @param strBirthday the str birthday
-     * @param strCivility the str civility
-     * @param strStreet the str street
-     * @param strCityOfBirth the str city of birth
-     * @param bStayConnected the b stay connected
-     * @param strCity the str city
-     * @param strPostalCode the str postal code
-     * @param strTelephoneNumber the str telephone number
-     * @param strFixedPhoneNumber the str telephone number
-     * @param oSuggest the o suggest
+     * @param strCustomerId the customer id
+     * @param strName the name
+     * @param strFirstName the first name
+     * @param strEmail the email
+     * @param strBirthday the birthday
+     * @param strCivility the civility
+     * @param strStreet the street
+     * @param strCityOfBirth the city of birth
+     * @param bStayConnected the stay connected
+     * @param strCity the city
+     * @param strPostalCode the postal code
+     * @param strTelephoneNumber the telephone number
+     * @param strFixedPhoneNumber the telephone number
+     * @param oSuggest the suggest
      */
-    public ESCustomerDTO( int nCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
+    public ESCustomerDTO( String strCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
         String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity,
         String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber, ESSuggestDTO oSuggest )
     {
         super(  );
-        this._nCustomerId = nCustomerId;
+        this._strCustomerId = strCustomerId;
         this._strName = strName;
         this._strFirstName = strFirstName;
         this._strEmail = strEmail;
@@ -158,19 +156,19 @@ public class ESCustomerDTO
      * @return The CustomerId
      */
     @JsonProperty( "user_cid" )
-    public int getCustomerId(  )
+    public String getCustomerId(  )
     {
-        return _nCustomerId;
+        return _strCustomerId;
     }
 
     /**
      * Sets the CustomerId.
      *
-     * @param luserGuid the new customer id
+     * @param strCustomerId the new customer id
      */
-    public void setCustomerId( int luserGuid )
+    public void setCustomerId( String strCustomerId )
     {
-        _nCustomerId = luserGuid;
+        _strCustomerId = strCustomerId;
     }
 
     /**
@@ -459,7 +457,7 @@ public class ESCustomerDTO
         ESPayload oPayload = new ESPayload(  );
         HashMap<String, String> payload = new HashMap<String, String>(  );
 
-        payload.put( "user_cid", String.valueOf( _nCustomerId ) );
+        payload.put( "user_cid", _strCustomerId );
         payload.put( "last_name", _strName );
         payload.put( "first_name", _strFirstName );
         payload.put( "birthday", _strBirthday );

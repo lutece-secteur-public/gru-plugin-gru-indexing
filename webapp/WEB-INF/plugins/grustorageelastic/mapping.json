@@ -19,7 +19,8 @@
                    
                 },
                 "user_cid": {
-                    "type": "long"
+                    "index": "not_analyzed",
+                    "type": "string"
                 },
                 "birthday": {
                     "index": "not_analyzed",
@@ -213,7 +214,8 @@
                     "dynamic": true,
                     "properties": {
                         "user_cid": {
-                            "type": "string"
+                            "type": "string",
+                            "index" : "not_analyzed"
                         }
                     }
                 },

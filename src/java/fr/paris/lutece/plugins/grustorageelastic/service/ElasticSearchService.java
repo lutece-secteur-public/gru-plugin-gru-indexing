@@ -123,7 +123,7 @@ public class ElasticSearchService implements ISearchService
      * {@inheritDoc }
      */
     @Override
-    public Customer searchCustomerById( int nCustomerId )
+    public Customer searchCustomerById( String strCustomerId )
     {
         Customer customer = null;
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
@@ -131,7 +131,7 @@ public class ElasticSearchService implements ISearchService
 
         Map<String, String> mapFields = new HashMap<String, String>(  );
 
-        mapFields.put( KEY_CUSTOMER_ID, String.valueOf( nCustomerId ) );
+        mapFields.put( KEY_CUSTOMER_ID, strCustomerId );
 
         try
         {
@@ -193,7 +193,7 @@ public class ElasticSearchService implements ISearchService
 
         try
         {
-            customer.setId( node.findValue( KEY_CUSTOMER_ID ).asInt(  ) );
+            customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText(  ) );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ).asInt(  ) );
             customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ).asText(  ) );
             customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText(  ) );
