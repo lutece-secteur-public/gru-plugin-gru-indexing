@@ -66,6 +66,7 @@ public class ElasticSearchService implements ISearchService
     private static final String KEY_CUSTOMER_EMAIL = "email";
     private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
     private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
+    private static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
 
     /**
      * {@inheritDoc }.
@@ -200,6 +201,7 @@ public class ElasticSearchService implements ISearchService
             customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ).asText(  ) );
             customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ).asText(  ) );
             customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText(  ) );
+            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText(  ) );
         }
         catch ( NullPointerException ex )
         {
