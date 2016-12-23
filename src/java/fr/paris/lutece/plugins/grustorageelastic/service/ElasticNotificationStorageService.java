@@ -33,6 +33,11 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.paris.lutece.plugins.grubusiness.business.notification.NotifyGruGlobalNotification;
 import fr.paris.lutece.plugins.grustorageelastic.business.CustomerDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
@@ -47,10 +52,6 @@ import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
 import org.apache.commons.lang.StringUtils;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
@@ -76,6 +77,8 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         }
 
         ObjectMapper mapper = new ObjectMapper(  );
+        mapper.setSerializationInclusion( Include.NON_NULL );
+
         String jsonNotif = "";
 
         try
@@ -114,6 +117,8 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         }
 
         ObjectMapper mapper = new ObjectMapper(  );
+        mapper.setSerializationInclusion( Include.NON_NULL );
+
         String jsonUser;
 
         try
@@ -153,6 +158,8 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
         ESDemandDTO demandDTO = buildDemandDTO( demand, demand.getCustomer(  ) );
 
         ObjectMapper mapper = new ObjectMapper(  );
+        mapper.setSerializationInclusion( Include.NON_NULL );
+
         String jsonDemand;
 
         try
@@ -254,9 +261,14 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
 
         try
         {
-            CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-                        demand.getCustomer(  ).getCustomerId(  ) ) );
-            demandDTO.setCustomerDemand( customerDemand );
+            if ( ( demand.getCustomer(  ) != null ) &&
+                    StringUtils.isNotBlank( demand.getCustomer(  ).getCustomerId(  ) ) )
+            {
+                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
+                            demand.getCustomer(  ).getCustomerId(  ) ) );
+                demandDTO.setCustomerDemand( customerDemand );
+            }
+
             demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
             demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
             demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
