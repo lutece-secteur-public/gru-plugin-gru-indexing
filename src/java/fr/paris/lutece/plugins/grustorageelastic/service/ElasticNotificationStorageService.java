@@ -43,7 +43,7 @@ import fr.paris.lutece.plugins.grustorageelastic.business.NotificationDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
 import fr.paris.lutece.plugins.grusupply.business.Demand;
-import fr.paris.lutece.plugins.grusupply.service.INotificationStorageService;
+import fr.paris.lutece.plugins.grusupply.service.INotificationIndexService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
 import org.apache.commons.lang.StringUtils;
@@ -60,7 +60,7 @@ import javax.ws.rs.core.Response;
 /**
  * The Class ElasticNotificationStorageService.
  */
-public class ElasticNotificationStorageService implements INotificationStorageService
+public class ElasticNotificationStorageService implements INotificationIndexService
 {
     /**
      * {@inheritDoc }.
@@ -68,7 +68,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param notification the notification
      */
     @Override
-    public void store( NotifyGruGlobalNotification notification )
+    public void index( NotifyGruGlobalNotification notification )
     {
         if ( notification == null )
         {
@@ -106,7 +106,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param user the user
      */
     @Override
-    public void store( Customer user )
+    public void index( Customer user )
     {
         if ( user == null )
         {
@@ -143,7 +143,7 @@ public class ElasticNotificationStorageService implements INotificationStorageSe
      * @param demand the demand
      */
     @Override
-    public void store( Demand demand )
+    public void index( Demand demand )
     {
         if ( demand == null )
         {
