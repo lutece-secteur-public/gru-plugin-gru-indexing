@@ -38,13 +38,13 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
 import fr.paris.lutece.plugins.grustorageelastic.business.CustomerDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
-import fr.paris.lutece.plugins.grusupply.business.Demand;
 import fr.paris.lutece.plugins.grusupply.service.INotificationIndexService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
@@ -105,14 +105,14 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
      * @param demand the demand
      */
     @Override
-    public void index( Demand demand )
+    public void index( Demand demand, Customer customer )
     {
         if ( demand == null )
         {
             throw new NullPointerException(  );
         }
 
-        ESDemandDTO demandDTO = buildDemandDTO( demand, demand.getCustomer(  ) );
+        ESDemandDTO demandDTO = buildDemandDTO( demand, customer );
 
         ObjectMapper mapper = new ObjectMapper(  );
         mapper.setSerializationInclusion( Include.NON_NULL );
@@ -187,16 +187,14 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
 
         try
         {
-            if ( ( demand.getCustomer(  ) != null ) &&
-                    StringUtils.isNotBlank( demand.getCustomer(  ).getCustomerId(  ) ) )
+            if ( StringUtils.isNotBlank( demand.getCustomerId(  ) ) )
             {
-                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-                            demand.getCustomer(  ).getCustomerId(  ) ) );
+                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( demand.getCustomerId(  ) ) );
                 demandDTO.setCustomerDemand( customerDemand );
             }
 
-            demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
-            demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
+            demandDTO.setDemandId( demand.getId(  ) );
+            demandDTO.setDemandTypeId( demand.getTypeId(  ) );
             demandDTO.setReference( demand.getReference(  ) );
             demandDTO.setSuggest( customer );
         }

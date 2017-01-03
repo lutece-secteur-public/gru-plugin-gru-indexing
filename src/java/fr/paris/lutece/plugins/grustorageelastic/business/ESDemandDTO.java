@@ -219,20 +219,28 @@ public class ESDemandDTO
         // input
         String[] input = { _strReference };
         s.setInput( input );
-        // Output
-        s.setOutput( customer.getName(  ) + " " + customer.getFirstName(  ) );
+
+        if ( customer != null )
+        {
+            // Output
+            s.setOutput( customer.getName(  ) + " " + customer.getFirstName(  ) );
+        }
 
         // Payload
         ESPayload oPayload = new ESPayload(  );
         HashMap<String, String> payload = new HashMap<String, String>(  );
 
-        payload.put( "user_cid", String.valueOf( customer.getCustomerId(  ) ) );
-        payload.put( "last_name", customer.getName(  ) );
-        payload.put( "first_name", customer.getFirstName(  ) );
-        payload.put( "birthday", customer.getBirthday(  ) );
-        payload.put( "telephoneNumber", customer.getTelephoneNumber(  ) );
-        payload.put( "FixeTelephoneNumber", customer.getFixedTelephoneNumber(  ) );
-        payload.put( "email", customer.getEmail(  ) );
+        if ( customer != null )
+        {
+            payload.put( "user_cid", customer.getCustomerId(  ) );
+            payload.put( "last_name", customer.getName(  ) );
+            payload.put( "first_name", customer.getFirstName(  ) );
+            payload.put( "birthday", customer.getBirthday(  ) );
+            payload.put( "telephoneNumber", customer.getTelephoneNumber(  ) );
+            payload.put( "FixeTelephoneNumber", customer.getFixedTelephoneNumber(  ) );
+            payload.put( "email", customer.getEmail(  ) );
+        }
+
         payload.put( "reference", _strReference );
 
         oPayload.setElements( payload );
