@@ -33,13 +33,15 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import fr.paris.lutece.plugins.grubusiness.business.notification.BackofficeNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.EmailNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.SMSNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.UserDashboardNotification;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 
 
 /**

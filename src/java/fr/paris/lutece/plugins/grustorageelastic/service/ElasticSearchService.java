@@ -41,7 +41,6 @@ import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 
-import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
 
@@ -51,6 +50,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 // TODO: Auto-generated Javadoc

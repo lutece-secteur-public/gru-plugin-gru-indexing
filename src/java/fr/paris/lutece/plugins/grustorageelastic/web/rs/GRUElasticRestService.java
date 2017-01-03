@@ -38,23 +38,26 @@ import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConsta
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.ObjectNode;
+
 
 import java.io.IOException;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 /**
@@ -117,15 +120,31 @@ public class GRUElasticRestService
         for ( JsonNode node : payload )
         {
             ObjectNode item = new ObjectNode( factory );
-            item.put( "last_name", node.findValue( "last_name" ) );
-            item.put( "first_name", node.findValue( "first_name" ) );
-
+            
+            node = node.path("elements");
+            
+            if ( !node.path( "last_name" ).isMissingNode() ){
+            	item.put( "last_name", node.get( "last_name" ).asText( ) );
+            }
+            if ( !node.path( "first_name" ).isMissingNode() ){
+            	item.put( "first_name", node.get( "first_name" ).asText( ) );
+            }
+            if ( !node.path( "reference" ).isMissingNode() ){
+            	item.put( "reference", node.get( "reference" ).asText( ) );
+            }
+            if ( !node.path( "demandId" ).isMissingNode() ){
+            	item.put( "demandId", node.get( "demandId" ).asText( ) );
+            }
+            if ( !node.path( "demandTypeId" ).isMissingNode() ){
+            	item.put( "demandTypeId", node.get( "demandTypeId" ).asText( ) );
+            }    
+            
             ObjectNode tmp = new ObjectNode( factory );
-            tmp.put( "item", item );
+            tmp.set( "item", item);
             autocomplete.add( tmp );
         }
 
-        root.put( "autocomplete", autocomplete );
+        root.set( "autocomplete", autocomplete );
 
         String test = mapper.writeValueAsString( root );
 

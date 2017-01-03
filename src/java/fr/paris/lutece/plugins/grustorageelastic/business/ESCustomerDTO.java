@@ -33,10 +33,12 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 
 import java.util.HashMap;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
 // TODO: Auto-generated Javadoc
@@ -129,9 +131,10 @@ public class ESCustomerDTO
      * @param strFixedPhoneNumber the telephone number
      * @param oSuggest the suggest
      */
-    public ESCustomerDTO( String strCustomerId, String strName, String strFirstName, String strEmail, String strBirthday,
-        String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity,
-        String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber, ESSuggestDTO oSuggest )
+    public ESCustomerDTO( String strCustomerId, String strName, String strFirstName, String strEmail,
+        String strBirthday, String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected,
+        String strCity, String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber,
+        ESSuggestDTO oSuggest )
     {
         super(  );
         this._strCustomerId = strCustomerId;

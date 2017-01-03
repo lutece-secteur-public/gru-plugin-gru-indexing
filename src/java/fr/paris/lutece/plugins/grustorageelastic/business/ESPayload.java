@@ -35,13 +35,15 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import fr.paris.lutece.portal.service.util.AppLogService;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.ObjectNode;
+
 
 import java.io.IOException;
 
 import java.util.HashMap;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 // TODO: Auto-generated Javadoc

@@ -33,8 +33,7 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 // TODO: Auto-generated Javadoc
 /**
