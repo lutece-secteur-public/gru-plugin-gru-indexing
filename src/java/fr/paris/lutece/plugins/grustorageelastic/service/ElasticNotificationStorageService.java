@@ -38,16 +38,13 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.paris.lutece.plugins.grubusiness.business.notification.NotifyGruGlobalNotification;
+import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
 import fr.paris.lutece.plugins.grustorageelastic.business.CustomerDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
-import fr.paris.lutece.plugins.grustorageelastic.business.ESNotificationDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorageelastic.business.NotificationDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.grusupply.business.Customer;
-import fr.paris.lutece.plugins.grusupply.business.Demand;
 import fr.paris.lutece.plugins.grusupply.service.INotificationIndexService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
@@ -63,46 +60,6 @@ import javax.ws.rs.core.Response;
  */
 public class ElasticNotificationStorageService implements INotificationIndexService
 {
-    /**
-     * {@inheritDoc }.
-     *
-     * @param notification the notification
-     */
-    @Override
-    public void index( NotifyGruGlobalNotification notification )
-    {
-        if ( notification == null )
-        {
-            throw new NullPointerException(  );
-        }
-
-        ObjectMapper mapper = new ObjectMapper(  );
-        mapper.setSerializationInclusion( Include.NON_NULL );
-
-        String jsonNotif = "";
-
-        try
-        {
-            ESNotificationDTO notifDto = buildNotificationDto( notification );
-
-            jsonNotif = mapper.writeValueAsString( notifDto );
-            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( 
-                    GRUElasticsConstants.PATH_ELK_TYPE_NOTIFICATION, "" ), jsonNotif );
-        }
-        catch ( JsonGenerationException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-        }
-        catch ( JsonMappingException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-        }
-        catch ( IOException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-        }
-    }
-
     /**
      * {@inheritDoc }.
      *
@@ -148,14 +105,14 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
      * @param demand the demand
      */
     @Override
-    public void index( Demand demand )
+    public void index( Demand demand, Customer customer )
     {
         if ( demand == null )
         {
             throw new NullPointerException(  );
         }
 
-        ESDemandDTO demandDTO = buildDemandDTO( demand, demand.getCustomer(  ) );
+        ESDemandDTO demandDTO = buildDemandDTO( demand, customer );
 
         ObjectMapper mapper = new ObjectMapper(  );
         mapper.setSerializationInclusion( Include.NON_NULL );
@@ -218,37 +175,6 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
     }
 
     /**
-     * Buid a Notification to an esNotificationDTO.
-     *
-     * @param notif the notif
-     * @param demand the demand
-     * @return the ES notification dto
-     */
-    private ESNotificationDTO buildNotificationDto( NotifyGruGlobalNotification notif )
-    {
-        ESNotificationDTO notifDTO = new ESNotificationDTO(  );
-
-        try
-        {
-            NotificationDemandDTO nddto = new NotificationDemandDTO( String.valueOf( notif.getDemandId(  ) ),
-                    String.valueOf( notif.getDemandTypeId(  ) ) );
-
-            notifDTO.setDateNotification( notif.getNotificationDate(  ) );
-            notifDTO.setNotificationDemand( nddto );
-            notifDTO.setUserEmail( notif.getUserEmail(  ) );
-            notifDTO.setUserDashBoard( notif.getUserDashboard(  ) );
-            notifDTO.setUserSms( notif.getUserSMS(  ) );
-            notifDTO.setUserBackOffice( notif.getBackofficeLogging(  ) );
-        }
-        catch ( NullPointerException ex )
-        {
-            error( "Demand OR Notofocation parsing fail", ex );
-        }
-
-        return notifDTO;
-    }
-
-    /**
      * Build a demand to an esDemandDTO.
      *
      * @param demand the demand
@@ -261,23 +187,15 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
 
         try
         {
-            if ( ( demand.getCustomer(  ) != null ) &&
-                    StringUtils.isNotBlank( demand.getCustomer(  ).getCustomerId(  ) ) )
+            if ( StringUtils.isNotBlank( demand.getCustomerId(  ) ) )
             {
-                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-                            demand.getCustomer(  ).getCustomerId(  ) ) );
+                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( demand.getCustomerId(  ) ) );
                 demandDTO.setCustomerDemand( customerDemand );
             }
 
-            demandDTO.setDemandId( String.valueOf( demand.getDemandId(  ) ) );
-            demandDTO.setDemandTypeId( String.valueOf( demand.getDemandTypeId(  ) ) );
-            demandDTO.setDemandMaxStep( String.valueOf( demand.getDemandMaxStep(  ) ) );
-            demandDTO.setDemandUserCurrentStep( String.valueOf( demand.getDemandUserCurrentStep(  ) ) );
-            demandDTO.setDemandState( String.valueOf( demand.getDemandStatus(  ) ) );
-            demandDTO.setNotifType( demand.getNotifType(  ) );
-            demandDTO.setCRMStatus( demand.getCRMStatus(  ) );
+            demandDTO.setDemandId( demand.getId(  ) );
+            demandDTO.setDemandTypeId( demand.getTypeId(  ) );
             demandDTO.setReference( demand.getReference(  ) );
-            demandDTO.setDemandStatus( demand.getDemandStatus(  ) );
             demandDTO.setSuggest( customer );
         }
         catch ( NullPointerException ex )
