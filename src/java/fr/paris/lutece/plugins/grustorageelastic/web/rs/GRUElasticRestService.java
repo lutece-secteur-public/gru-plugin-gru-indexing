@@ -33,24 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.web.rs;
 
-import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
-import fr.paris.lutece.plugins.rest.service.RestConstants;
-import fr.paris.lutece.portal.service.util.AppLogService;
-
-
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -58,6 +40,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
+import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.rest.service.RestConstants;
+import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.util.string.StringUtil;
+
+import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
+
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 
 /**
@@ -78,9 +78,9 @@ public class GRUElasticRestService
     public String autocomplete( @QueryParam( "query" )
     String strQuery )
     {
-        String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SUGGEST );
-        String json = "";
-        String retour = "";
+        String uri = ElasticConnexion.getESParam( StringUtils.EMPTY, GRUElasticsConstants.PATH_ELK_SUGGEST );
+        String json = StringUtils.EMPTY;
+        String retour = StringUtils.EMPTY;
 
         try
         {
@@ -110,7 +110,7 @@ public class GRUElasticRestService
     private static String getInfoAutocomplete( JsonNode nodeTree )
         throws JsonGenerationException, JsonMappingException, IOException
     {
-        List<JsonNode> payload = nodeTree.findValues( "payload" );
+        List<JsonNode> payload = nodeTree.findValues( GRUElasticsConstants.MARKER_PAYLOAD );
 
         ObjectMapper mapper = new ObjectMapper(  );
         JsonNodeFactory factory = JsonNodeFactory.instance;
@@ -120,31 +120,51 @@ public class GRUElasticRestService
         for ( JsonNode node : payload )
         {
             ObjectNode item = new ObjectNode( factory );
-            
-            node = node.path("elements");
-            
-            if ( !node.path( "last_name" ).isMissingNode() ){
-            	item.put( "last_name", node.get( "last_name" ).asText( ) );
+
+            node = node.path( GRUElasticsConstants.MARKER_ELEMENTS );
+
+            if ( !node.path( GRUElasticsConstants.MARKER_LAST_NAME ).isMissingNode(  ) )
+            {
+                item.put( GRUElasticsConstants.MARKER_LAST_NAME,
+                    node.get( GRUElasticsConstants.MARKER_LAST_NAME ).asText(  ) );
             }
-            if ( !node.path( "first_name" ).isMissingNode() ){
-            	item.put( "first_name", node.get( "first_name" ).asText( ) );
+
+            if ( !node.path( GRUElasticsConstants.MARKER_FIRST_NAME ).isMissingNode(  ) )
+            {
+                item.put( GRUElasticsConstants.MARKER_FIRST_NAME,
+                    node.get( GRUElasticsConstants.MARKER_FIRST_NAME ).asText(  ) );
             }
-            if ( !node.path( "reference" ).isMissingNode() ){
-            	item.put( "reference", node.get( "reference" ).asText( ) );
+
+            if ( !node.path( GRUElasticsConstants.MARKER_REFERENCE ).isMissingNode(  ) )
+            {
+                item.put( GRUElasticsConstants.MARKER_REFERENCE,
+                    node.get( GRUElasticsConstants.MARKER_REFERENCE ).asText(  ) );
             }
-            if ( !node.path( "demandId" ).isMissingNode() ){
-            	item.put( "demandId", node.get( "demandId" ).asText( ) );
+
+            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_ID ).isMissingNode(  ) )
+            {
+                item.put( GRUElasticsConstants.MARKER_DEMAND_ID,
+                    node.get( GRUElasticsConstants.MARKER_DEMAND_ID ).asText(  ) );
             }
-            if ( !node.path( "demandTypeId" ).isMissingNode() ){
-            	item.put( "demandTypeId", node.get( "demandTypeId" ).asText( ) );
-            }    
-            
+
+            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).isMissingNode(  ) )
+            {
+                item.put( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID,
+                    node.get( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).asText(  ) );
+            }
+
+            if ( !node.path( GRUElasticsConstants.MARKER_USER_CID ).isMissingNode(  ) )
+            {
+                item.put( GRUElasticsConstants.MARKER_USER_CID,
+                    node.get( GRUElasticsConstants.MARKER_USER_CID ).asText(  ) );
+            }
+
             ObjectNode tmp = new ObjectNode( factory );
-            tmp.set( "item", item);
+            tmp.set( GRUElasticsConstants.MARKER_ITEM, item );
             autocomplete.add( tmp );
         }
 
-        root.set( "autocomplete", autocomplete );
+        root.set( GRUElasticsConstants.MARKER_AUTOCOMPLETE, autocomplete );
 
         String test = mapper.writeValueAsString( root );
 

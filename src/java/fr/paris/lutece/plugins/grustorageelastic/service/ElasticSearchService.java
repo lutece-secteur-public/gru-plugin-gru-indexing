@@ -33,6 +33,9 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.paris.lutece.plugins.gru.service.search.ISearchService;
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
@@ -41,6 +44,7 @@ import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 
@@ -50,8 +54,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 
 // TODO: Auto-generated Javadoc
@@ -76,28 +78,27 @@ public class ElasticSearchService implements ISearchService
      * @return the list
      */
     @Override
-    public List<Customer> searchCustomer( String strQuery )
+    public List<Customer> searchCustomer( String strFirstName, String strLastName )
     {
         List<Customer> listCustomer = new ArrayList<Customer>(  );
-        String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
-        String[] res = strQuery.split( " " );
-        String json = "";
-
-        // Gets the name/firstname entered by autocomplete
-        Map<String, String> mapFields = new HashMap<String, String>(  );
-
-        if ( res.length >= 1 )
-        {
-            mapFields.put( KEY_CUSTOMER_FIRST_NAME, res[0] );
-        }
-
-        if ( res.length >= 2 )
-        {
-            mapFields.put( KEY_CUSTOMER_LAST_NAME, res[1] );
-        }
+        String uri = ElasticConnexion.getESParam( StringUtils.EMPTY, GRUElasticsConstants.PATH_ELK_SEARCH );
+        String json = StringUtils.EMPTY;
 
         try
         {
+            // Gets the name/firstname entered by autocomplete
+            Map<String, String> mapFields = new HashMap<String, String>(  );
+
+            if ( StringUtils.isNotEmpty( strFirstName ) )
+            {
+                mapFields.put( KEY_CUSTOMER_FIRST_NAME, strFirstName );
+            }
+
+            if ( StringUtils.isNotEmpty( strLastName ) )
+            {
+                mapFields.put( KEY_CUSTOMER_LAST_NAME, strLastName );
+            }
+
             json = ElasticConnexion.formatFullText( mapFields );
         }
         catch ( IOException ex )

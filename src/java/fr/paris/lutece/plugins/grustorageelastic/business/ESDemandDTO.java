@@ -33,15 +33,13 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-import fr.paris.lutece.plugins.grusupply.business.Customer;
-
-
-
-import java.util.HashMap;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import fr.paris.lutece.plugins.grusupply.business.Customer;
+
+import java.util.HashMap;
 
 
 /**
@@ -244,6 +242,8 @@ public class ESDemandDTO
         }
 
         payload.put( "reference", _strReference );
+        payload.put( "demand_id", _strDemandId );
+        payload.put( "demand_type_id", _strDemandTypeId );
 
         oPayload.setElements( payload );
         s.setPayload( oPayload );

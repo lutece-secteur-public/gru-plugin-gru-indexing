@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import com.mysql.jdbc.StringUtils;
 
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
@@ -47,8 +48,6 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.httpaccess.HttpAccess;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
-
-
 
 import java.io.IOException;
 
@@ -202,8 +201,8 @@ public final class ElasticConnexion
         completion.put( "size", "15" );
 
         tmp.put( "text", champ );
-        tmp.put( "completion", completion );
-        root.put( "user-suggest", tmp );
+        tmp.set( "completion", completion );
+        root.set( "user-suggest", tmp );
 
         return mapper.writeValueAsString( root );
     }
@@ -228,19 +227,19 @@ public final class ElasticConnexion
 
         ObjectNode filtered = new ObjectNode( factory );
         ObjectNode query = new ObjectNode( factory );
-        query.put( "match_all", new ObjectNode( factory ) );
+        query.set( "match_all", new ObjectNode( factory ) );
 
         ObjectNode filter = new ObjectNode( factory );
         ObjectNode term = new ObjectNode( factory );
 
         term.put( strKey, strValue );
-        filter.put( "term", term );
+        filter.set( "term", term );
 
-        filtered.put( "query", query );
-        filtered.put( "filter", filter );
+        filtered.set( "query", query );
+        filtered.set( "filter", filter );
 
-        tmp.put( "filtered", filtered );
-        root.put( "query", tmp );
+        tmp.set( "filtered", filtered );
+        root.set( "query", tmp );
 
         return mapper.writeValueAsString( root );
     }
@@ -272,15 +271,15 @@ public final class ElasticConnexion
             ObjectNode tmp = new ObjectNode( factory );
             ObjectNode term = new ObjectNode( factory );
             term.put( mapKey, map.get( mapKey ) );
-            tmp.put( "term", term );
+            tmp.set( "term", term );
             must.add( tmp );
         }
 
-        bool.put( "must", must );
-        filter.put( "bool", bool );
-        filtered.put( "filter", filter );
-        query.put( "filtered", filtered );
-        root.put( "query", query );
+        bool.set( "must", must );
+        filter.set( "bool", bool );
+        filtered.set( "filter", filter );
+        query.set( "filtered", filtered );
+        root.set( "query", query );
 
         return mapper.writeValueAsString( root );
     }
@@ -311,14 +310,14 @@ public final class ElasticConnexion
             ObjectNode match = new ObjectNode( factory );
             ObjectNode tmp = new ObjectNode( factory );
             tmp.put( mapKey, map.get( mapKey ) );
-            match.put( "match", tmp );
+            match.set( "match", tmp );
             should.add( match );
         }
 
-        bool.put( "should", should );
-        and.put( "bool", bool );
-        query.put( "and", and );
-        root.put( "query", query );
+        bool.set( "should", should );
+        and.set( "bool", bool );
+        query.set( "and", and );
+        root.set( "query", query );
 
         return mapper.writeValueAsString( root );
     }

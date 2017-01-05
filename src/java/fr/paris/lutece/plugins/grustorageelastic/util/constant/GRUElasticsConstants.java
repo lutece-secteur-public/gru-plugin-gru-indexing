@@ -54,6 +54,18 @@ public final class GRUElasticsConstants
     public static final String PATH_ELK_TYPE_USER = "grustorage-elastics.pathUser";
     public static final String PATH_ELK_TYPE_NOTIFICATION = "grustorage-elastics.pathNotification";
 
+    //MARKERS
+    public static final String MARKER_AUTOCOMPLETE = "autocomplete";
+    public static final String MARKER_ITEM = "item";
+    public static final String MARKER_USER_CID = "user_cid";
+    public static final String MARKER_DEMAND_TYPE_ID = "demand_type_id";
+    public static final String MARKER_DEMAND_ID = "demand_id";
+    public static final String MARKER_REFERENCE = "reference";
+    public static final String MARKER_FIRST_NAME = "first_name";
+    public static final String MARKER_LAST_NAME = "last_name";
+    public static final String MARKER_ELEMENTS = "elements";
+    public static final String MARKER_PAYLOAD = "payload";
+
     /**
      * Instantiates a new GRU elastics constants.
      */
