@@ -105,14 +105,14 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
      * @param demand the demand
      */
     @Override
-    public void index( Demand demand, Customer customer )
+    public void index( Demand demand )
     {
         if ( demand == null )
         {
             throw new NullPointerException(  );
         }
 
-        ESDemandDTO demandDTO = buildDemandDTO( demand, customer );
+        ESDemandDTO demandDTO = buildDemandDTO( demand );
 
         ObjectMapper mapper = new ObjectMapper(  );
         mapper.setSerializationInclusion( Include.NON_NULL );
@@ -181,13 +181,15 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
      * @param customer the customer
      * @return the ES demand dto
      */
-    private ESDemandDTO buildDemandDTO( Demand demand, Customer customer )
+    private ESDemandDTO buildDemandDTO( Demand demand )
     {
         ESDemandDTO demandDTO = new ESDemandDTO(  );
 
         try
         {
-            if ( StringUtils.isNotBlank( demand.getCustomerId(  ) ) )
+        	String strCustomerId = StringUtils.EMPTY;
+        	strCustomerId = demand.getCustomerId(  );
+            if ( StringUtils.isNotBlank( strCustomerId ) )
             {
                 CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( demand.getCustomerId(  ) ) );
                 demandDTO.setCustomerDemand( customerDemand );
@@ -196,7 +198,8 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
             demandDTO.setDemandId( demand.getId(  ) );
             demandDTO.setDemandTypeId( demand.getTypeId(  ) );
             demandDTO.setReference( demand.getReference(  ) );
-            demandDTO.setSuggest( customer );
+            demandDTO.setSuggest( strCustomerId );
+
         }
         catch ( NullPointerException ex )
         {

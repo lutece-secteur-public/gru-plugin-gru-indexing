@@ -37,9 +37,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import fr.paris.lutece.plugins.grusupply.business.Customer;
-
 import java.util.HashMap;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -212,7 +212,7 @@ public class ESDemandDTO
      *
      * @param customer the new suggest
      */
-    public void setSuggest( Customer customer )
+    public void setSuggest( String strCustomerId )
     {
         ESSuggestDTO s = new ESSuggestDTO(  );
 
@@ -220,25 +220,18 @@ public class ESDemandDTO
         String[] input = { _strReference };
         s.setInput( input );
 
-        if ( customer != null )
-        {
             // Output
-            s.setOutput( customer.getName(  ) + " " + customer.getFirstName(  ) );
-        }
+            s.setOutput( _strReference );
+
 
         // Payload
         ESPayload oPayload = new ESPayload(  );
         HashMap<String, String> payload = new HashMap<String, String>(  );
 
-        if ( customer != null )
+        if ( StringUtils.isNotEmpty( strCustomerId ) )
         {
-            payload.put( "user_cid", customer.getCustomerId(  ) );
-            payload.put( "last_name", customer.getName(  ) );
-            payload.put( "first_name", customer.getFirstName(  ) );
-            payload.put( "birthday", customer.getBirthday(  ) );
-            payload.put( "telephoneNumber", customer.getTelephoneNumber(  ) );
-            payload.put( "FixeTelephoneNumber", customer.getFixedTelephoneNumber(  ) );
-            payload.put( "email", customer.getEmail(  ) );
+            payload.put( "user_cid", strCustomerId );
+
         }
 
         payload.put( "reference", _strReference );
