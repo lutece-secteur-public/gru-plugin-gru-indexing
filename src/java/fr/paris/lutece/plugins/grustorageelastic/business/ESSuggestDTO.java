@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ESSuggestDTO.

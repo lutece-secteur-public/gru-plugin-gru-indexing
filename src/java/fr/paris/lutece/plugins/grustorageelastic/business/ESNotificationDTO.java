@@ -42,8 +42,6 @@ import fr.paris.lutece.plugins.grubusiness.business.notification.SMSNotification
 import fr.paris.lutece.plugins.grubusiness.business.notification.UserDashboardNotification;
 
 
-
-
 /**
  * The Class ESNotificationDTO.
  */

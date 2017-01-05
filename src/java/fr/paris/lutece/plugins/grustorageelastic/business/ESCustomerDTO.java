@@ -33,12 +33,10 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-
-
-import java.util.HashMap;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.util.HashMap;
 
 
 // TODO: Auto-generated Javadoc
