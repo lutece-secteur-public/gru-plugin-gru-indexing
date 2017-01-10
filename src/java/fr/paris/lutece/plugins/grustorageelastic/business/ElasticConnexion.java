@@ -47,11 +47,11 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.httpaccess.HttpAccess;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.IOException;
 
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -239,10 +239,12 @@ public final class ElasticConnexion
         filtered.set( "filter", filter );
 
         tmp.set( "filtered", filtered );
-        if( StringUtils.isNotBlank( AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) ) )
+
+        if ( StringUtils.isNotBlank( AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) ) )
         {
             root.put( "size", AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) );
         }
+
         root.set( "query", tmp );
 
         return mapper.writeValueAsString( root );
@@ -283,10 +285,12 @@ public final class ElasticConnexion
         filter.set( "bool", bool );
         filtered.set( "filter", filter );
         query.set( "filtered", filtered );
-        if( StringUtils.isNotBlank( AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) ) )
+
+        if ( StringUtils.isNotBlank( AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) ) )
         {
             root.put( "size", AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) );
         }
+
         root.set( "query", query );
 
         return mapper.writeValueAsString( root );
@@ -325,10 +329,12 @@ public final class ElasticConnexion
         bool.set( "should", should );
         and.set( "bool", bool );
         query.set( "and", and );
-        if( StringUtils.isNotBlank( AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) ) )
+
+        if ( StringUtils.isNotBlank( AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) ) )
         {
             root.put( "size", AppPropertiesService.getProperty( GRUElasticsConstants.SIZE_ELK_SEARCH_PARAM_VALUE ) );
         }
+
         root.set( "query", query );
 
         return mapper.writeValueAsString( root );

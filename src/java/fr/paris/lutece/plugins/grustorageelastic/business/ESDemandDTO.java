@@ -37,9 +37,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.HashMap;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.HashMap;
 
 
 /**
@@ -220,9 +220,8 @@ public class ESDemandDTO
         String[] input = { _strReference };
         s.setInput( input );
 
-            // Output
-            s.setOutput( _strReference );
-
+        // Output
+        s.setOutput( _strReference );
 
         // Payload
         ESPayload oPayload = new ESPayload(  );
@@ -231,7 +230,6 @@ public class ESDemandDTO
         if ( StringUtils.isNotEmpty( strCustomerId ) )
         {
             payload.put( "user_cid", strCustomerId );
-
         }
 
         payload.put( "reference", _strReference );
