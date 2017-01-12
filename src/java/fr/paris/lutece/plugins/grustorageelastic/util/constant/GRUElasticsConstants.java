@@ -46,6 +46,7 @@ public final class GRUElasticsConstants
     public static final String PATH_ELASTIC_AUTOCOMPLETION = "autocomplete";
     public static final String PATH_ELK_SUGGEST = "_suggest";
     public static final String PATH_ELK_SEARCH = "_search";
+    public static final String SIZE_ELK_SEARCH_PARAM_VALUE = "grustorage-elastics.sizeSearchParamValue";
 
     // PATHS
     public static final String PATH_ELK_SERVER = "grustorage-elastics.urlElk";
