@@ -37,9 +37,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import fr.paris.lutece.plugins.grubusiness.business.notification.BackofficeNotification;
+import fr.paris.lutece.plugins.grubusiness.business.notification.DashboardNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.EmailNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.SMSNotification;
-import fr.paris.lutece.plugins.grubusiness.business.notification.UserDashboardNotification;
 
 
 /**
@@ -64,7 +64,7 @@ public class ESNotificationDTO
     private EmailNotification _emailNotification;
 
     /** The _dash board notification. */
-    private UserDashboardNotification _userDashboardNotification;
+    private DashboardNotification _userDashboardNotification;
 
     /** The _sms notification. */
     private SMSNotification _smsNotification;
@@ -91,7 +91,7 @@ public class ESNotificationDTO
      * @param backOfficeNotification the back office notification
      */
     public ESNotificationDTO( NotificationDemandDTO oNotificationDemand, long lDateSollicitation,
-        EmailNotification emailNotification, UserDashboardNotification userDashboardNotification,
+        EmailNotification emailNotification, DashboardNotification userDashboardNotification,
         SMSNotification smsNotification, BackofficeNotification backOfficeNotification )
     {
         super(  );
@@ -175,7 +175,7 @@ public class ESNotificationDTO
      * @return the user dash board
      */
     @JsonProperty( "user_dashboard" )
-    public UserDashboardNotification getUserDashBoard(  )
+    public DashboardNotification getUserDashBoard(  )
     {
         return _userDashboardNotification;
     }
@@ -186,7 +186,7 @@ public class ESNotificationDTO
      * @param userDashBoard the new user dash board
      */
     @JsonProperty( "user_dashboard" )
-    public void setUserDashBoard( UserDashboardNotification userDashboardNotification )
+    public void setUserDashBoard( DashboardNotification userDashboardNotification )
     {
         _userDashboardNotification = userDashboardNotification;
     }

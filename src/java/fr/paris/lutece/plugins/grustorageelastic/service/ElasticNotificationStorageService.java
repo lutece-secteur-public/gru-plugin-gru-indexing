@@ -187,11 +187,12 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
 
         try
         {
-        	String strCustomerId = StringUtils.EMPTY;
-        	strCustomerId = demand.getCustomerId(  );
-            if ( StringUtils.isNotBlank( strCustomerId ) )
+            String strCustomerId = StringUtils.EMPTY;
+
+            if ( ( demand.getCustomer(  ) != null ) && StringUtils.isNotBlank( demand.getCustomer(  ).getId(  ) ) )
             {
-                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( demand.getCustomerId(  ) ) );
+                CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
+                            demand.getCustomer(  ).getId(  ) ) );
                 demandDTO.setCustomerDemand( customerDemand );
             }
 
@@ -199,7 +200,6 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
             demandDTO.setDemandTypeId( demand.getTypeId(  ) );
             demandDTO.setReference( demand.getReference(  ) );
             demandDTO.setSuggest( strCustomerId );
-
         }
         catch ( NullPointerException ex )
         {
