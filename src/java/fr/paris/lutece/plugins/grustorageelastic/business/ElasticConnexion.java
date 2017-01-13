@@ -137,23 +137,12 @@ public final class ElasticConnexion
      *
      * @param uri the uri
      * @param json the json
+     * @throws HttpAccessException http access exception
      * @return the string
      */
-    public static String sentToElasticPOST( String uri, String json )
+    public static String sentToElasticPOST( String uri, String json ) throws HttpAccessException
     {
-        String strReponse = "";
-
-        try
-        {
-            strReponse = _clientHttp.doPostJSON( uri, json, null, null );
-        }
-        catch ( HttpAccessException e )
-        {
-            String strError = "Grustorageelastic - POST json to ES ' url : " + uri + "' , data : " + json;
-            AppLogService.error( strError + e.getMessage(  ), e );
-        }
-
-        return strReponse;
+        return _clientHttp.doPostJSON( uri, json, null, null );
     }
 
     /**

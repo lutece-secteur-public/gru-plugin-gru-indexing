@@ -45,12 +45,12 @@ import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 import fr.paris.lutece.util.string.StringUtil;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -91,6 +91,10 @@ public class GRUElasticRestService
             retour = getInfoAutocomplete( node );
         }
         catch ( IOException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+        catch ( HttpAccessException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
