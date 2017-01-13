@@ -43,11 +43,11 @@ import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConsta
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,18 +105,24 @@ public class ElasticSearchService implements ISearchService
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
-
-        String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );
-        JsonNode retour = ElasticConnexion.setJsonToJsonTree( jsonRetour );
-
-        List<JsonNode> tmp = retour.findValues( "_source" );
-
-        for ( JsonNode node : tmp )
+        
+        try
         {
-            if ( node != null )
+            String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );
+            JsonNode retour = ElasticConnexion.setJsonToJsonTree( jsonRetour );
+            List<JsonNode> tmp = retour.findValues( "_source" );
+
+            for ( JsonNode node : tmp )
             {
-                listCustomer.add( buildCustomer( node ) );
+                if ( node != null )
+                {
+                    listCustomer.add( buildCustomer( node ) );
+                }
             }
+        }
+        catch ( HttpAccessException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
 
         return listCustomer;
@@ -152,6 +158,10 @@ public class ElasticSearchService implements ISearchService
             }
         }
         catch ( IOException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+        catch ( HttpAccessException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }

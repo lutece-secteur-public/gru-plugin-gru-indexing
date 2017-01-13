@@ -47,6 +47,7 @@ import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConsta
 import fr.paris.lutece.plugins.grusupply.business.Customer;
 import fr.paris.lutece.plugins.grusupply.service.INotificationIndexService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -97,6 +98,10 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
+        catch ( HttpAccessException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
     }
 
     /**
@@ -134,6 +139,10 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
         catch ( IOException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+        }
+        catch ( HttpAccessException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
