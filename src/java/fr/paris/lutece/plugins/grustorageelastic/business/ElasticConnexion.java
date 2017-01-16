@@ -140,7 +140,8 @@ public final class ElasticConnexion
      * @throws HttpAccessException http access exception
      * @return the string
      */
-    public static String sentToElasticPOST( String uri, String json ) throws HttpAccessException
+    public static String sentToElasticPOST( String uri, String json )
+        throws HttpAccessException
     {
         return _clientHttp.doPostJSON( uri, json, null, null );
     }
