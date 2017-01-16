@@ -161,6 +161,7 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
         try
         {
             customerDTO.setCustomerId( customer.getCustomerId(  ) );
+            customerDTO.setConnectionId( manageNullValue(customer.getConnectionId(  ) ) );
             customerDTO.setName( manageNullValue( customer.getName(  ) ) );
             customerDTO.setFirstName( manageNullValue( customer.getFirstName(  ) ) );
             customerDTO.setEmail( manageNullValue( customer.getEmail(  ) ) );
@@ -177,7 +178,7 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
         }
         catch ( NullPointerException ex )
         {
-            error( "Demand OR Notofocation parsing fail", ex );
+            error( "Demand OR Notification parsing fail", ex );
         }
 
         return customerDTO;
