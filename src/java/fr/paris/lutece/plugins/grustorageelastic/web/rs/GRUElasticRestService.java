@@ -51,6 +51,7 @@ import fr.paris.lutece.util.string.StringUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+
 import java.util.List;
 
 import javax.ws.rs.GET;

@@ -48,6 +48,7 @@ import fr.paris.lutece.util.httpaccess.HttpAccessException;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +106,7 @@ public class ElasticSearchService implements ISearchService
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
         }
-        
+
         try
         {
             String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );

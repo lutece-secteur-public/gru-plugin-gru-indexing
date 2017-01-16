@@ -161,7 +161,7 @@ public class ElasticNotificationStorageService implements INotificationIndexServ
         try
         {
             customerDTO.setCustomerId( customer.getCustomerId(  ) );
-            customerDTO.setConnectionId( manageNullValue(customer.getConnectionId(  ) ) );
+            customerDTO.setConnectionId( manageNullValue( customer.getConnectionId(  ) ) );
             customerDTO.setName( manageNullValue( customer.getName(  ) ) );
             customerDTO.setFirstName( manageNullValue( customer.getFirstName(  ) ) );
             customerDTO.setEmail( manageNullValue( customer.getEmail(  ) ) );

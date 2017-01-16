@@ -44,7 +44,7 @@ import java.util.HashMap;
  * This is the business class for the object Customer.
  */
 @JsonPropertyOrder( {"user_cid",
-	"connection_id",
+    "connection_id",
     "email",
     "last_name",
     "first_name",
@@ -64,7 +64,7 @@ public class ESCustomerDTO
     /** The _n customer id. */
     // Variables declarations 
     private String _strCustomerId;
-    
+
     /** The connection id. */
     // Variables declarations 
     private String _strConnectionId;
@@ -176,8 +176,7 @@ public class ESCustomerDTO
     {
         _strCustomerId = strCustomerId;
     }
-    
-    
+
     /**
      * Returns the ConnectionId.
      *
@@ -196,9 +195,8 @@ public class ESCustomerDTO
      */
     public void setConnectionId( String strConnectionId )
     {
-    	_strConnectionId = strConnectionId;
-    }  
-    
+        _strConnectionId = strConnectionId;
+    }
 
     /**
      * Returns the Name.
@@ -487,7 +485,7 @@ public class ESCustomerDTO
         HashMap<String, String> payload = new HashMap<String, String>(  );
 
         payload.put( "user_cid", _strCustomerId );
-        payload.put( "connection_id",  _strConnectionId );
+        payload.put( "connection_id", _strConnectionId );
         payload.put( "last_name", _strName );
         payload.put( "first_name", _strFirstName );
         payload.put( "birthday", _strBirthday );
