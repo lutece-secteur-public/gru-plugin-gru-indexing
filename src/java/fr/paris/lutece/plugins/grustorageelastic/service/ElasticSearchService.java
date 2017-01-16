@@ -70,6 +70,7 @@ public class ElasticSearchService implements ISearchService
     private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
     private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
     private static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
+	private static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
 
     /**
      * {@inheritDoc }.
@@ -207,13 +208,15 @@ public class ElasticSearchService implements ISearchService
         try
         {
             customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText(  ) );
-            customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ).asInt(  ) );
-            customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ).asText(  ) );
-            customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText(  ) );
-            customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ).asText(  ) );
-            customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ).asText(  ) );
-            customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText(  ) );
-            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText(  ) );
+            
+            customer.setAccountGuid( node.findValue ( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue ( KEY_CUSTOMER_CONNECTION_ID ).asText(  ) : StringUtils.EMPTY);
+            customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt(  ) : 0 );
+            customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText(  ) : StringUtils.EMPTY);
+            customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText(  ) : StringUtils.EMPTY );
+            customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText(  ) : StringUtils.EMPTY );
+            customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ).asText(  ) : StringUtils.EMPTY);
+            customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText(  ) : StringUtils.EMPTY );
+            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ) != null ? node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText(  ) : StringUtils.EMPTY );
         }
         catch ( NullPointerException ex )
         {
