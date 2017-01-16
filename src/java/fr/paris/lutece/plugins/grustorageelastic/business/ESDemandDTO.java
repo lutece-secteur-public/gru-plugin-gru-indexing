@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -66,9 +65,6 @@ public class ESDemandDTO
     /** The _str reference. */
     private String _strReference;
 
-    /** The _o suggest. */
-    private ESSuggestDTO _oSuggest;
-
     /**
      * Instantiates a new ES demand dto.
      */
@@ -87,14 +83,13 @@ public class ESDemandDTO
      * @param oSuggest the o suggest
      */
     public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandTypeId,
-        String strReference, ESSuggestDTO oSuggest )
+        String strReference )
     {
         super(  );
         this._oCustomerDemand = oCustomerDemand;
         this._strDemandId = strDemandId;
         this._strDemandTypeId = strDemandTypeId;
         this._strReference = strReference;
-        this._oSuggest = oSuggest;
     }
 
     /**
@@ -193,43 +188,22 @@ public class ESDemandDTO
     @JsonProperty( "suggest" )
     public ESSuggestDTO getSuggest(  )
     {
-        return _oSuggest;
-    }
-
-    /**
-     * Sets the suggest.
-     *
-     * @param suggest the new suggest
-     */
-    @JsonIgnore
-    public void setSuggest( ESSuggestDTO suggest )
-    {
-        _oSuggest = suggest;
-    }
-
-    /**
-     * Sets the suggest.
-     *
-     * @param customer the new suggest
-     */
-    public void setSuggest( String strCustomerId )
-    {
-        ESSuggestDTO s = new ESSuggestDTO(  );
+        ESSuggestDTO esSuggestDTO = new ESSuggestDTO(  );
 
         // input
         String[] input = { _strReference };
-        s.setInput( input );
+        esSuggestDTO.setInput( input );
 
         // Output
-        s.setOutput( _strReference );
+        esSuggestDTO.setOutput( _strReference );
 
         // Payload
         ESPayload oPayload = new ESPayload(  );
         HashMap<String, String> payload = new HashMap<String, String>(  );
 
-        if ( StringUtils.isNotEmpty( strCustomerId ) )
+        if ( ( _oCustomerDemand != null ) && StringUtils.isNotEmpty( _oCustomerDemand.getCid(  ) ) )
         {
-            payload.put( "user_cid", strCustomerId );
+            payload.put( "user_cid", _oCustomerDemand.getCid(  ) );
         }
 
         payload.put( "reference", _strReference );
@@ -237,7 +211,8 @@ public class ESDemandDTO
         payload.put( "demand_type_id", _strDemandTypeId );
 
         oPayload.setElements( payload );
-        s.setPayload( oPayload );
-        this._oSuggest = s;
+        esSuggestDTO.setPayload( oPayload );
+
+        return esSuggestDTO;
     }
 }
