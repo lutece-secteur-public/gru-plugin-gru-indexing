@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.util;
 
-
 /**
  * The Class ElasticIndexerException.
  */
@@ -54,8 +53,10 @@ public class ElasticIndexerException extends Exception
     /**
      * Instantiates a new elastic indexer exception.
      *
-     * @param strTitleField the str title field
-     * @param strErrorMessage the str error message
+     * @param strTitleField
+     *            the str title field
+     * @param strErrorMessage
+     *            the str error message
      */
     public ElasticIndexerException( String strTitleField, String strErrorMessage )
     {
@@ -69,7 +70,7 @@ public class ElasticIndexerException extends Exception
      *
      * @return the title field
      */
-    public String getTitleField(  )
+    public String getTitleField( )
     {
         return _strTitleField;
     }
@@ -79,7 +80,7 @@ public class ElasticIndexerException extends Exception
      *
      * @return the error message
      */
-    public String getErrorMessage(  )
+    public String getErrorMessage( )
     {
         return _strErrorMessage;
     }
@@ -89,7 +90,7 @@ public class ElasticIndexerException extends Exception
      *
      * @return true, if is mandatory error
      */
-    public boolean isMandatoryError(  )
+    public boolean isMandatoryError( )
     {
         return _bMandatoryError;
     }

@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 /**
  * The Class CustomerDemandDTO.
  */
@@ -47,19 +46,20 @@ public class CustomerDemandDTO
     /**
      * Instantiates a new customer demand dto.
      */
-    public CustomerDemandDTO(  )
+    public CustomerDemandDTO( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Instantiates a new customer demand dto.
      *
-     * @param strCid the str cid
+     * @param strCid
+     *            the str cid
      */
     public CustomerDemandDTO( String strCid )
     {
-        super(  );
+        super( );
         this._strCid = strCid;
     }
 
@@ -69,7 +69,7 @@ public class CustomerDemandDTO
      * @return the cid
      */
     @JsonProperty( "user_cid" )
-    public String getCid(  )
+    public String getCid( )
     {
         return _strCid;
     }
@@ -77,7 +77,8 @@ public class CustomerDemandDTO
     /**
      * Sets the cid.
      *
-     * @param strCid the new cid
+     * @param strCid
+     *            the new cid
      */
     @JsonProperty( "user_cid" )
     public void setCid( String strCid )

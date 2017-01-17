@@ -40,20 +40,16 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
-
 /**
  * The Class ESDemandDTO.
  */
-@JsonPropertyOrder( {"utilisateur",
-    "demand_id",
-    "demand_type_id",
-    "reference",
-    "suggest"
+@JsonPropertyOrder( {
+        "utilisateur", "demand_id", "demand_type_id", "reference", "suggest"
 } )
 public class ESDemandDTO
 {
     /** The _o customer demand. */
-    // Variables declarations 
+    // Variables declarations
     private CustomerDemandDTO _oCustomerDemand;
 
     /** The _str demand id. */
@@ -68,24 +64,28 @@ public class ESDemandDTO
     /**
      * Instantiates a new ES demand dto.
      */
-    public ESDemandDTO(  )
+    public ESDemandDTO( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Instantiates a new ES demand dto.
      *
-     * @param oCustomerDemand the o customer demand
-     * @param strDemandId the str demand id
-     * @param strDemandTypeId the str demand type id
-     * @param strReference the str reference
-     * @param oSuggest the o suggest
+     * @param oCustomerDemand
+     *            the o customer demand
+     * @param strDemandId
+     *            the str demand id
+     * @param strDemandTypeId
+     *            the str demand type id
+     * @param strReference
+     *            the str reference
+     * @param oSuggest
+     *            the o suggest
      */
-    public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandTypeId,
-        String strReference )
+    public ESDemandDTO( CustomerDemandDTO oCustomerDemand, String strDemandId, String strDemandTypeId, String strReference )
     {
-        super(  );
+        super( );
         this._oCustomerDemand = oCustomerDemand;
         this._strDemandId = strDemandId;
         this._strDemandTypeId = strDemandTypeId;
@@ -98,7 +98,7 @@ public class ESDemandDTO
      * @return the customer demand
      */
     @JsonProperty( "utilisateur" )
-    public CustomerDemandDTO getCustomerDemand(  )
+    public CustomerDemandDTO getCustomerDemand( )
     {
         return _oCustomerDemand;
     }
@@ -106,7 +106,8 @@ public class ESDemandDTO
     /**
      * Sets the customer demand.
      *
-     * @param oCustomerDemand the new customer demand
+     * @param oCustomerDemand
+     *            the new customer demand
      */
     @JsonProperty( "utilisateur" )
     public void setCustomerDemand( CustomerDemandDTO oCustomerDemand )
@@ -120,7 +121,7 @@ public class ESDemandDTO
      * @return the demand id
      */
     @JsonProperty( "demand_id" )
-    public String getDemandId(  )
+    public String getDemandId( )
     {
         return _strDemandId;
     }
@@ -128,7 +129,8 @@ public class ESDemandDTO
     /**
      * Sets the demand id.
      *
-     * @param nDemandId the new demand id
+     * @param nDemandId
+     *            the new demand id
      */
     @JsonProperty( "demand_id" )
     public void setDemandId( String nDemandId )
@@ -142,7 +144,7 @@ public class ESDemandDTO
      * @return the demand type id
      */
     @JsonProperty( "demand_type_id" )
-    public String getDemandTypeId(  )
+    public String getDemandTypeId( )
     {
         return _strDemandTypeId;
     }
@@ -150,7 +152,8 @@ public class ESDemandDTO
     /**
      * Sets the demand type id.
      *
-     * @param nDemandTypeId the new demand type id
+     * @param nDemandTypeId
+     *            the new demand type id
      */
     @JsonProperty( "demand_type_id" )
     public void setDemandTypeId( String nDemandTypeId )
@@ -164,7 +167,7 @@ public class ESDemandDTO
      * @return the reference
      */
     @JsonProperty( "demand_reference" )
-    public String getReference(  )
+    public String getReference( )
     {
         return _strReference;
     }
@@ -172,7 +175,8 @@ public class ESDemandDTO
     /**
      * Sets the reference.
      *
-     * @param strReference the new reference
+     * @param strReference
+     *            the new reference
      */
     @JsonProperty( "demand_reference" )
     public void setReference( String strReference )
@@ -186,24 +190,26 @@ public class ESDemandDTO
      * @return the suggest
      */
     @JsonProperty( "suggest" )
-    public ESSuggestDTO getSuggest(  )
+    public ESSuggestDTO getSuggest( )
     {
-        ESSuggestDTO esSuggestDTO = new ESSuggestDTO(  );
+        ESSuggestDTO esSuggestDTO = new ESSuggestDTO( );
 
         // input
-        String[] input = { _strReference };
+        String [ ] input = {
+            _strReference
+        };
         esSuggestDTO.setInput( input );
 
         // Output
         esSuggestDTO.setOutput( _strReference );
 
         // Payload
-        ESPayload oPayload = new ESPayload(  );
-        HashMap<String, String> payload = new HashMap<String, String>(  );
+        ESPayload oPayload = new ESPayload( );
+        HashMap<String, String> payload = new HashMap<String, String>( );
 
-        if ( ( _oCustomerDemand != null ) && StringUtils.isNotEmpty( _oCustomerDemand.getCid(  ) ) )
+        if ( ( _oCustomerDemand != null ) && StringUtils.isNotEmpty( _oCustomerDemand.getCid( ) ) )
         {
-            payload.put( "user_cid", _oCustomerDemand.getCid(  ) );
+            payload.put( "user_cid", _oCustomerDemand.getCid( ) );
         }
 
         payload.put( "reference", _strReference );
