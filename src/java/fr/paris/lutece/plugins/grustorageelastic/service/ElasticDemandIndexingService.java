@@ -65,10 +65,6 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
     @Override
     public void index( Demand demand )
     {
-        if ( demand == null )
-        {
-            throw new NullPointerException(  );
-        }
 
         ESDemandDTO demandDTO = buildDemandDTO( demand );
 
