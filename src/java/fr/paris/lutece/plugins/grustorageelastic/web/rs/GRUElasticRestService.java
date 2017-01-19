@@ -60,7 +60,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-
 /**
  * The Class GRUElasticRestService.
  */
@@ -70,14 +69,14 @@ public class GRUElasticRestService
     /**
      * Autocomplete.
      *
-     * @param strQuery the str query
+     * @param strQuery
+     *            the str query
      * @return the string
      */
     @GET
     @Path( GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION )
     @Produces( MediaType.APPLICATION_JSON )
-    public String autocomplete( @QueryParam( "query" )
-    String strQuery )
+    public String autocomplete( @QueryParam( "query" ) String strQuery )
     {
         String uri = ElasticConnexion.getESParam( StringUtils.EMPTY, GRUElasticsConstants.PATH_ELK_SUGGEST );
         String json = StringUtils.EMPTY;
@@ -91,13 +90,13 @@ public class GRUElasticRestService
             JsonNode node = ElasticConnexion.setJsonToJsonTree( jsonRetour );
             retour = getInfoAutocomplete( node );
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch ( HttpAccessException ex )
+        catch( HttpAccessException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
 
         return retour;
@@ -106,18 +105,21 @@ public class GRUElasticRestService
     /**
      * Method which permit to find and format the result of an autocomplete.
      *
-     * @param nodeTree the node tree
+     * @param nodeTree
+     *            the node tree
      * @return the info autocomplete
-     * @throws JsonGenerationException the json generation exception
-     * @throws JsonMappingException the json mapping exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JsonGenerationException
+     *             the json generation exception
+     * @throws JsonMappingException
+     *             the json mapping exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    private static String getInfoAutocomplete( JsonNode nodeTree )
-        throws JsonGenerationException, JsonMappingException, IOException
+    private static String getInfoAutocomplete( JsonNode nodeTree ) throws JsonGenerationException, JsonMappingException, IOException
     {
         List<JsonNode> payload = nodeTree.findValues( GRUElasticsConstants.MARKER_PAYLOAD );
 
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
         ObjectNode root = new ObjectNode( factory );
         ArrayNode autocomplete = new ArrayNode( factory );
@@ -128,40 +130,34 @@ public class GRUElasticRestService
 
             node = node.path( GRUElasticsConstants.MARKER_ELEMENTS );
 
-            if ( !node.path( GRUElasticsConstants.MARKER_LAST_NAME ).isMissingNode(  ) )
+            if ( !node.path( GRUElasticsConstants.MARKER_LAST_NAME ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_LAST_NAME,
-                    node.get( GRUElasticsConstants.MARKER_LAST_NAME ).asText(  ) );
+                item.put( GRUElasticsConstants.MARKER_LAST_NAME, node.get( GRUElasticsConstants.MARKER_LAST_NAME ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_FIRST_NAME ).isMissingNode(  ) )
+            if ( !node.path( GRUElasticsConstants.MARKER_FIRST_NAME ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_FIRST_NAME,
-                    node.get( GRUElasticsConstants.MARKER_FIRST_NAME ).asText(  ) );
+                item.put( GRUElasticsConstants.MARKER_FIRST_NAME, node.get( GRUElasticsConstants.MARKER_FIRST_NAME ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_REFERENCE ).isMissingNode(  ) )
+            if ( !node.path( GRUElasticsConstants.MARKER_REFERENCE ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_REFERENCE,
-                    node.get( GRUElasticsConstants.MARKER_REFERENCE ).asText(  ) );
+                item.put( GRUElasticsConstants.MARKER_REFERENCE, node.get( GRUElasticsConstants.MARKER_REFERENCE ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_ID ).isMissingNode(  ) )
+            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_ID ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_DEMAND_ID,
-                    node.get( GRUElasticsConstants.MARKER_DEMAND_ID ).asText(  ) );
+                item.put( GRUElasticsConstants.MARKER_DEMAND_ID, node.get( GRUElasticsConstants.MARKER_DEMAND_ID ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).isMissingNode(  ) )
+            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID,
-                    node.get( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).asText(  ) );
+                item.put( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID, node.get( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_USER_CID ).isMissingNode(  ) )
+            if ( !node.path( GRUElasticsConstants.MARKER_USER_CID ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_USER_CID,
-                    node.get( GRUElasticsConstants.MARKER_USER_CID ).asText(  ) );
+                item.put( GRUElasticsConstants.MARKER_USER_CID, node.get( GRUElasticsConstants.MARKER_USER_CID ).asText( ) );
             }
 
             ObjectNode tmp = new ObjectNode( factory );

@@ -38,35 +38,22 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashMap;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * This is the business class for the object Customer.
  */
-@JsonPropertyOrder( {"user_cid",
-    "connection_id",
-    "email",
-    "last_name",
-    "first_name",
-    "stayConnected",
-    "street",
-    "telephoneNumber",
-    "fixed_telephone_number",
-    "city",
-    "cityOfBirth",
-    "birthday",
-    "civility",
-    "postalCode",
-    "suggest"
+@JsonPropertyOrder( {
+        "user_cid", "connection_id", "email", "last_name", "first_name", "stayConnected", "street", "telephoneNumber", "fixed_telephone_number", "city",
+        "cityOfBirth", "birthday", "civility", "postalCode", "suggest"
 } )
 public class ESCustomerDTO
 {
     /** The _n customer id. */
-    // Variables declarations 
+    // Variables declarations
     private String _strCustomerId;
 
     /** The connection id. */
-    // Variables declarations 
+    // Variables declarations
     private String _strConnectionId;
 
     /** The _str name. */
@@ -111,35 +98,48 @@ public class ESCustomerDTO
     /**
      * Instantiates a new ES customer dto.
      */
-    public ESCustomerDTO(  )
+    public ESCustomerDTO( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Instantiates a new ES customer dto.
      *
-     * @param strCustomerId the customer id
-     * @param strName the name
-     * @param strFirstName the first name
-     * @param strEmail the email
-     * @param strBirthday the birthday
-     * @param strCivility the civility
-     * @param strStreet the street
-     * @param strCityOfBirth the city of birth
-     * @param bStayConnected the stay connected
-     * @param strCity the city
-     * @param strPostalCode the postal code
-     * @param strTelephoneNumber the telephone number
-     * @param strFixedPhoneNumber the telephone number
-     * @param oSuggest the suggest
+     * @param strCustomerId
+     *            the customer id
+     * @param strName
+     *            the name
+     * @param strFirstName
+     *            the first name
+     * @param strEmail
+     *            the email
+     * @param strBirthday
+     *            the birthday
+     * @param strCivility
+     *            the civility
+     * @param strStreet
+     *            the street
+     * @param strCityOfBirth
+     *            the city of birth
+     * @param bStayConnected
+     *            the stay connected
+     * @param strCity
+     *            the city
+     * @param strPostalCode
+     *            the postal code
+     * @param strTelephoneNumber
+     *            the telephone number
+     * @param strFixedPhoneNumber
+     *            the telephone number
+     * @param oSuggest
+     *            the suggest
      */
-    public ESCustomerDTO( String strCustomerId, String strName, String strFirstName, String strEmail,
-        String strBirthday, String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected,
-        String strCity, String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber,
-        ESSuggestDTO oSuggest )
+    public ESCustomerDTO( String strCustomerId, String strName, String strFirstName, String strEmail, String strBirthday, String strCivility, String strStreet,
+            String strCityOfBirth, boolean bStayConnected, String strCity, String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber,
+            ESSuggestDTO oSuggest )
     {
-        super(  );
+        super( );
         this._strCustomerId = strCustomerId;
         this._strName = strName;
         this._strFirstName = strFirstName;
@@ -162,7 +162,7 @@ public class ESCustomerDTO
      * @return The CustomerId
      */
     @JsonProperty( "user_cid" )
-    public String getCustomerId(  )
+    public String getCustomerId( )
     {
         return _strCustomerId;
     }
@@ -170,7 +170,8 @@ public class ESCustomerDTO
     /**
      * Sets the CustomerId.
      *
-     * @param strCustomerId the new customer id
+     * @param strCustomerId
+     *            the new customer id
      */
     public void setCustomerId( String strCustomerId )
     {
@@ -183,7 +184,7 @@ public class ESCustomerDTO
      * @return The ConnectionId
      */
     @JsonProperty( "connection_id" )
-    public String getConnectionId(  )
+    public String getConnectionId( )
     {
         return _strConnectionId;
     }
@@ -191,7 +192,8 @@ public class ESCustomerDTO
     /**
      * Sets the ConnectionId.
      *
-     * @param ConnectionId the new customer connection id
+     * @param ConnectionId
+     *            the new customer connection id
      */
     public void setConnectionId( String strConnectionId )
     {
@@ -204,7 +206,7 @@ public class ESCustomerDTO
      * @return The Name
      */
     @JsonProperty( "last_name" )
-    public String getName(  )
+    public String getName( )
     {
         return _strName;
     }
@@ -212,7 +214,8 @@ public class ESCustomerDTO
     /**
      * Sets the Name.
      *
-     * @param strName The Name
+     * @param strName
+     *            The Name
      */
     public void setName( String strName )
     {
@@ -225,7 +228,7 @@ public class ESCustomerDTO
      * @return The FirstName
      */
     @JsonProperty( "first_name" )
-    public String getFirstName(  )
+    public String getFirstName( )
     {
         return _strFirstName;
     }
@@ -233,7 +236,8 @@ public class ESCustomerDTO
     /**
      * Sets the FirstName.
      *
-     * @param strFirstName The FirstName
+     * @param strFirstName
+     *            The FirstName
      */
     public void setFirstName( String strFirstName )
     {
@@ -246,7 +250,7 @@ public class ESCustomerDTO
      * @return The Email
      */
     @JsonProperty( "email" )
-    public String getEmail(  )
+    public String getEmail( )
     {
         return _strEmail;
     }
@@ -254,7 +258,8 @@ public class ESCustomerDTO
     /**
      * Sets the Email.
      *
-     * @param strEmail The Email
+     * @param strEmail
+     *            The Email
      */
     public void setEmail( String strEmail )
     {
@@ -267,7 +272,7 @@ public class ESCustomerDTO
      * @return The Birthday
      */
     @JsonProperty( "birthday" )
-    public String getBirthday(  )
+    public String getBirthday( )
     {
         return _strBirthday;
     }
@@ -275,7 +280,8 @@ public class ESCustomerDTO
     /**
      * Sets the Birthday.
      *
-     * @param strBirthday The Birthday
+     * @param strBirthday
+     *            The Birthday
      */
     public void setBirthday( String strBirthday )
     {
@@ -288,7 +294,7 @@ public class ESCustomerDTO
      * @return The Civility
      */
     @JsonProperty( "civility" )
-    public String getCivility(  )
+    public String getCivility( )
     {
         return _strCivility;
     }
@@ -296,7 +302,8 @@ public class ESCustomerDTO
     /**
      * Sets the Civility.
      *
-     * @param strCivility The Civility
+     * @param strCivility
+     *            The Civility
      */
     public void setCivility( String strCivility )
     {
@@ -309,7 +316,7 @@ public class ESCustomerDTO
      * @return The Street
      */
     @JsonProperty( "street" )
-    public String getStreet(  )
+    public String getStreet( )
     {
         return _strStreet;
     }
@@ -317,7 +324,8 @@ public class ESCustomerDTO
     /**
      * Sets the Street.
      *
-     * @param strStreet The Street
+     * @param strStreet
+     *            The Street
      */
     public void setStreet( String strStreet )
     {
@@ -330,7 +338,7 @@ public class ESCustomerDTO
      * @return The CityOfBirth
      */
     @JsonProperty( "cityOfBirth" )
-    public String getCityOfBirth(  )
+    public String getCityOfBirth( )
     {
         return _strCityOfBirth;
     }
@@ -338,7 +346,8 @@ public class ESCustomerDTO
     /**
      * Sets the CityOfBirth.
      *
-     * @param strCityOfBirth The CityOfBirth
+     * @param strCityOfBirth
+     *            The CityOfBirth
      */
     public void setCityOfBirth( String strCityOfBirth )
     {
@@ -351,7 +360,7 @@ public class ESCustomerDTO
      * @return The StayConnected
      */
     @JsonProperty( "stayConnected" )
-    public boolean getStayConnected(  )
+    public boolean getStayConnected( )
     {
         return _bStayConnected;
     }
@@ -359,7 +368,8 @@ public class ESCustomerDTO
     /**
      * Sets the StayConnected.
      *
-     * @param stayConnected the new stay connected
+     * @param stayConnected
+     *            the new stay connected
      */
     public void setStayConnected( boolean stayConnected )
     {
@@ -372,7 +382,7 @@ public class ESCustomerDTO
      * @return The City
      */
     @JsonProperty( "city" )
-    public String getCity(  )
+    public String getCity( )
     {
         return _strCity;
     }
@@ -380,7 +390,8 @@ public class ESCustomerDTO
     /**
      * Sets the City.
      *
-     * @param strCity The City
+     * @param strCity
+     *            The City
      */
     public void setCity( String strCity )
     {
@@ -393,7 +404,7 @@ public class ESCustomerDTO
      * @return The PostalCode
      */
     @JsonProperty( "postalCode" )
-    public String getPostalCode(  )
+    public String getPostalCode( )
     {
         return _strPostalCode;
     }
@@ -401,7 +412,8 @@ public class ESCustomerDTO
     /**
      * Sets the PostalCode.
      *
-     * @param strPostalCode The PostalCode
+     * @param strPostalCode
+     *            The PostalCode
      */
     public void setPostalCode( String strPostalCode )
     {
@@ -414,7 +426,7 @@ public class ESCustomerDTO
      * @return The TelephoneNumber
      */
     @JsonProperty( "telephoneNumber" )
-    public String getTelephoneNumber(  )
+    public String getTelephoneNumber( )
     {
         return _strTelephoneNumber;
     }
@@ -422,7 +434,8 @@ public class ESCustomerDTO
     /**
      * Sets the TelephoneNumber.
      *
-     * @param strTelephoneNumber The TelephoneNumber
+     * @param strTelephoneNumber
+     *            The TelephoneNumber
      */
     public void setTelephoneNumber( String strTelephoneNumber )
     {
@@ -435,7 +448,7 @@ public class ESCustomerDTO
      * @return the fixed telephone number
      */
     @JsonProperty( "fixed_telephone_number" )
-    public String getFixedTelephoneNumber(  )
+    public String getFixedTelephoneNumber( )
     {
         return _strFixedPhoneNumber;
     }
@@ -443,7 +456,8 @@ public class ESCustomerDTO
     /**
      * Sets the fixed telephone number.
      *
-     * @param strFixedPhoneNumber the new fixe telephone number
+     * @param strFixedPhoneNumber
+     *            the new fixe telephone number
      */
     public void setFixedTelephoneNumber( String strFixedPhoneNumber )
     {
@@ -456,7 +470,7 @@ public class ESCustomerDTO
      * @return the suggest
      */
     @JsonProperty( "suggest" )
-    public ESSuggestDTO getSuggest(  )
+    public ESSuggestDTO getSuggest( )
     {
         return _oSuggest;
     }
@@ -464,25 +478,23 @@ public class ESCustomerDTO
     /**
      * Sets the suggest.
      */
-    public void setSuggest(  )
+    public void setSuggest( )
     {
-        ESSuggestDTO s = new ESSuggestDTO(  );
+        ESSuggestDTO s = new ESSuggestDTO( );
 
         // input
-        //        String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
-        String[] input = 
-            {
-                _strFirstName, _strName, _strFirstName + " " + _strName, _strName + " " + _strFirstName,
-                _strTelephoneNumber, _strFixedPhoneNumber,
-            };
+        // String[] input = { _strFirstName, _strName, _strTelephoneNumber, _strEmail };
+        String [ ] input = {
+                _strFirstName, _strName, _strFirstName + " " + _strName, _strName + " " + _strFirstName, _strTelephoneNumber, _strFixedPhoneNumber,
+        };
 
         s.setInput( input );
         // Output
         s.setOutput( _strFirstName + " " + _strName );
 
         // Payload
-        ESPayload oPayload = new ESPayload(  );
-        HashMap<String, String> payload = new HashMap<String, String>(  );
+        ESPayload oPayload = new ESPayload( );
+        HashMap<String, String> payload = new HashMap<String, String>( );
 
         payload.put( "user_cid", _strCustomerId );
         payload.put( "connection_id", _strConnectionId );

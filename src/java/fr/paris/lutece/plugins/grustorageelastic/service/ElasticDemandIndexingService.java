@@ -51,24 +51,23 @@ import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConsta
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
-
 /**
  * The Class ElasticDemandIndexingService.
  */
-public class ElasticDemandIndexingService implements IIndexingService<Demand> 
+public class ElasticDemandIndexingService implements IIndexingService<Demand>
 {
     /**
      * {@inheritDoc }.
      *
-     * @param demand the demand
+     * @param demand
+     *            the demand
      */
     @Override
     public void index( Demand demand )
     {
-
         ESDemandDTO demandDTO = buildDemandDTO( demand );
 
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         mapper.setSerializationInclusion( Include.NON_NULL );
 
         String jsonDemand;
@@ -76,48 +75,48 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
         try
         {
             jsonDemand = mapper.writeValueAsString( demandDTO );
-            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( 
-                    GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getReference(  ) ), jsonDemand );
+            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_DEMAND, demand.getReference( ) ), jsonDemand );
         }
-        catch ( JsonGenerationException ex )
+        catch( JsonGenerationException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch ( JsonMappingException ex )
+        catch( JsonMappingException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch ( HttpAccessException ex )
+        catch( HttpAccessException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
     }
 
     /**
      * Build a demand to an esDemandDTO.
      *
-     * @param demand the demand
-     * @param customer the customer
+     * @param demand
+     *            the demand
+     * @param customer
+     *            the customer
      * @return the ES demand dto
      */
     private ESDemandDTO buildDemandDTO( Demand demand )
     {
-        ESDemandDTO demandDTO = new ESDemandDTO(  );
+        ESDemandDTO demandDTO = new ESDemandDTO( );
 
-        if ( ( demand.getCustomer(  ) != null ) && StringUtils.isNotBlank( demand.getCustomer(  ).getId(  ) ) )
+        if ( ( demand.getCustomer( ) != null ) && StringUtils.isNotBlank( demand.getCustomer( ).getId( ) ) )
         {
-            CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( 
-                        demand.getCustomer(  ).getId(  ) ) );
+            CustomerDemandDTO customerDemand = new CustomerDemandDTO( String.valueOf( demand.getCustomer( ).getId( ) ) );
             demandDTO.setCustomerDemand( customerDemand );
         }
-    
-        demandDTO.setDemandId( demand.getId(  ) );
-        demandDTO.setDemandTypeId( demand.getTypeId(  ) );
-        demandDTO.setReference( demand.getReference(  ) );
+
+        demandDTO.setDemandId( demand.getId( ) );
+        demandDTO.setDemandTypeId( demand.getTypeId( ) );
+        demandDTO.setReference( demand.getReference( ) );
 
         return demandDTO;
     }

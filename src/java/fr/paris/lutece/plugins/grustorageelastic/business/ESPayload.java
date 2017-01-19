@@ -43,7 +43,6 @@ import java.io.IOException;
 
 import java.util.HashMap;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class ESPayload.
@@ -58,7 +57,7 @@ public class ESPayload
      *
      * @return the elements
      */
-    public HashMap<String, String> getElements(  )
+    public HashMap<String, String> getElements( )
     {
         return _oElements;
     }
@@ -66,7 +65,8 @@ public class ESPayload
     /**
      * Sets the elements.
      *
-     * @param oElements the o elements
+     * @param oElements
+     *            the o elements
      */
     public void setElements( HashMap<String, String> oElements )
     {
@@ -78,36 +78,36 @@ public class ESPayload
      *
      * @return the string
      */
-    public String toJson(  )
+    public String toJson( )
     {
         String strRetour = "";
 
         if ( _oElements == null )
         {
-            throw new NullPointerException(  );
+            throw new NullPointerException( );
         }
 
         try
         {
-            ObjectMapper mapper = new ObjectMapper(  );
+            ObjectMapper mapper = new ObjectMapper( );
             JsonNodeFactory factory = JsonNodeFactory.instance;
 
             ObjectNode root = new ObjectNode( factory );
 
-            for ( String mapKey : _oElements.keySet(  ) )
+            for ( String mapKey : _oElements.keySet( ) )
             {
                 root.put( mapKey, _oElements.get( mapKey ) );
             }
 
             strRetour = mapper.writeValueAsString( root );
         }
-        catch ( NullPointerException ex )
+        catch( NullPointerException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
 
         return strRetour;

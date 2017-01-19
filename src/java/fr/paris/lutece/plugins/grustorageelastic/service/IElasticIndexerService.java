@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.grustorageelastic.service;
 
 import fr.paris.lutece.plugins.grustorageelastic.util.ElasticIndexerException;
 
-
 /**
  * The Interface IElasticIndexerService.
  */
@@ -44,12 +43,13 @@ public interface IElasticIndexerService
     /**
      * Indexer es.
      *
-     * @throws ElasticIndexerException the elastic indexer exception
+     * @throws ElasticIndexerException
+     *             the elastic indexer exception
      */
-    void indexerES(  ) throws ElasticIndexerException;
+    void indexerES( ) throws ElasticIndexerException;
 
     /**
      * Kill threads.
      */
-    void killThreads(  );
+    void killThreads( );
 }

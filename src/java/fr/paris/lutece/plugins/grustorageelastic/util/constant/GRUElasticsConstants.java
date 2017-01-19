@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.util.constant;
 
-
 /**
  *
  * GRUElasticsConstants
@@ -55,7 +54,7 @@ public final class GRUElasticsConstants
     public static final String PATH_ELK_TYPE_USER = "grustorage-elastics.pathUser";
     public static final String PATH_ELK_TYPE_NOTIFICATION = "grustorage-elastics.pathNotification";
 
-    //MARKERS
+    // MARKERS
     public static final String MARKER_AUTOCOMPLETE = "autocomplete";
     public static final String MARKER_ITEM = "item";
     public static final String MARKER_USER_CID = "user_cid";
@@ -70,7 +69,7 @@ public final class GRUElasticsConstants
     /**
      * Instantiates a new GRU elastics constants.
      */
-    private GRUElasticsConstants(  )
+    private GRUElasticsConstants( )
     {
     }
 }
