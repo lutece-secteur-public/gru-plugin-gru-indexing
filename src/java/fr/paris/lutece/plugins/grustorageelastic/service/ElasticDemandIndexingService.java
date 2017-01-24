@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.paris.lutece.plugins.grubusiness.business.demand.Demand;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
+import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
 import fr.paris.lutece.plugins.grustorageelastic.business.CustomerDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ESDemandDTO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
@@ -101,6 +102,18 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
         }
     }
 
+    /**
+     * {@inheritDoc }.
+     *
+     * @param demand the demand
+     * @throws IndexingException indexing exception
+     */
+    @Override
+    public void deleteIndex( Demand demand ) throws IndexingException
+    {
+        
+    }
+    
     /**
      * Build a demand to an esDemandDTO.
      *

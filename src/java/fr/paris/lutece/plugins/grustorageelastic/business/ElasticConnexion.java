@@ -116,20 +116,9 @@ public final class ElasticConnexion
      * @return the string
      */
     public static String sentToElasticPUT( String uri, String json )
+        throws HttpAccessException
     {
-        String strReponse = "";
-
-        try
-        {
-            strReponse = _clientHttp.doPutJSON( uri, json, null, null );
-        }
-        catch ( HttpAccessException e )
-        {
-            String strError = "Grustorageelastic - PUT json to ES ' url : " + uri + "' , data : " + json;
-            AppLogService.error( strError + e.getMessage(  ), e );
-        }
-
-        return strReponse;
+        return _clientHttp.doPutJSON( uri, json, null, null );
     }
 
     /**
@@ -150,23 +139,13 @@ public final class ElasticConnexion
      * Sent to elastic delete.
      *
      * @param uri the uri
+     * @throws HttpAccessException http access exception
      * @return the string
      */
     public static String sentToElasticDELETE( String uri )
+        throws HttpAccessException
     {
-        String strReponse = "";
-
-        try
-        {
-            strReponse = _clientHttp.doDelete( uri, null, null, null, null );
-        }
-        catch ( HttpAccessException e )
-        {
-            String strError = "Grustorageelastic - DELETE  to ES ' url : " + uri + "' , data : ";
-            AppLogService.error( strError + e.getMessage(  ), e );
-        }
-
-        return strReponse;
+        return _clientHttp.doDelete( uri, null, null, null, null );
     }
 
     /**

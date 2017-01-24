@@ -61,21 +61,23 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
      * {@inheritDoc }.
      *
      * @param customer the customer
+     * @throws IndexingException indexing exception
      */
     @Override
     public void index( Customer customer ) throws IndexingException
     {
+        ESCustomerDTO customerDTO = buildCustomer( customer );
+
         ObjectMapper mapper = new ObjectMapper(  );
         mapper.setSerializationInclusion( Include.NON_NULL );
 
         String jsonUser;
-
+        
         try
         {
-            ESCustomerDTO customerDTO = buildCustomer( customer );
             jsonUser = mapper.writeValueAsString( customerDTO );
             ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
-                    customer.getId(  ) ), jsonUser );
+                    customerDTO.getCustomerId(  ) ), jsonUser );
         }
         catch ( JsonGenerationException ex )
         {
@@ -91,6 +93,28 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
         {
             AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
             throw new IndexingException( ex.getMessage(  ), ex );
+        }
+        catch ( HttpAccessException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            throw new IndexingException( ex.getMessage(  ), ex );
+        }
+           
+    }
+
+    /**
+     * {@inheritDoc }.
+     *
+     * @param customer the customer
+     * @throws IndexingException indexing exception
+     */
+    @Override
+    public void deleteIndex( Customer customer ) throws IndexingException
+    {
+        try
+        {
+            ElasticConnexion.sentToElasticDELETE( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
+                    customer.getId(  ) ) );
         }
         catch ( HttpAccessException ex )
         {
