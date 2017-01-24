@@ -61,7 +61,8 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
      *
      * @param customer
      *            the customer
-     * @throws IndexingException indexing exception
+     * @throws IndexingException
+     *             indexing exception
      */
     @Override
     public void index( Customer customer ) throws IndexingException
@@ -72,12 +73,11 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
         mapper.setSerializationInclusion( Include.NON_NULL );
 
         String jsonUser;
-        
+
         try
         {
             jsonUser = mapper.writeValueAsString( customerDTO );
-            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
-                    customerDTO.getCustomerId(  ) ), jsonUser );
+            ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER, customerDTO.getCustomerId( ) ), jsonUser );
         }
         catch( JsonGenerationException ex )
         {
@@ -99,27 +99,28 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
             throw new IndexingException( ex.getMessage( ), ex );
         }
-           
+
     }
 
     /**
      * {@inheritDoc }.
      *
-     * @param customer the customer
-     * @throws IndexingException indexing exception
+     * @param customer
+     *            the customer
+     * @throws IndexingException
+     *             indexing exception
      */
     @Override
     public void deleteIndex( Customer customer ) throws IndexingException
     {
         try
         {
-            ElasticConnexion.sentToElasticDELETE( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
-                    customer.getId(  ) ) );
+            ElasticConnexion.sentToElasticDELETE( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER, customer.getId( ) ) );
         }
-        catch ( HttpAccessException ex )
+        catch( HttpAccessException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-            throw new IndexingException( ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
     }
 

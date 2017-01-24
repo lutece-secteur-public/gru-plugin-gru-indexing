@@ -99,15 +99,17 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
     /**
      * {@inheritDoc }.
      *
-     * @param demand the demand
-     * @throws IndexingException indexing exception
+     * @param demand
+     *            the demand
+     * @throws IndexingException
+     *             indexing exception
      */
     @Override
     public void deleteIndex( Demand demand ) throws IndexingException
     {
-        
+
     }
-    
+
     /**
      * Build a demand to an esDemandDTO.
      *

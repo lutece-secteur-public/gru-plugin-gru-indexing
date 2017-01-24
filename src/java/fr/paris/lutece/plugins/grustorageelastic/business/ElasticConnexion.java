@@ -120,8 +120,7 @@ public final class ElasticConnexion
      *            the json
      * @return the string
      */
-    public static String sentToElasticPUT( String uri, String json )
-        throws HttpAccessException
+    public static String sentToElasticPUT( String uri, String json ) throws HttpAccessException
     {
         return _clientHttp.doPutJSON( uri, json, null, null );
     }
@@ -147,11 +146,11 @@ public final class ElasticConnexion
      *
      * @param uri
      *            the uri
-     * @throws HttpAccessException http access exception
+     * @throws HttpAccessException
+     *             http access exception
      * @return the string
      */
-    public static String sentToElasticDELETE( String uri )
-        throws HttpAccessException
+    public static String sentToElasticDELETE( String uri ) throws HttpAccessException
     {
         return _clientHttp.doDelete( uri, null, null, null, null );
     }
