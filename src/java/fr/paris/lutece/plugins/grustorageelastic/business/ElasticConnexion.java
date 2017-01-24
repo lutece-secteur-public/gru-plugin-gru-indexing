@@ -53,14 +53,13 @@ import java.io.IOException;
 
 import java.util.Map;
 
-
 /**
  * The Class ElasticConnexion.
  */
 public final class ElasticConnexion
 {
     /** The _client. */
-    private static HttpAccess _clientHttp = new HttpAccess(  );
+    private static HttpAccess _clientHttp = new HttpAccess( );
 
     /** The _singleton. */
     private ElasticConnexion _singleton;
@@ -70,11 +69,11 @@ public final class ElasticConnexion
      *
      * @return single instance of ElasticConnexion
      */
-    public ElasticConnexion getInstance(  )
+    public ElasticConnexion getInstance( )
     {
         if ( _singleton == null )
         {
-            return new ElasticConnexion(  );
+            return new ElasticConnexion( );
         }
 
         return _singleton;
@@ -83,15 +82,17 @@ public final class ElasticConnexion
     /**
      * Gets the ES param.
      *
-     * @param strPath the str path
-     * @param strSpecif the str specif
+     * @param strPath
+     *            the str path
+     * @param strSpecif
+     *            the str specif
      * @return the ES param
      */
     public static String getESParam( String strPath, String strSpecif )
     {
         String path = ( StringUtils.isBlank( strPath ) ) ? "" : AppPropertiesService.getProperty( strPath );
-        String tmp = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER ) +
-            AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) + path + strSpecif;
+        String tmp = AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_SERVER )
+                + AppPropertiesService.getProperty( GRUElasticsConstants.PATH_ELK_PATH ) + path + strSpecif;
 
         return tmp;
     }
@@ -99,8 +100,10 @@ public final class ElasticConnexion
     /**
      * Gets the ES param.
      *
-     * @param strPath the str path
-     * @param strSpecif the str specif
+     * @param strPath
+     *            the str path
+     * @param strSpecif
+     *            the str specif
      * @return the ES param
      */
     public static String getESParam( String strPath, int strSpecif )
@@ -111,8 +114,10 @@ public final class ElasticConnexion
     /**
      * Sent to elastic put.
      *
-     * @param uri the uri
-     * @param json the json
+     * @param uri
+     *            the uri
+     * @param json
+     *            the json
      * @return the string
      */
     public static String sentToElasticPUT( String uri, String json )
@@ -124,13 +129,15 @@ public final class ElasticConnexion
     /**
      * Sent to elastic post.
      *
-     * @param uri the uri
-     * @param json the json
-     * @throws HttpAccessException http access exception
+     * @param uri
+     *            the uri
+     * @param json
+     *            the json
+     * @throws HttpAccessException
+     *             http access exception
      * @return the string
      */
-    public static String sentToElasticPOST( String uri, String json )
-        throws HttpAccessException
+    public static String sentToElasticPOST( String uri, String json ) throws HttpAccessException
     {
         return _clientHttp.doPostJSON( uri, json, null, null );
     }
@@ -138,7 +145,8 @@ public final class ElasticConnexion
     /**
      * Sent to elastic delete.
      *
-     * @param uri the uri
+     * @param uri
+     *            the uri
      * @throws HttpAccessException http access exception
      * @return the string
      */
@@ -151,16 +159,19 @@ public final class ElasticConnexion
     /**
      * Format auto complete search.
      *
-     * @param champ the champ
+     * @param champ
+     *            the champ
      * @return the string
-     * @throws JsonGenerationException the json generation exception
-     * @throws JsonMappingException the json mapping exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JsonGenerationException
+     *             the json generation exception
+     * @throws JsonMappingException
+     *             the json mapping exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static String formatAutoCompleteSearch( String champ )
-        throws JsonGenerationException, JsonMappingException, IOException
+    public static String formatAutoCompleteSearch( String champ ) throws JsonGenerationException, JsonMappingException, IOException
     {
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
 
         ObjectNode root = new ObjectNode( factory );
@@ -179,17 +190,21 @@ public final class ElasticConnexion
     /**
      * Format exact search.
      *
-     * @param strKey the str key
-     * @param strValue the str value
+     * @param strKey
+     *            the str key
+     * @param strValue
+     *            the str value
      * @return the string
-     * @throws JsonGenerationException the json generation exception
-     * @throws JsonMappingException the json mapping exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JsonGenerationException
+     *             the json generation exception
+     * @throws JsonMappingException
+     *             the json mapping exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static String formatExactSearch( String strKey, String strValue )
-        throws JsonGenerationException, JsonMappingException, IOException
+    public static String formatExactSearch( String strKey, String strValue ) throws JsonGenerationException, JsonMappingException, IOException
     {
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
         ObjectNode root = new ObjectNode( factory );
         ObjectNode tmp = new ObjectNode( factory );
@@ -222,16 +237,19 @@ public final class ElasticConnexion
     /**
      * Format exact search.
      *
-     * @param map the map
+     * @param map
+     *            the map
      * @return the string
-     * @throws JsonGenerationException the json generation exception
-     * @throws JsonMappingException the json mapping exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JsonGenerationException
+     *             the json generation exception
+     * @throws JsonMappingException
+     *             the json mapping exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static String formatExactSearch( Map<String, String> map )
-        throws JsonGenerationException, JsonMappingException, IOException
+    public static String formatExactSearch( Map<String, String> map ) throws JsonGenerationException, JsonMappingException, IOException
     {
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
         ObjectNode root = new ObjectNode( factory );
         ObjectNode query = new ObjectNode( factory );
@@ -241,7 +259,7 @@ public final class ElasticConnexion
 
         ArrayNode must = new ArrayNode( factory );
 
-        for ( String mapKey : map.keySet(  ) )
+        for ( String mapKey : map.keySet( ) )
         {
             ObjectNode tmp = new ObjectNode( factory );
             ObjectNode term = new ObjectNode( factory );
@@ -268,16 +286,19 @@ public final class ElasticConnexion
     /**
      * Format full text.
      *
-     * @param map the map
+     * @param map
+     *            the map
      * @return the string
-     * @throws JsonGenerationException the json generation exception
-     * @throws JsonMappingException the json mapping exception
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JsonGenerationException
+     *             the json generation exception
+     * @throws JsonMappingException
+     *             the json mapping exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static String formatFullText( Map<String, String> map )
-        throws JsonGenerationException, JsonMappingException, IOException
+    public static String formatFullText( Map<String, String> map ) throws JsonGenerationException, JsonMappingException, IOException
     {
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
         ObjectNode root = new ObjectNode( factory );
         ObjectNode query = new ObjectNode( factory );
@@ -286,7 +307,7 @@ public final class ElasticConnexion
 
         ArrayNode should = new ArrayNode( factory );
 
-        for ( String mapKey : map.keySet(  ) )
+        for ( String mapKey : map.keySet( ) )
         {
             ObjectNode match = new ObjectNode( factory );
             ObjectNode tmp = new ObjectNode( factory );
@@ -312,21 +333,22 @@ public final class ElasticConnexion
     /**
      * Sets the json to json tree.
      *
-     * @param strJson the str json
+     * @param strJson
+     *            the str json
      * @return the json node
      */
     public static JsonNode setJsonToJsonTree( String strJson )
     {
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         JsonNode tmp = null;
 
         try
         {
             tmp = mapper.readTree( strJson );
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
 
         return tmp;

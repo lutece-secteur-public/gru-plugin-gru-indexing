@@ -41,16 +41,11 @@ import fr.paris.lutece.plugins.grubusiness.business.notification.EmailNotificati
 import fr.paris.lutece.plugins.grubusiness.business.notification.MyDashboardNotification;
 import fr.paris.lutece.plugins.grubusiness.business.notification.SMSNotification;
 
-
 /**
  * The Class ESNotificationDTO.
  */
-@JsonPropertyOrder( {"demande",
-    "user_backoffice",
-    "date_sollicitation",
-    "user_email",
-    "user_dashboard",
-    "user_sms"
+@JsonPropertyOrder( {
+        "demande", "user_backoffice", "date_sollicitation", "user_email", "user_dashboard", "user_sms"
 } )
 public class ESNotificationDTO
 {
@@ -75,26 +70,31 @@ public class ESNotificationDTO
     /**
      * Instantiates a new ES notification dto.
      */
-    public ESNotificationDTO(  )
+    public ESNotificationDTO( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Instantiates a new ES notification dto.
      *
-     * @param oNotificationDemand the o notification demand
-     * @param lDateSollicitation the l date sollicitation
-     * @param emailNotification the email notification
-     * @param userDashboardNotification the dash board notification
-     * @param smsNotification the sms notification
-     * @param backOfficeNotification the back office notification
+     * @param oNotificationDemand
+     *            the o notification demand
+     * @param lDateSollicitation
+     *            the l date sollicitation
+     * @param emailNotification
+     *            the email notification
+     * @param userDashboardNotification
+     *            the dash board notification
+     * @param smsNotification
+     *            the sms notification
+     * @param backOfficeNotification
+     *            the back office notification
      */
-    public ESNotificationDTO( NotificationDemandDTO oNotificationDemand, long lDateSollicitation,
-        EmailNotification emailNotification, MyDashboardNotification userDashboardNotification,
-        SMSNotification smsNotification, BackofficeNotification backOfficeNotification )
+    public ESNotificationDTO( NotificationDemandDTO oNotificationDemand, long lDateSollicitation, EmailNotification emailNotification,
+            MyDashboardNotification userDashboardNotification, SMSNotification smsNotification, BackofficeNotification backOfficeNotification )
     {
-        super(  );
+        super( );
         this._oNotificationDemand = oNotificationDemand;
         this._lDateNotification = lDateSollicitation;
         this._emailNotification = emailNotification;
@@ -109,7 +109,7 @@ public class ESNotificationDTO
      * @return the notification demand
      */
     @JsonProperty( "demande" )
-    public NotificationDemandDTO getNotificationDemand(  )
+    public NotificationDemandDTO getNotificationDemand( )
     {
         return _oNotificationDemand;
     }
@@ -117,7 +117,8 @@ public class ESNotificationDTO
     /**
      * Sets the notification demand.
      *
-     * @param oNotificationDemand the new notification demand
+     * @param oNotificationDemand
+     *            the new notification demand
      */
     @JsonProperty( "demande" )
     public void setNotificationDemand( NotificationDemandDTO oNotificationDemand )
@@ -131,7 +132,7 @@ public class ESNotificationDTO
      * @return the date notification
      */
     @JsonProperty( "notification_date" )
-    public long getDateNotification(  )
+    public long getDateNotification( )
     {
         return _lDateNotification;
     }
@@ -139,7 +140,8 @@ public class ESNotificationDTO
     /**
      * Sets the date notification.
      *
-     * @param lDateSollicitation the new date notification
+     * @param lDateSollicitation
+     *            the new date notification
      */
     @JsonProperty( "notification_date" )
     public void setDateNotification( long lDateSollicitation )
@@ -153,7 +155,7 @@ public class ESNotificationDTO
      * @return the user email
      */
     @JsonProperty( "user_email" )
-    public EmailNotification getUserEmail(  )
+    public EmailNotification getUserEmail( )
     {
         return _emailNotification;
     }
@@ -161,7 +163,8 @@ public class ESNotificationDTO
     /**
      * Sets the user email.
      *
-     * @param userEmail the new user email
+     * @param userEmail
+     *            the new user email
      */
     @JsonProperty( "user_email" )
     public void setUserEmail( EmailNotification userEmail )
@@ -175,7 +178,7 @@ public class ESNotificationDTO
      * @return the user dash board
      */
     @JsonProperty( "user_dashboard" )
-    public MyDashboardNotification getUserDashBoard(  )
+    public MyDashboardNotification getUserDashBoard( )
     {
         return _userDashboardNotification;
     }
@@ -183,7 +186,8 @@ public class ESNotificationDTO
     /**
      * Sets the user dash board.
      *
-     * @param userDashBoard the new user dash board
+     * @param userDashBoard
+     *            the new user dash board
      */
     @JsonProperty( "user_dashboard" )
     public void setUserDashBoard( MyDashboardNotification userDashboardNotification )
@@ -197,7 +201,7 @@ public class ESNotificationDTO
      * @return the user sms
      */
     @JsonProperty( "user_sms" )
-    public SMSNotification getUserSms(  )
+    public SMSNotification getUserSms( )
     {
         return _smsNotification;
     }
@@ -205,7 +209,8 @@ public class ESNotificationDTO
     /**
      * Sets the user sms.
      *
-     * @param userSms the new user sms
+     * @param userSms
+     *            the new user sms
      */
     @JsonProperty( "user_sms" )
     public void setUserSms( SMSNotification userSms )
@@ -219,7 +224,7 @@ public class ESNotificationDTO
      * @return the user back office
      */
     @JsonProperty( "user_backoffice" )
-    public BackofficeNotification getUserBackOffice(  )
+    public BackofficeNotification getUserBackOffice( )
     {
         return _backOfficeNotification;
     }
@@ -227,7 +232,8 @@ public class ESNotificationDTO
     /**
      * Sets the user back office.
      *
-     * @param userBackOffice the new user back office
+     * @param userBackOffice
+     *            the new user back office
      */
     @JsonProperty( "user_backoffice" )
     public void setUserBackOffice( BackofficeNotification userBackOffice )

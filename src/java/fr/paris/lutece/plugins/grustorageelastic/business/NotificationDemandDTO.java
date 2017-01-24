@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class NotificationDemandDTO.
@@ -51,20 +50,22 @@ public class NotificationDemandDTO
     /**
      * Instantiates a new notification demand dto.
      */
-    public NotificationDemandDTO(  )
+    public NotificationDemandDTO( )
     {
-        super(  );
+        super( );
     }
 
     /**
      * Instantiates a new notification demand dto.
      *
-     * @param strDemandId the str demand id
-     * @param strDemandTypeId the str demand type id
+     * @param strDemandId
+     *            the str demand id
+     * @param strDemandTypeId
+     *            the str demand type id
      */
     public NotificationDemandDTO( String strDemandId, String strDemandTypeId )
     {
-        super(  );
+        super( );
         this._strDemandId = strDemandId;
         this._strDemandTypeId = strDemandTypeId;
     }
@@ -75,7 +76,7 @@ public class NotificationDemandDTO
      * @return the demand id
      */
     @JsonProperty( "demand_id" )
-    public String getDemandId(  )
+    public String getDemandId( )
     {
         return _strDemandId;
     }
@@ -83,7 +84,8 @@ public class NotificationDemandDTO
     /**
      * Sets the demand id.
      *
-     * @param strDemandId the new demand id
+     * @param strDemandId
+     *            the new demand id
      */
     @JsonProperty( "demand_id" )
     public void setDemandId( String strDemandId )
@@ -97,7 +99,7 @@ public class NotificationDemandDTO
      * @return the demand type id
      */
     @JsonProperty( "demand_type_id" )
-    public String getDemandTypeId(  )
+    public String getDemandTypeId( )
     {
         return _strDemandTypeId;
     }
@@ -105,7 +107,8 @@ public class NotificationDemandDTO
     /**
      * Sets the demand type id.
      *
-     * @param strDemandTypeId the new demand type id
+     * @param strDemandTypeId
+     *            the new demand type id
      */
     @JsonProperty( "demand_type_id" )
     public void setDemandTypeId( String strDemandTypeId )

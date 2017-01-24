@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.grustorageelastic.business.indexer;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class ConfigException.
@@ -43,7 +42,8 @@ public class ConfigException extends Exception
     /**
      * Instantiates a new config exception.
      *
-     * @param message the message
+     * @param message
+     *            the message
      */
     public ConfigException( String message )
     {

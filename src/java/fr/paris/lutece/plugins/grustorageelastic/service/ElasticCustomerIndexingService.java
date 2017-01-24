@@ -51,16 +51,16 @@ import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConsta
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
-
 /**
  * The Class ElasticCustomerIndexingService.
  */
-public class ElasticCustomerIndexingService implements IIndexingService<Customer> 
-{   
+public class ElasticCustomerIndexingService implements IIndexingService<Customer>
+{
     /**
      * {@inheritDoc }.
      *
-     * @param customer the customer
+     * @param customer
+     *            the customer
      * @throws IndexingException indexing exception
      */
     @Override
@@ -68,7 +68,7 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
     {
         ESCustomerDTO customerDTO = buildCustomer( customer );
 
-        ObjectMapper mapper = new ObjectMapper(  );
+        ObjectMapper mapper = new ObjectMapper( );
         mapper.setSerializationInclusion( Include.NON_NULL );
 
         String jsonUser;
@@ -79,25 +79,25 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
             ElasticConnexion.sentToElasticPOST( ElasticConnexion.getESParam( GRUElasticsConstants.PATH_ELK_TYPE_USER,
                     customerDTO.getCustomerId(  ) ), jsonUser );
         }
-        catch ( JsonGenerationException ex )
+        catch( JsonGenerationException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-            throw new IndexingException( ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
-        catch ( JsonMappingException ex )
+        catch( JsonMappingException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-            throw new IndexingException( ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-            throw new IndexingException( ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
-        catch ( HttpAccessException ex )
+        catch( HttpAccessException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
-            throw new IndexingException( ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
            
     }
@@ -126,30 +126,33 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
     /**
      * Build a customer to an esCustomerSTO.
      *
-     * @param customer the customer
+     * @param customer
+     *            the customer
      * @return the ES customer dto
      */
     private ESCustomerDTO buildCustomer( Customer customer )
     {
-        ESCustomerDTO customerDTO = new ESCustomerDTO(  );
+        ESCustomerDTO customerDTO = new ESCustomerDTO( );
 
-        customerDTO.setCustomerId( customer.getId(  ) );
-        customerDTO.setConnectionId( customer.getAccountGuid(  ) ) ;
-        customerDTO.setName( manageNullValue( customer.getLastname(  ) ) );
-        customerDTO.setFirstName( manageNullValue( customer.getFirstname(  ) ) );
-        customerDTO.setEmail( manageNullValue( customer.getEmail(  ) ) );
-        customerDTO.setBirthday( manageNullValue( customer.getBirthDate(  ) ) );
-        customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle(  ) ) ) );
-        customerDTO.setTelephoneNumber( manageNullValue( customer.getMobilePhone(  ) ) );
-        customerDTO.setFixedTelephoneNumber( manageNullValue( customer.getFixedPhoneNumber(  ) ) );
-        customerDTO.setSuggest(  );
+        customerDTO.setCustomerId( customer.getId( ) );
+        customerDTO.setConnectionId( customer.getAccountGuid( ) );
+        customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
+        customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
+        customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );
+        customerDTO.setBirthday( manageNullValue( customer.getBirthDate( ) ) );
+        customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
+        customerDTO.setTelephoneNumber( manageNullValue( customer.getMobilePhone( ) ) );
+        customerDTO.setFixedTelephoneNumber( manageNullValue( customer.getFixedPhoneNumber( ) ) );
+        customerDTO.setSuggest( );
 
         return customerDTO;
     }
 
     /**
      * Manages the case the specified String is {@code null}
-     * @param strValue the String to manage
+     * 
+     * @param strValue
+     *            the String to manage
      * @return the correct String when the specified String is {@code null}, {@code strValue} otherwise
      */
     private static String manageNullValue( String strValue )

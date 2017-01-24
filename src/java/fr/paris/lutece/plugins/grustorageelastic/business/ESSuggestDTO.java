@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.grustorageelastic.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class ESSuggestDTO.
@@ -43,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ESSuggestDTO
 {
     /** The _str input. */
-    private String[] _strInput;
+    private String [ ] _strInput;
 
     /** The _str output. */
     private String _strOutput;
@@ -57,19 +56,20 @@ public class ESSuggestDTO
      * @return the input
      */
     @JsonProperty( "input" )
-    public String[] getInput(  )
+    public String [ ] getInput( )
     {
-        return _strInput.clone(  );
+        return _strInput.clone( );
     }
 
     /**
      * Sets the input.
      *
-     * @param strInput the new input
+     * @param strInput
+     *            the new input
      */
-    public void setInput( String[] strInput )
+    public void setInput( String [ ] strInput )
     {
-        this._strInput = strInput.clone(  );
+        this._strInput = strInput.clone( );
     }
 
     /**
@@ -78,7 +78,7 @@ public class ESSuggestDTO
      * @return the output
      */
     @JsonProperty( "output" )
-    public String getOutput(  )
+    public String getOutput( )
     {
         return _strOutput;
     }
@@ -86,7 +86,8 @@ public class ESSuggestDTO
     /**
      * Sets the output.
      *
-     * @param strOutput the new output
+     * @param strOutput
+     *            the new output
      */
     public void setOutput( String strOutput )
     {
@@ -99,7 +100,7 @@ public class ESSuggestDTO
      * @return the payload
      */
     @JsonProperty( "payload" )
-    public ESPayload getPayload(  )
+    public ESPayload getPayload( )
     {
         return _oPayload;
     }
@@ -107,7 +108,8 @@ public class ESSuggestDTO
     /**
      * Sets the payload.
      *
-     * @param oPayload the new payload
+     * @param oPayload
+     *            the new payload
      */
     public void setPayload( ESPayload oPayload )
     {

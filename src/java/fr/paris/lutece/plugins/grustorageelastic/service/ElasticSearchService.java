@@ -56,7 +56,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class ElasticSearchService.
@@ -71,25 +70,26 @@ public class ElasticSearchService implements ISearchService
     private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
     private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
     private static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
-	private static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
+    private static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
 
     /**
      * {@inheritDoc }.
      *
-     * @param strQuery the str query
+     * @param strQuery
+     *            the str query
      * @return the list
      */
     @Override
     public List<Customer> searchCustomer( String strFirstName, String strLastName )
     {
-        List<Customer> listCustomer = new ArrayList<Customer>(  );
+        List<Customer> listCustomer = new ArrayList<Customer>( );
         String uri = ElasticConnexion.getESParam( StringUtils.EMPTY, GRUElasticsConstants.PATH_ELK_SEARCH );
         String json = StringUtils.EMPTY;
 
         try
         {
             // Gets the name/firstname entered by autocomplete
-            Map<String, String> mapFields = new HashMap<String, String>(  );
+            Map<String, String> mapFields = new HashMap<String, String>( );
 
             if ( StringUtils.isNotEmpty( strFirstName ) )
             {
@@ -103,9 +103,9 @@ public class ElasticSearchService implements ISearchService
 
             json = ElasticConnexion.formatFullText( mapFields );
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
 
         try
@@ -122,9 +122,9 @@ public class ElasticSearchService implements ISearchService
                 }
             }
         }
-        catch ( HttpAccessException ex )
+        catch( HttpAccessException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
 
         return listCustomer;
@@ -140,7 +140,7 @@ public class ElasticSearchService implements ISearchService
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
         String json = "";
 
-        Map<String, String> mapFields = new HashMap<String, String>(  );
+        Map<String, String> mapFields = new HashMap<String, String>( );
 
         mapFields.put( KEY_CUSTOMER_ID, strCustomerId );
 
@@ -159,13 +159,13 @@ public class ElasticSearchService implements ISearchService
                 customer = buildCustomer( jsonCustomer );
             }
         }
-        catch ( IOException ex )
+        catch( IOException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch ( HttpAccessException ex )
+        catch( HttpAccessException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage(  ), ex );
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
 
         return customer;
@@ -177,7 +177,7 @@ public class ElasticSearchService implements ISearchService
      * @return true, if is auto complete
      */
     @Override
-    public boolean isAutoComplete(  )
+    public boolean isAutoComplete( )
     {
         return true;
     }
@@ -188,40 +188,44 @@ public class ElasticSearchService implements ISearchService
      * @return the auto complete url
      */
     @Override
-    public String getAutoCompleteUrl(  )
+    public String getAutoCompleteUrl( )
     {
-        String tmp = AppPathService.getProdUrl(  );
+        String tmp = AppPathService.getProdUrl( );
 
-        return tmp.substring( 0, tmp.length(  ) - 1 ) + RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME +
-        GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
+        return tmp.substring( 0, tmp.length( ) - 1 ) + RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME
+                + GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
     }
 
     /**
      * Build a Customer from a node.
      *
-     * @param node the node
+     * @param node
+     *            the node
      * @return the created customer
      */
     private Customer buildCustomer( JsonNode node )
     {
-        Customer customer = new Customer(  );
+        Customer customer = new Customer( );
 
         try
         {
-            customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText(  ) );
-            
-            customer.setAccountGuid( node.findValue ( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue ( KEY_CUSTOMER_CONNECTION_ID ).asText(  ) : StringUtils.EMPTY);
-            customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt(  ) : 0 );
-            customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText(  ) : StringUtils.EMPTY);
-            customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText(  ) : StringUtils.EMPTY );
-            customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText(  ) : StringUtils.EMPTY );
-            customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ).asText(  ) : StringUtils.EMPTY);
-            customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText(  ) : StringUtils.EMPTY );
-            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ) != null ? node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText(  ) : StringUtils.EMPTY );
+            customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText( ) );
+
+            customer.setAccountGuid( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
+                    : StringUtils.EMPTY );
+            customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
+            customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
+            customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText( ) : StringUtils.EMPTY );
+            customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText( ) : StringUtils.EMPTY );
+            customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER )
+                    .asText( ) : StringUtils.EMPTY );
+            customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText( )
+                    : StringUtils.EMPTY );
+            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ) != null ? node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText( ) : StringUtils.EMPTY );
         }
-        catch ( NullPointerException ex )
+        catch( NullPointerException ex )
         {
-            error( "Parsing Customer fail" + node.toString(  ), null );
+            error( "Parsing Customer fail" + node.toString( ), null );
         }
 
         return customer;
@@ -230,8 +234,10 @@ public class ElasticSearchService implements ISearchService
     /**
      * Build an error response.
      *
-     * @param strMessage The error message
-     * @param ex An exception
+     * @param strMessage
+     *            The error message
+     * @param ex
+     *            An exception
      * @return The response
      */
     protected Response error( String strMessage, Throwable ex )
@@ -247,6 +253,6 @@ public class ElasticSearchService implements ISearchService
 
         String strError = "{ \"status\": \"Error : " + strMessage + "\" }";
 
-        return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build(  );
+        return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).entity( strError ).build( );
     }
 }
