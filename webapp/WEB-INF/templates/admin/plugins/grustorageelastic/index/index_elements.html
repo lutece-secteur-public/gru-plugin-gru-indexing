@@ -1,0 +1,41 @@
+<#include "../grustorageelastic_commons.html" />
+<@row>
+	<@columns>
+		<@box color='danger'>
+			<@boxHeaderGruStoES title='#i18n{grustorageelastic.index_elements.labelIndexersList}' boxTools=true>
+				<#if indexers_list?has_content>
+					<@tform method='post' name='index_elements' action='jsp/admin/plugins/grustorageelastic/index/IndexElements.jsp' class='form pull-right'>
+						<@button type='submit' buttonIcon='repeat' title='#i18n{grustorageelastic.index_elements.buttonDoIndex}' name='action_doIndexElements' size=''/>
+					</@tform>
+				</#if>
+			</@boxHeaderGruStoES>
+			<@messages infos=infos errors=errors />
+			<@boxBody>
+				<@table>
+					<tr>
+						<th>#i18n{grustorageelastic.index_elements.columnIndexerName}</th>
+						<th>#i18n{grustorageelastic.index_elements.columnIndexerVersion}</th>
+						<th>#i18n{grustorageelastic.index_elements.columnIndexerDescription}</th>
+					</tr>
+					<#list indexers_list as indexer>
+						<tr>
+							<td>
+								<#if indexer.enable>
+									<@tag color='success' title='${indexer.name} #i18n{grustorageelastic.index_elements.IndexerEnable}'>
+										<@icon style='check' />
+									</@tag>
+								<#else>
+									<@tag color='important' title='${indexer.name} #i18n{grustorageelastic.index_elements.IndexerDisable}'>
+										<@icon style='times' />
+									</@tag>
+								</#if>&nbsp;${indexer.name}
+							</td>
+							<td>${indexer.version}</td>
+							<td>${indexer.description}</td>
+						</tr>
+					</#list>
+				</@table>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

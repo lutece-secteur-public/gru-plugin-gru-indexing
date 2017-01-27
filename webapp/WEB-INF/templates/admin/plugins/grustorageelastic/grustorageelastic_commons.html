@@ -1,0 +1,106 @@
+<#-- ROW -->
+<#macro row class='' id=''>
+	<div class="row<#if class!=''> ${class}</#if>"<#if id!=''> id="${id}"</#if>>
+		<#nested>
+	</div>
+</#macro>
+
+<#-- BOXHEADER -->
+<#macro boxHeaderGruStoES title='' showTitle=true id='' boxTools=false titleLevel='h2'>
+<div class="box-header with-border"<#if id!=''> id="${id}"</#if>>
+<${titleLevel} class="box-title<#if showTitle=false> sr-only</#if>">${title}</${titleLevel}>
+	<#if boxTools>
+	<div class="box-tools">
+		<#nested>
+	</div>
+	</#if>
+</div>
+</#macro>
+
+<#-- COLUMNS -->
+<#-- cols = col-xs- (<544px)/col-sm- (>=544px)/col-md- (>=768px)/col-lg- (>=992px)/col-xl- (>=1200px) -->
+<#macro columns offsetXs=0 offsetSm=0 offsetMd=0 offsetLg=0 offsetXl=0 pushXs=0 pushSm=0 pushMd=0 pushLg=0 pushXl=0 xs=12 sm=12 md=12 lg=12 xl=12 id='' class=''>
+	<div class="col-xs-${xs} col-sm-${sm} col-md-${md} col-lg-${lg}
+	<#if offsetXs!=0> col-xs-offset-${offsetXs}</#if>
+	<#if offsetSm!=0> col-sm-offset-${offsetSm}</#if>
+	<#if offsetMd!=0> col-md-offset-${offsetMd}</#if>
+	<#if offsetLg!=0> col-lg-offset-${offsetLg}</#if>
+	<#if offsetXl!=0> col-xl-offset-${offsetXl}</#if>
+	<#if pushXs!=0> col-xs-push-${pushXs}</#if>
+	<#if pushSm!=0> col-sm-push-${pushSm}</#if>
+	<#if pushMd!=0> col-md-push-${pushMd}</#if>
+	<#if pushLg!=0> col-lg-push-${pushLg}</#if>
+	<#if pushXl!=0> col-xl-push-${pushXl}</#if>
+	<#if class!=''> ${class}</#if>"<#if id!=''> id="${id}"</#if>>
+		<#nested>
+	</div>
+</#macro>
+
+<#-- AdminLTE Box -->
+<#-- color: default/primary/info/success/warning/danger -->
+<#-- style: solid (no top border) -->
+<#-- collapsed: true/false -->
+<#macro box color='' id='' style='' class='' params='' collapsed=false>
+<div class="box<#if color!=''> box-${color}</#if><#if style!=''> box-${style}</#if><#if class!=''> ${class}</#if><#if collapsed> collapsed-box</#if>"<#if id!=''> id="${id}"</#if><#if params!=''> ${params}</#if>>
+	<#nested>
+</div>
+</#macro>
+
+<#-- FORM -->
+<#-- class: form-inline/form-horizontal/navbar-form/navbar-left/search-form... Default is horizontal -->
+<#macro tform class='form-horizontal' class2='' action='' method='post' name='' id='' role='form' params=''>
+	<form class="${class}<#if class2!=''> ${class2}</#if>"<#if id!=''> id="${id}"</#if><#if action!=''> action="${action}"</#if><#if method!=''> method="${method}"</#if><#if name!=''> name="${name}"</#if><#if role!=''> role="${role}"</#if><#if params!=''> ${params}</#if>>
+		<#nested>
+	</form>
+</#macro>
+
+<#-- BUTTON -->
+<#-- bootstrap 3 : size: btn-xs/btn-sm/btn-lg -->
+<#-- upcoming bootstrap 4 : size: btn-sm for small buttons/empty for medium buttons/btn-lg for large buttons -->
+<#-- color: btn-default[bootstrap4 : btn-secondary]/btn-primary/btn-success/btn-warning/btn-danger/btn-info/bg-purple/bg-blue/bg-navy/bg-teal/bg-maroon/bg-black/bg-gray/bg-olive/bg-lime/bg-orange/bg-fuchsia -->
+<#-- color (upcoming bootstrap 4): btn-outline-default/btn-outline-primary/btn-outline-success/btn-outline-warning/btn-outline-danger/btn-outline-info/ -->
+<#-- style: btn-block/btn-flat/close/navbar-toggle/collapsed... -->
+<#-- type: button/submit/reset -->
+<#-- params: data-toggle/data-target/data-dismiss... -->
+<#-- buttonIcon: icon name ex: info/check/comment/envelope... -->
+<#-- iconPosition: left/right -->
+<#-- titleVisibility: hide the title for reponsive mode ex: hidden-xs, hidden-sm -->
+<#macro button size='sm' color='btn-primary' style='btn-flat' class='' type='button' params='' title='' showTitle=true showTitleXs=true showTitleSm=true showTitleMd=true showTitleLg=true titleVisibility='hidden-xs' name='' buttonIcon='' dropdownMenu=false disabled=false id='' value='' iconPosition='left' tabIndex=''>
+	<#-- Bootstrap 4 transition -->
+	<#if color='btn-secondary'>
+		<#assign color_temp='btn-default'>
+	<#else>
+		<#assign color_temp=color>
+	</#if>
+	
+	<#-- Visibility of button title -->
+	<#assign showTitleClass = '' />
+	<#if showTitle = false><#assign showTitleClass = 'sr-only' /></#if>
+	<#if showTitleXs = false><#assign showTitleClass = showTitleClass + 'hidden-xs' /></#if>
+	<#if showTitleSm = false><#assign showTitleClass = showTitleClass + ' ' + 'hidden-sm' /></#if>
+	<#if showTitleMd = false><#assign showTitleClass = showTitleClass + ' ' + 'hidden-md' /></#if>
+	<#if showTitleLg = false><#assign showTitleClass = showTitleClass + ' ' + 'hidden-lg' /></#if>
+	
+	<button class="<#if style!='close'>btn</#if><#if size!='' && style!='btn-box-tool'> btn-${size}</#if><#if color_temp!='' && style!='btn-box-tool'> ${color_temp}</#if><#if style!=''> ${style}</#if><#if dropdownMenu> dropdown-toggle</#if><#if class!=''> ${class}</#if>" type="${type}"<#if title!=''> title="${title}"</#if><#if name!=''> name="${name}"</#if><#if id!=''> id="${id}"</#if><#if value!=''> value="${value}"</#if><#if params!=''> ${params}</#if><#if disabled> disabled</#if><#if dropdownMenu> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"</#if>>
+		<#if buttonIcon!='' && iconPosition='left'><@icon style=buttonIcon /></#if>
+		<#if showTitleClass!='' && style!='btn-box-tool'><span class="${showTitleClass}"></#if>${title}<#if showTitleClass!='' && style!='btn-box-tool'></span></#if>
+		<#if buttonIcon!='' && iconPosition='right'><@icon style=buttonIcon /></#if>
+		<#if dropdownMenu>
+		&#160;<@icon style='caret-down' />
+		</#if>
+	</button>
+</#macro>
+
+<#-- TAG -->
+<#-- color: default/primary/success/info/warning/danger/ -->
+<#macro tag color='default' title='' type='span'>
+	<${type} class="label label-${color}"<#if title!=''>title='${title}'</#if>>
+		<#nested>
+	</${type}>
+</#macro>
+
+<#-- ICONS -->
+<#-- Icons from FontAwesome -->
+<#macro icon prefix='fa fa-' style='' class='' title=''>
+  <i class="${prefix}${style}<#if class!=''> ${class}</#if>" aria-hidden="true"<#if title!=''> title='${title}'</#if>></i>
+</#macro>

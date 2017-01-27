@@ -65,6 +65,11 @@ public final class GRUElasticsConstants
     public static final String MARKER_LAST_NAME = "last_name";
     public static final String MARKER_ELEMENTS = "elements";
     public static final String MARKER_PAYLOAD = "payload";
+    
+    // MESSAGES
+    public static final String FULL_INDEX_ERROR_MESSAGE = "grustorageelastic.index_elements.errorMessage";
+    public static final String FULL_INDEX_SUCCESS_MESSAGE = "grustorageelastic.index_elements.successMessage";
+    public static final String NO_INDEX_MESSAGE = "grustorageelastic.index_elements.noIndexMessage";
 
     /**
      * Instantiates a new GRU elastics constants.
