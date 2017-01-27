@@ -54,20 +54,20 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
  */
 @Controller( controllerJsp = ElementIndexingJspBean.ADMIN_FEATURE_CONTROLLER_JSP, controllerPath = ElementIndexingJspBean.ADMIN_FEATURE_CONTROLLLER_PATH, right = ElementIndexingJspBean.ADMIN_FEATURE_RIGHT )
 public class ElementIndexingJspBean extends MVCAdminJspBean
-{   
+{
     // //////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String ADMIN_FEATURE_CONTROLLER_JSP = "IndexElements.jsp";
     public static final String ADMIN_FEATURE_CONTROLLLER_PATH = "jsp/admin/plugins/grustorageelastic/index/";
     public static final String ADMIN_FEATURE_RIGHT = "GRUSTORAGE_INDEXING";
     public static final String PROPERTY_PAGE_TITLE_INDEX_ELEMENTS = "grustorageelastic.index_elements.pageTitle";
-    
+
     // Serial
     private static final long serialVersionUID = -2781183979097986731L;
-    
+
     // Marks
     private static final String MARK_INDEXERS_LIST = "indexers_list";
-    
+
     // Views
     private static final String VIEW_INDEX_ELEMENTS = "indexElements";
 
@@ -76,9 +76,9 @@ public class ElementIndexingJspBean extends MVCAdminJspBean
 
     // Templates
     private static final String TEMPLATE_INDEX_ELEMENTS = "/admin/plugins/grustorageelastic/index/index_elements.html";
-    
+
     private List<IIndexer> _listElasticIndexer = SpringContextService.getBeansOfType( IIndexer.class );
-    
+
     /**
      * Displays the indexing parameters
      *
@@ -91,16 +91,16 @@ public class ElementIndexingJspBean extends MVCAdminJspBean
     {
         Map<String, Object> model = getModel( );
         model.put( MARK_INDEXERS_LIST, _listElasticIndexer );
-        
-        if( _listElasticIndexer == null || _listElasticIndexer.isEmpty( ) )
+
+        if ( _listElasticIndexer == null || _listElasticIndexer.isEmpty( ) )
         {
             addInfo( GRUElasticsConstants.NO_INDEX_MESSAGE, getLocale( ) );
             fillCommons( model );
         }
-        
+
         return getPage( PROPERTY_PAGE_TITLE_INDEX_ELEMENTS, TEMPLATE_INDEX_ELEMENTS, model );
     }
-    
+
     /**
      * Indexes the elements
      * 
@@ -110,16 +110,16 @@ public class ElementIndexingJspBean extends MVCAdminJspBean
      */
     @Action( ACTION_INDEX_ELEMENTS )
     public String doIndexingElements( HttpServletRequest request )
-    {        
+    {
         // Create the map of the bean which implements the IElasticSearchIndexer interface
         LinkedHashMap<String, IIndexer> mapBeanImplementation = new LinkedHashMap<String, IIndexer>( );
         for ( IIndexer beanImplementation : _listElasticIndexer )
         {
             mapBeanImplementation.put( beanImplementation.getName( ), beanImplementation );
         }
-        
+
         // Create the list of all enabled indexer
-        if( ( _listElasticIndexer != null && !_listElasticIndexer.isEmpty( ) ) && !mapBeanImplementation.isEmpty( ) )
+        if ( ( _listElasticIndexer != null && !_listElasticIndexer.isEmpty( ) ) && !mapBeanImplementation.isEmpty( ) )
         {
             try
             {
@@ -138,15 +138,16 @@ public class ElementIndexingJspBean extends MVCAdminJspBean
                         }
                     }
                 }
-            } catch( AppException appException )
+            }
+            catch( AppException appException )
             {
                 addError( GRUElasticsConstants.FULL_INDEX_ERROR_MESSAGE, getLocale( ) );
                 return redirectView( request, VIEW_INDEX_ELEMENTS );
             }
         }
-        
+
         addInfo( GRUElasticsConstants.FULL_INDEX_SUCCESS_MESSAGE, getLocale( ) );
         return redirectView( request, VIEW_INDEX_ELEMENTS );
     }
-    
+
 }
