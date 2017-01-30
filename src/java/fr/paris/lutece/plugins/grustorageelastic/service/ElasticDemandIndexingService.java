@@ -62,9 +62,10 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
      *
      * @param demand
      *            the demand
+     * @throws IndexingException 
      */
     @Override
-    public void index( Demand demand )
+    public void index( Demand demand ) throws IndexingException
     {
         ESDemandDTO demandDTO = buildDemandDTO( demand );
 
@@ -81,18 +82,22 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
         catch( JsonGenerationException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
         catch( JsonMappingException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
         catch( IOException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
         catch( HttpAccessException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
         }
     }
 
