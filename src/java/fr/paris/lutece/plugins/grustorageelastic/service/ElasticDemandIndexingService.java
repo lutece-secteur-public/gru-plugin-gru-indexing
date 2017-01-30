@@ -62,7 +62,7 @@ public class ElasticDemandIndexingService implements IIndexingService<Demand>
      *
      * @param demand
      *            the demand
-     * @throws IndexingException 
+     * @throws IndexingException
      */
     @Override
     public void index( Demand demand ) throws IndexingException
