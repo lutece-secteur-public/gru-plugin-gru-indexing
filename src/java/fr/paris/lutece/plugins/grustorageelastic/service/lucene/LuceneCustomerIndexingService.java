@@ -37,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -52,28 +54,42 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
+import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
+import fr.paris.lutece.portal.service.search.LuceneSearchEngine;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * The Class LuceneCustomerService.
  */
-public class LuceneCustomerIndexingService implements IIndexingService<Customer>
+public class LuceneCustomerIndexingService implements IIndexingService<Customer>, ICustomerDAO
 {
 
     private static final String PATH_INDEX = "/WEB-INF/plugins/identitystore/modules/indexer/indexes";
     private static final Version LUCENE_VERSION = Version.LUCENE_4_9;
+    private static final int INDENT = 4;
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_FIRSTNAME = "firstname";
@@ -256,4 +272,163 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         }
     }
 
+    /**
+     * Method which returns a list of all customer found from the specified query
+     * 
+     * @param query
+     * @return a list of all customer found or null
+     */
+    private static List<Customer> getCustomerSearchResult ( Query queryToLaunch )
+    {
+        List<Customer> listCustomer = new ArrayList<Customer>( );
+        try
+        {
+            IndexReader indexReader = DirectoryReader.open( FSDirectory.open( getIndexPath( ) ) );
+            IndexSearcher indexSearcher = new IndexSearcher( indexReader );
+
+            if ( indexSearcher != null )
+            {                    
+                // Get results documents
+                TopDocs topDocs = indexSearcher.search( queryToLaunch, LuceneSearchEngine.MAX_RESPONSES );
+                ScoreDoc [ ] hits = topDocs.scoreDocs;
+
+                for ( int i = 0; i < hits.length; i++ )
+                {
+                    int docId = hits [i].doc;
+                    Document document = indexSearcher.doc( docId );
+                    listCustomer.add( buildCustomerFromDocument( document ) );
+                }
+            }
+
+        }
+        catch( IOException e )
+        {
+            AppLogService.error( e.getMessage( ), e );
+        }
+        return listCustomer;
+    }
+
+    /**
+     * {@inheritDoc }.
+     */
+    @Override
+    public List<Customer> loadByName( String strFirstName, String strLastName )
+    {
+        BooleanQuery booleanQueryMain = new BooleanQuery( );
+        
+        TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strFirstName ) );
+        booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.MUST ) );
+        
+        TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strLastName ) );
+        booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
+        
+        return getCustomerSearchResult( booleanQueryMain );
+    }
+    
+    /**
+     * Method used to retrun a list of customer based on a search value
+     * 
+     * @param strSearch
+     * @return the list of customer found by the search value
+     */
+    private static List<Customer> loadBySearch( String strSearch )
+    {
+        BooleanQuery booleanQueryMain = new BooleanQuery( );
+        
+        TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strSearch ) );
+        booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.SHOULD ) );
+        
+        TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strSearch ) );
+        booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.SHOULD ) );
+        
+        return getCustomerSearchResult( booleanQueryMain );
+    }
+
+    /**
+     * {@inheritDoc }.
+     */
+    @Override
+    public Customer load( String strCustomerId )
+    {
+        BooleanQuery booleanQueryMain = new BooleanQuery( );      
+        TermQuery termQueryId = new TermQuery( new Term( FIELD_ID, strCustomerId ) );
+        booleanQueryMain.add( new BooleanClause( termQueryId, BooleanClause.Occur.MUST ) );
+
+        List<Customer> listCustomer = getCustomerSearchResult( booleanQueryMain );
+        if ( listCustomer != null && !listCustomer.isEmpty( ) )
+        {
+            return listCustomer.get( 0 );
+        }
+        return null;
+    }
+
+    /**
+     * Convert a Lucene document to a customer
+     * 
+     * @param document
+     * @return the customer associated to the document, null otherwise
+     */
+    private static Customer buildCustomerFromDocument ( Document document )
+    {
+        if( document != null )
+        {
+            Customer customer = new Customer ( );
+            customer.setId( document.get( FIELD_ID ) );
+            customer.setFirstname( document.get( FIELD_FIRSTNAME ) );
+            customer.setLastname( document.get( FIELD_LASTNAME ) );
+            customer.setEmail( document.get( FIELD_EMAIL ) );
+            customer.setMobilePhone( document.get( FIELD_PHONE ) );
+            customer.setFixedPhoneNumber( document.get( FIELD_FIXED_PHONE_NUMBER ) );
+            customer.setBirthDate( document.get( FIELD_BIRTHDATE ) );
+            if( document.get( FIELD_CIVILITY  ) != null )
+            {
+                customer.setIdTitle( Integer.valueOf( document.get( FIELD_CIVILITY  ) ) );
+            }
+            return customer;
+        }
+        return null;
+    }
+
+    /**
+     * Returns a json string for autocomplete purpose
+     * @param strQuery The query
+     * @return The JSON
+     */
+    public static String search( String strQuery )
+    {
+        String[] terms = strQuery.split( " " );
+        StringBuilder sbSearchQuery = new StringBuilder(  );
+
+        for ( int i = 0; i < terms.length; i++ )
+        {
+            if ( i > 0 )
+            {
+                sbSearchQuery.append( ' ' );
+            }
+
+            sbSearchQuery.append( terms[i] );
+        }
+
+        List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString(  ) );
+        
+        JSONObject json = new JSONObject(  );
+
+        JSONArray jsonAutocomplete = new JSONArray(  );
+
+        for ( Customer customer : listCustomers )
+        {
+            JSONObject jsonItem = new JSONObject(  );
+            JSONObject jsonItemContent = new JSONObject(  );
+
+            jsonItemContent.accumulate( "first_name", customer.getFirstname(  ) );
+            jsonItemContent.accumulate( "last_name", customer.getLastname(  ) );
+            jsonItem.accumulate( "item", jsonItemContent );
+            jsonAutocomplete.add( jsonItem );
+        }
+
+        json.accumulate( "autocomplete", jsonAutocomplete );
+
+        return json.toString( INDENT );
+    }
+    
 }
