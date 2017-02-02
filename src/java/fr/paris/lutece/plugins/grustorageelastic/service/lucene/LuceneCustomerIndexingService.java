@@ -44,16 +44,13 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
-import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
-import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -67,6 +64,8 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -163,22 +162,15 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     /**
      * The Class CustomAnalyzer.
      */
-    private static class CustomAnalyzer extends StopwordAnalyzerBase
+    private static class CustomAnalyzer extends Analyzer
     {
-        public CustomAnalyzer( )
-        {
-            super( LUCENE_VERSION, StandardAnalyzer.STOP_WORDS_SET );
-        }
-
         @Override
         protected TokenStreamComponents createComponents( String fieldName, Reader reader )
         {
             final Tokenizer source = new StandardTokenizer( LUCENE_VERSION, reader );
 
             TokenStream tokenStream = source;
-            tokenStream = new StandardFilter( LUCENE_VERSION, tokenStream );
             tokenStream = new LowerCaseFilter( LUCENE_VERSION, tokenStream );
-            tokenStream = new StopFilter( LUCENE_VERSION, tokenStream, getStopwordSet( ) );
             tokenStream = new ASCIIFoldingFilter( tokenStream );
             return new TokenStreamComponents( source, tokenStream );
         }
@@ -201,17 +193,11 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
         doc.add( fielIdname );
 
-        Field fielFirstname = new StringField( FIELD_FIRSTNAME, customer.getFirstname( ), Field.Store.YES );
+        Field fielFirstname = new TextField( FIELD_FIRSTNAME, customer.getFirstname( ), Field.Store.YES );
         doc.add( fielFirstname );
 
-        Field fielLastname = new StringField( FIELD_LASTNAME, customer.getLastname( ), Field.Store.YES );
+        Field fielLastname = new TextField( FIELD_LASTNAME, customer.getLastname( ), Field.Store.YES );
         doc.add( fielLastname );
-
-        if ( customer.getEmail( ) != null )
-        {
-            Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
-            doc.add( fieldEmail );
-        }
 
         if ( customer.getMobilePhone( ) != null )
         {
@@ -223,6 +209,12 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         {
             Field fieldPhone = new StringField( FIELD_FIXED_PHONE_NUMBER, customer.getFixedPhoneNumber( ), Field.Store.YES );
             doc.add( fieldPhone );
+        }
+
+        if ( customer.getEmail( ) != null )
+        {
+            Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
+            doc.add( fieldEmail );
         }
 
         if ( customer.getBirthDate( ) != null )
@@ -278,7 +270,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @param query
      * @return a list of all customer found or null
      */
-    private static List<Customer> getCustomerSearchResult ( Query queryToLaunch )
+    private static List<Customer> getCustomerSearchResult( Query queryToLaunch )
     {
         List<Customer> listCustomer = new ArrayList<Customer>( );
         try
@@ -287,9 +279,16 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             IndexSearcher indexSearcher = new IndexSearcher( indexReader );
 
             if ( indexSearcher != null )
-            {                    
+            {
+                String[] strTabFields = { FIELD_FIRSTNAME, FIELD_LASTNAME };
+                MultiFieldQueryParser mfqp = new MultiFieldQueryParser( LUCENE_VERSION, strTabFields, getAnalyzer( ) );
+                mfqp.setAutoGeneratePhraseQueries( true );
+                mfqp.setAllowLeadingWildcard( true );
+                mfqp.setLowercaseExpandedTerms( true );
+                Query query = mfqp.parse( queryToLaunch.toString( ) );
+                
                 // Get results documents
-                TopDocs topDocs = indexSearcher.search( queryToLaunch, LuceneSearchEngine.MAX_RESPONSES );
+                TopDocs topDocs = indexSearcher.search( query, LuceneSearchEngine.MAX_RESPONSES );
                 ScoreDoc [ ] hits = topDocs.scoreDocs;
 
                 for ( int i = 0; i < hits.length; i++ )
@@ -304,6 +303,10 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         catch( IOException e )
         {
             AppLogService.error( e.getMessage( ), e );
+        } 
+        catch ( ParseException e )
+        {
+            AppLogService.error( e.getMessage( ), e );
         }
         return listCustomer;
     }
@@ -315,16 +318,16 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     public List<Customer> loadByName( String strFirstName, String strLastName )
     {
         BooleanQuery booleanQueryMain = new BooleanQuery( );
-        
+
         TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strFirstName ) );
         booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.MUST ) );
-        
+
         TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strLastName ) );
         booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
-        
+
         return getCustomerSearchResult( booleanQueryMain );
     }
-    
+
     /**
      * Method used to retrun a list of customer based on a search value
      * 
@@ -334,13 +337,13 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     private static List<Customer> loadBySearch( String strSearch )
     {
         BooleanQuery booleanQueryMain = new BooleanQuery( );
-        
+
         TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strSearch ) );
         booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.SHOULD ) );
-        
+
         TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strSearch ) );
         booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.SHOULD ) );
-        
+
         return getCustomerSearchResult( booleanQueryMain );
     }
 
@@ -350,7 +353,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     @Override
     public Customer load( String strCustomerId )
     {
-        BooleanQuery booleanQueryMain = new BooleanQuery( );      
+        BooleanQuery booleanQueryMain = new BooleanQuery( );
         TermQuery termQueryId = new TermQuery( new Term( FIELD_ID, strCustomerId ) );
         booleanQueryMain.add( new BooleanClause( termQueryId, BooleanClause.Occur.MUST ) );
 
@@ -368,11 +371,11 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @param document
      * @return the customer associated to the document, null otherwise
      */
-    private static Customer buildCustomerFromDocument ( Document document )
+    private static Customer buildCustomerFromDocument( Document document )
     {
-        if( document != null )
+        if ( document != null )
         {
-            Customer customer = new Customer ( );
+            Customer customer = new Customer( );
             customer.setId( document.get( FIELD_ID ) );
             customer.setFirstname( document.get( FIELD_FIRSTNAME ) );
             customer.setLastname( document.get( FIELD_LASTNAME ) );
@@ -380,9 +383,9 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             customer.setMobilePhone( document.get( FIELD_PHONE ) );
             customer.setFixedPhoneNumber( document.get( FIELD_FIXED_PHONE_NUMBER ) );
             customer.setBirthDate( document.get( FIELD_BIRTHDATE ) );
-            if( document.get( FIELD_CIVILITY  ) != null )
+            if ( document.get( FIELD_CIVILITY ) != null )
             {
-                customer.setIdTitle( Integer.valueOf( document.get( FIELD_CIVILITY  ) ) );
+                customer.setIdTitle( Integer.valueOf( document.get( FIELD_CIVILITY ) ) );
             }
             return customer;
         }
@@ -391,13 +394,15 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
     /**
      * Returns a json string for autocomplete purpose
-     * @param strQuery The query
+     * 
+     * @param strQuery
+     *            The query
      * @return The JSON
      */
     public static String search( String strQuery )
     {
-        String[] terms = strQuery.split( " " );
-        StringBuilder sbSearchQuery = new StringBuilder(  );
+        String [ ] terms = strQuery.split( " " );
+        StringBuilder sbSearchQuery = new StringBuilder( );
 
         for ( int i = 0; i < terms.length; i++ )
         {
@@ -406,22 +411,22 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
                 sbSearchQuery.append( ' ' );
             }
 
-            sbSearchQuery.append( terms[i] );
+            sbSearchQuery.append( terms [i] ).append( '*' );
         }
 
-        List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString(  ) );
-        
-        JSONObject json = new JSONObject(  );
+        List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString( ) );
 
-        JSONArray jsonAutocomplete = new JSONArray(  );
+        JSONObject json = new JSONObject( );
+
+        JSONArray jsonAutocomplete = new JSONArray( );
 
         for ( Customer customer : listCustomers )
         {
-            JSONObject jsonItem = new JSONObject(  );
-            JSONObject jsonItemContent = new JSONObject(  );
+            JSONObject jsonItem = new JSONObject( );
+            JSONObject jsonItemContent = new JSONObject( );
 
-            jsonItemContent.accumulate( "first_name", customer.getFirstname(  ) );
-            jsonItemContent.accumulate( "last_name", customer.getLastname(  ) );
+            jsonItemContent.accumulate( "first_name", customer.getFirstname( ) );
+            jsonItemContent.accumulate( "last_name", customer.getLastname( ) );
             jsonItem.accumulate( "item", jsonItemContent );
             jsonAutocomplete.add( jsonItem );
         }
@@ -430,5 +435,5 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
         return json.toString( INDENT );
     }
-    
+
 }
