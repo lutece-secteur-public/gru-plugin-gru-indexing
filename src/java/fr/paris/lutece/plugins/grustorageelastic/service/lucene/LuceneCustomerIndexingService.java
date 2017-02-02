@@ -409,11 +409,11 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      */
     public static String search( String strQuery )
     {
-        if( StringUtils.isBlank( strQuery ) )
+        if ( StringUtils.isBlank( strQuery ) )
         {
             return StringUtils.EMPTY;
         }
-        
+
         String [ ] terms = strQuery.split( " " );
         StringBuilder sbSearchQuery = new StringBuilder( );
 
