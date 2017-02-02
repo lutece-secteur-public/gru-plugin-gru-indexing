@@ -136,7 +136,7 @@ public class ElasticCustomerIndexingService implements IIndexingService<Customer
         ESCustomerDTO customerDTO = new ESCustomerDTO( );
 
         customerDTO.setCustomerId( customer.getId( ) );
-        customerDTO.setConnectionId( customer.getAccountGuid( ) );
+        customerDTO.setConnectionId( customer.getConnectionId( ) );
         customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
         customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
         customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );

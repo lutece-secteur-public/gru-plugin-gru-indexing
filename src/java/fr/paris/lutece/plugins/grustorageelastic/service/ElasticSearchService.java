@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.grustorageelastic.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.paris.lutece.plugins.gru.service.search.ISearchService;
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
@@ -211,7 +210,7 @@ public class ElasticSearchService implements ISearchService
         {
             customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText( ) );
 
-            customer.setAccountGuid( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
+            customer.setConnectionId( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
                     : StringUtils.EMPTY );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
             customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
