@@ -231,13 +231,15 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
             if ( indexSearcher != null )
             {
-                String[] strTabFields = { FIELD_FIRSTNAME, FIELD_LASTNAME };
+                String [ ] strTabFields = {
+                        FIELD_FIRSTNAME, FIELD_LASTNAME
+                };
                 MultiFieldQueryParser mfqp = new MultiFieldQueryParser( LUCENE_VERSION, strTabFields, getAnalyzer( ) );
                 mfqp.setAutoGeneratePhraseQueries( true );
                 mfqp.setAllowLeadingWildcard( true );
                 mfqp.setLowercaseExpandedTerms( true );
                 Query query = mfqp.parse( queryToLaunch.toString( ) );
-                
+
                 // Get results documents
                 TopDocs topDocs = indexSearcher.search( query, LuceneSearchEngine.MAX_RESPONSES );
                 ScoreDoc [ ] hits = topDocs.scoreDocs;
@@ -254,8 +256,8 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         catch( IOException e )
         {
             AppLogService.error( e.getMessage( ), e );
-        } 
-        catch ( ParseException e )
+        }
+        catch( ParseException e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -353,7 +355,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
             doc.add( fieldEmail );
         }
-        
+
         if ( customer.getBirthDate( ) != null )
         {
             Field fieldBirthdate = new StoredField( FIELD_BIRTHDATE, customer.getBirthDate( ) );
