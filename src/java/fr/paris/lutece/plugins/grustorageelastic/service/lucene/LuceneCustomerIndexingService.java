@@ -122,8 +122,17 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
             IndexWriter writer = new IndexWriter( dir, iwc );
+            Document document = customer2Document( customer );
+            Customer customerIndexed = load( customer.getId( ) );
 
-            index( writer, customer );
+            if ( customerIndexed == null )
+            {
+                writer.addDocument( document );
+            }
+            else
+            {
+                writer.updateDocument( new Term( FIELD_ID, customer.getId( ) ), document );
+            }
 
             AppLogService.info( "\n\n\n\n\n END LUCENE INDEXING \n\n\n" );
             writer.close( );
@@ -185,62 +194,6 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     }
 
     /**
-     * Index a customer
-     * 
-     * @param writer
-     *            The index writer
-     * @param customer
-     *            The customer
-     * @throws IOException
-     *             If an error occurs
-     */
-    private static void index( IndexWriter writer, Customer customer ) throws IOException
-    {
-        Document doc = new Document( );
-
-        Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
-        doc.add( fielIdname );
-
-        Field fielFirstname = new StringField( FIELD_FIRSTNAME, customer.getFirstname( ), Field.Store.YES );
-        doc.add( fielFirstname );
-
-        Field fielLastname = new StringField( FIELD_LASTNAME, customer.getLastname( ), Field.Store.YES );
-        doc.add( fielLastname );
-
-        if ( customer.getEmail( ) != null )
-        {
-            Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
-            doc.add( fieldEmail );
-        }
-
-        if ( customer.getMobilePhone( ) != null )
-        {
-            Field fieldPhone = new StringField( FIELD_PHONE, customer.getMobilePhone( ), Field.Store.YES );
-            doc.add( fieldPhone );
-        }
-
-        if ( customer.getFixedPhoneNumber( ) != null )
-        {
-            Field fieldPhone = new StringField( FIELD_FIXED_PHONE_NUMBER, customer.getFixedPhoneNumber( ), Field.Store.YES );
-            doc.add( fieldPhone );
-        }
-
-        if ( customer.getBirthDate( ) != null )
-        {
-            Field fieldBirthdate = new StoredField( FIELD_BIRTHDATE, customer.getBirthDate( ) );
-            doc.add( fieldBirthdate );
-        }
-
-        if ( Integer.toString( customer.getIdTitle( ) ) != null )
-        {
-            Field fieldCivility = new StoredField( FIELD_CIVILITY, Integer.toString( customer.getIdTitle( ) ) );
-            doc.add( fieldCivility );
-        }
-
-        writer.addDocument( doc );
-    }
-
-    /**
      * {@inheritDoc }.
      *
      * @param customer
@@ -260,9 +213,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
             IndexWriter writer = new IndexWriter( dir, iwc );
 
-            Term termToDelete = new Term( FIELD_ID, customer.getId( ) );
-
-            writer.deleteDocuments( termToDelete );
+            writer.deleteDocuments( new Term( FIELD_ID, customer.getId( ) ) );
             writer.commit( );
             writer.close( );
         }
@@ -296,7 +247,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
                 {
                     int docId = hits [i].doc;
                     Document document = indexSearcher.doc( docId );
-                    listCustomer.add( buildCustomerFromDocument( document ) );
+                    listCustomer.add( document2Customer( document ) );
                 }
             }
 
@@ -363,12 +314,66 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     }
 
     /**
-     * Convert a Lucene document to a customer
+     * Converts a {@link Customer} object to a {@link Document} object
+     * 
+     * @param customer
+     *            The customer
+     * @return the Document
+     */
+    private static Document customer2Document( Customer customer )
+    {
+        Document doc = new Document( );
+
+        Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
+        doc.add( fielIdname );
+
+        Field fielFirstname = new StringField( FIELD_FIRSTNAME, customer.getFirstname( ), Field.Store.YES );
+        doc.add( fielFirstname );
+
+        Field fielLastname = new StringField( FIELD_LASTNAME, customer.getLastname( ), Field.Store.YES );
+        doc.add( fielLastname );
+
+        if ( customer.getEmail( ) != null )
+        {
+            Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
+            doc.add( fieldEmail );
+        }
+
+        if ( customer.getMobilePhone( ) != null )
+        {
+            Field fieldPhone = new StringField( FIELD_PHONE, customer.getMobilePhone( ), Field.Store.YES );
+            doc.add( fieldPhone );
+        }
+
+        if ( customer.getFixedPhoneNumber( ) != null )
+        {
+            Field fieldPhone = new StringField( FIELD_FIXED_PHONE_NUMBER, customer.getFixedPhoneNumber( ), Field.Store.YES );
+            doc.add( fieldPhone );
+        }
+
+        if ( customer.getBirthDate( ) != null )
+        {
+            Field fieldBirthdate = new StoredField( FIELD_BIRTHDATE, customer.getBirthDate( ) );
+            doc.add( fieldBirthdate );
+        }
+
+        if ( Integer.toString( customer.getIdTitle( ) ) != null )
+        {
+            Field fieldCivility = new StoredField( FIELD_CIVILITY, Integer.toString( customer.getIdTitle( ) ) );
+            doc.add( fieldCivility );
+        }
+
+        return doc;
+    }
+
+    /**
+     * Converts a {@link Document} object to a {@link Customer} object
      * 
      * @param document
-     * @return the customer associated to the document, null otherwise
+     *            the document
+     * @return the customer associated to the document, {@code null} otherwise
      */
-    private static Customer buildCustomerFromDocument ( Document document )
+    private static Customer document2Customer( Document document )
     {
         if( document != null )
         {
