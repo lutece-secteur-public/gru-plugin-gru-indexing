@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2016, Mairie de Paris
+ * Copyright (c) 2002-2017, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,13 +35,11 @@ package fr.paris.lutece.plugins.grustorageelastic.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import fr.paris.lutece.plugins.gru.service.search.ISearchService;
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
+import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
 import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
 import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
-import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
-import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.util.httpaccess.HttpAccessException;
 
 import org.apache.commons.lang.StringUtils;
@@ -59,7 +57,7 @@ import javax.ws.rs.core.Response;
 /**
  * The Class ElasticSearchService.
  */
-public class ElasticSearchService implements ISearchService
+public class ElasticSearchService implements ICustomerDAO
 {
     private static final String KEY_CUSTOMER_ID = "user_cid";
     private static final String KEY_CUSTOMER_CIVILITY = "civility";
@@ -79,7 +77,7 @@ public class ElasticSearchService implements ISearchService
      * @return the list
      */
     @Override
-    public List<Customer> searchCustomer( String strFirstName, String strLastName )
+    public List<Customer> loadByName( String strFirstName, String strLastName )
     {
         List<Customer> listCustomer = new ArrayList<Customer>( );
         String uri = ElasticConnexion.getESParam( StringUtils.EMPTY, GRUElasticsConstants.PATH_ELK_SEARCH );
@@ -133,7 +131,7 @@ public class ElasticSearchService implements ISearchService
      * {@inheritDoc }
      */
     @Override
-    public Customer searchCustomerById( String strCustomerId )
+    public Customer load( String strCustomerId )
     {
         Customer customer = null;
         String uri = ElasticConnexion.getESParam( "", GRUElasticsConstants.PATH_ELK_SEARCH );
@@ -151,7 +149,11 @@ public class ElasticSearchService implements ISearchService
             JsonNode jsonESResult = ElasticConnexion.setJsonToJsonTree( strESResult );
 
             List<JsonNode> listJsonCustomers = jsonESResult.findValues( "_source" );
-            JsonNode jsonCustomer = listJsonCustomers.get( 0 );
+            JsonNode jsonCustomer = null;
+            if ( listJsonCustomers != null && !listJsonCustomers.isEmpty( ) )
+            {
+                jsonCustomer = listJsonCustomers.get( 0 );
+            }
 
             if ( jsonCustomer != null )
             {
@@ -168,31 +170,6 @@ public class ElasticSearchService implements ISearchService
         }
 
         return customer;
-    }
-
-    /**
-     * {@inheritDoc }.
-     *
-     * @return true, if is auto complete
-     */
-    @Override
-    public boolean isAutoComplete( )
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc }.
-     *
-     * @return the auto complete url
-     */
-    @Override
-    public String getAutoCompleteUrl( )
-    {
-        String tmp = AppPathService.getProdUrl( );
-
-        return tmp.substring( 0, tmp.length( ) - 1 ) + RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME
-                + GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION;
     }
 
     /**
