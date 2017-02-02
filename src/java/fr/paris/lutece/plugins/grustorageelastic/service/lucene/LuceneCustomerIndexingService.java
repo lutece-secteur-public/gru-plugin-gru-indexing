@@ -40,6 +40,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
@@ -408,6 +409,11 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      */
     public static String search( String strQuery )
     {
+        if( StringUtils.isBlank( strQuery ) )
+        {
+            return StringUtils.EMPTY;
+        }
+        
         String [ ] terms = strQuery.split( " " );
         StringBuilder sbSearchQuery = new StringBuilder( );
 
@@ -417,9 +423,9 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             {
                 sbSearchQuery.append( ' ' );
             }
-
-            sbSearchQuery.append( terms [i] ).append( '*' );
+            sbSearchQuery.append( terms [i] );
         }
+        sbSearchQuery.append( '*' );
 
         List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString( ) );
 
