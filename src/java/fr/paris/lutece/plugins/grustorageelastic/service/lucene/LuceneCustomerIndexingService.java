@@ -114,6 +114,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     public void index( Customer customer ) throws IndexingException
     {
         AppLogService.info( "\n\n\n\n\n LUCENE DAEMON CUSTOMER \n\n\n" );
+        IndexWriter writer = null;
         try
         {
             Directory dir = FSDirectory.open( getIndexPath( ) );
@@ -121,7 +122,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
-            IndexWriter writer = new IndexWriter( dir, iwc );
+            writer = new IndexWriter( dir, iwc );
             Document document = customer2Document( customer );
             Customer customerIndexed = load( customer.getId( ) );
 
@@ -140,6 +141,20 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         catch( IOException ex )
         {
             AppLogService.error( "Error indexing customer : " + ex.getMessage( ), ex );
+        }
+        finally
+        {
+            if ( writer != null )
+            {
+                try
+                {
+                    writer.close( );
+                }
+                catch( IOException ex )
+                {
+                    AppLogService.error( "Error indexing customer : " + ex.getMessage( ), ex );
+                }
+            }
         }
     }
 
@@ -197,6 +212,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     @Override
     public void deleteIndex( Customer customer ) throws IndexingException
     {
+        IndexWriter writer = null;
         try
         {
             Directory dir = FSDirectory.open( getIndexPath( ) );
@@ -204,7 +220,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
-            IndexWriter writer = new IndexWriter( dir, iwc );
+            writer = new IndexWriter( dir, iwc );
 
             writer.deleteDocuments( new Term( FIELD_ID, customer.getId( ) ) );
             writer.commit( );
@@ -213,6 +229,20 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         catch( IOException ex )
         {
             AppLogService.error( "Error indexing customer : " + ex.getMessage( ), ex );
+        }
+        finally
+        {
+            if ( writer != null )
+            {
+                try
+                {
+                    writer.close( );
+                }
+                catch( IOException ex )
+                {
+                    AppLogService.error( "Error indexing customer : " + ex.getMessage( ), ex );
+                }
+            }
         }
     }
 
