@@ -87,7 +87,7 @@ import net.sf.json.JSONObject;
 public class LuceneCustomerIndexingService implements IIndexingService<Customer>, ICustomerDAO
 {
 
-    private static final String PATH_INDEX = "/WEB-INF/plugins/identitystore/modules/indexer/indexes";
+    private static final String PATH_INDEX = "/WEB-INF/plugins/gru/modules/indexer/indexes";
     private static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     private static final int INDENT = 4;
 
