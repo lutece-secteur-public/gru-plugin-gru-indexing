@@ -187,7 +187,7 @@ public class ElasticSearchService implements ICustomerDAO
         {
             customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText( ) );
 
-            customer.setAccountGuid( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
+            customer.setConnectionId( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
                     : StringUtils.EMPTY );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
             customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
