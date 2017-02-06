@@ -363,7 +363,8 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
         doc.add( fielIdname );
 
-        Field fielFirstname = new TextField( FIELD_FIRSTNAME, ( customer.getFirstname( ) == null ? StringUtils.EMPTY : customer.getFirstname( ) ), Field.Store.YES );
+        Field fielFirstname = new TextField( FIELD_FIRSTNAME, ( customer.getFirstname( ) == null ? StringUtils.EMPTY : customer.getFirstname( ) ),
+                Field.Store.YES );
         doc.add( fielFirstname );
 
         Field fielLastname = new TextField( FIELD_LASTNAME, ( customer.getLastname( ) == null ? StringUtils.EMPTY : customer.getLastname( ) ), Field.Store.YES );
