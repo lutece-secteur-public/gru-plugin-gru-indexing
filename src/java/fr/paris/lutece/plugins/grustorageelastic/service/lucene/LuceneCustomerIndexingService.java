@@ -37,8 +37,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Paths;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -440,7 +444,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      */
     public static String search( String strQuery )
     {
-        if ( StringUtils.isBlank( strQuery ) )
+        if ( StringUtils.isBlank( strQuery ) || strQuery.replaceAll( " ", StringUtils.EMPTY ).equals( "*" ) )
         {
             return StringUtils.EMPTY;
         }
@@ -459,20 +463,31 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         sbSearchQuery.append( '*' );
 
         List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString( ) );
+        Map<AbstractMap.SimpleEntry<String, String>, Customer> mapCustomer = new LinkedHashMap<AbstractMap.SimpleEntry<String, String>, Customer>( );
+        if( listCustomers != null && !listCustomers.isEmpty( ) )
+        {
+            for ( Customer customer : listCustomers )
+            {
+                mapCustomer.put( new AbstractMap.SimpleEntry<String, String>( customer.getFirstname( ), customer.getLastname( ) ), customer );
+            }
+        }
 
         JSONObject json = new JSONObject( );
 
         JSONArray jsonAutocomplete = new JSONArray( );
 
-        for ( Customer customer : listCustomers )
+        for ( Entry<AbstractMap.SimpleEntry<String, String>, Customer> entryCustomer : mapCustomer.entrySet( ) )
         {
-            JSONObject jsonItem = new JSONObject( );
-            JSONObject jsonItemContent = new JSONObject( );
+            if( entryCustomer != null && entryCustomer.getValue( ) != null )
+            {
+                JSONObject jsonItem = new JSONObject( );
+                JSONObject jsonItemContent = new JSONObject( );
 
-            jsonItemContent.accumulate( "first_name", customer.getFirstname( ) );
-            jsonItemContent.accumulate( "last_name", customer.getLastname( ) );
-            jsonItem.accumulate( "item", jsonItemContent );
-            jsonAutocomplete.add( jsonItem );
+                jsonItemContent.accumulate( "first_name", entryCustomer.getValue( ).getFirstname( ) );
+                jsonItemContent.accumulate( "last_name", entryCustomer.getValue( ).getLastname( ) );
+                jsonItem.accumulate( "item", jsonItemContent );
+                jsonAutocomplete.add( jsonItem );
+            }
         }
 
         json.accumulate( "autocomplete", jsonAutocomplete );
