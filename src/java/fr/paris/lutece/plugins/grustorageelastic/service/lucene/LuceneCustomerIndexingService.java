@@ -464,7 +464,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
         List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString( ) );
         Map<AbstractMap.SimpleEntry<String, String>, Customer> mapCustomer = new LinkedHashMap<AbstractMap.SimpleEntry<String, String>, Customer>( );
-        if( listCustomers != null && !listCustomers.isEmpty( ) )
+        if ( listCustomers != null && !listCustomers.isEmpty( ) )
         {
             for ( Customer customer : listCustomers )
             {
@@ -478,7 +478,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
         for ( Entry<AbstractMap.SimpleEntry<String, String>, Customer> entryCustomer : mapCustomer.entrySet( ) )
         {
-            if( entryCustomer != null && entryCustomer.getValue( ) != null )
+            if ( entryCustomer != null && entryCustomer.getValue( ) != null )
             {
                 JSONObject jsonItem = new JSONObject( );
                 JSONObject jsonItemContent = new JSONObject( );
