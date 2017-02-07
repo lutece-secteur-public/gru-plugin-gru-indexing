@@ -345,7 +345,31 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         TermQuery termQueryId = new TermQuery( new Term( FIELD_ID, strCustomerId ) );
         booleanQueryMain.add( new BooleanClause( termQueryId, BooleanClause.Occur.MUST ) );
 
-        List<Customer> listCustomer = getCustomerSearchResult( booleanQueryMain );
+        List<Customer> listCustomer = new ArrayList<Customer>( );       
+        try
+        {
+            IndexReader indexReader = DirectoryReader.open( FSDirectory.open( getIndexPath( ) ) );
+            IndexSearcher indexSearcher = new IndexSearcher( indexReader );
+        
+            if ( indexSearcher != null )
+            {
+                // Get results documents
+                TopDocs topDocs = indexSearcher.search( booleanQueryMain, LuceneSearchEngine.MAX_RESPONSES );
+                ScoreDoc [ ] hits = topDocs.scoreDocs;
+
+                for ( int i = 0; i < hits.length; i++ )
+                {
+                    int docId = hits [i].doc;
+                    Document document = indexSearcher.doc( docId );
+                    listCustomer.add( document2Customer( document ) );
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            AppLogService.error( e.getMessage( ), e );
+        }
+        
         if ( listCustomer != null && !listCustomer.isEmpty( ) )
         {
             return listCustomer.get( 0 );
