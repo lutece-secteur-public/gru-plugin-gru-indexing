@@ -345,12 +345,12 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         TermQuery termQueryId = new TermQuery( new Term( FIELD_ID, strCustomerId ) );
         booleanQueryMain.add( new BooleanClause( termQueryId, BooleanClause.Occur.MUST ) );
 
-        List<Customer> listCustomer = new ArrayList<Customer>( );       
+        List<Customer> listCustomer = new ArrayList<Customer>( );
         try
         {
             IndexReader indexReader = DirectoryReader.open( FSDirectory.open( getIndexPath( ) ) );
             IndexSearcher indexSearcher = new IndexSearcher( indexReader );
-        
+
             if ( indexSearcher != null )
             {
                 // Get results documents
@@ -365,11 +365,11 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
                 }
             }
         }
-        catch ( IOException e )
+        catch( IOException e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
-        
+
         if ( listCustomer != null && !listCustomer.isEmpty( ) )
         {
             return listCustomer.get( 0 );
