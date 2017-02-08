@@ -96,6 +96,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     private static final int INDENT = 4;
 
     private static final String FIELD_ID = "id";
+    private static final String FIELD_CONNECTION_ID = "connection_id";
     private static final String FIELD_FIRSTNAME = "firstname";
     private static final String FIELD_LASTNAME = "lastname";
     private static final String FIELD_EMAIL = "email";
@@ -390,6 +391,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
         Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
         doc.add( fielIdname );
+        
 
         Field fielFirstname = new TextField( FIELD_FIRSTNAME, ( customer.getFirstname( ) == null ? StringUtils.EMPTY : customer.getFirstname( ) ),
                 Field.Store.YES );
@@ -415,6 +417,9 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
             doc.add( fieldEmail );
         }
+        
+        Field fieldConnectionId = new StoredField( FIELD_CONNECTION_ID, customer.getConnectionId( ) == null ? StringUtils.EMPTY : customer.getConnectionId( ) );
+        doc.add( fieldConnectionId );
 
         if ( customer.getBirthDate( ) != null )
         {
@@ -444,6 +449,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         {
             Customer customer = new Customer( );
             customer.setId( document.get( FIELD_ID ) );
+            customer.setConnectionId( document.get( FIELD_CONNECTION_ID ) );
             customer.setFirstname( document.get( FIELD_FIRSTNAME ) );
             customer.setLastname( document.get( FIELD_LASTNAME ) );
             customer.setEmail( document.get( FIELD_EMAIL ) );
