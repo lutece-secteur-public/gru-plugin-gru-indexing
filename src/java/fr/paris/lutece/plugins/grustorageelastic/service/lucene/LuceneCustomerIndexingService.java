@@ -118,7 +118,6 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     @Override
     public void index( Customer customer ) throws IndexingException
     {
-        AppLogService.info( "\n\n\n\n\n LUCENE DAEMON CUSTOMER \n\n\n" );
         IndexWriter writer = null;
         try
         {
@@ -140,7 +139,6 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
                 writer.updateDocument( new Term( FIELD_ID, customer.getId( ) ), document );
             }
 
-            AppLogService.info( "\n\n\n\n\n END LUCENE INDEXING \n\n\n" );
             writer.close( );
         }
         catch( IOException ex )
