@@ -389,7 +389,6 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
 
         Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
         doc.add( fielIdname );
-        
 
         Field fielFirstname = new TextField( FIELD_FIRSTNAME, ( customer.getFirstname( ) == null ? StringUtils.EMPTY : customer.getFirstname( ) ),
                 Field.Store.YES );
@@ -415,7 +414,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
             doc.add( fieldEmail );
         }
-        
+
         Field fieldConnectionId = new StoredField( FIELD_CONNECTION_ID, customer.getConnectionId( ) == null ? StringUtils.EMPTY : customer.getConnectionId( ) );
         doc.add( fieldConnectionId );
 
