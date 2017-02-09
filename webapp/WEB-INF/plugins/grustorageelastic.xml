@@ -2,7 +2,7 @@
     <!-- Plugin Informations -->
     <name>grustorageelastic</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
-    <version>1.2.3</version>
+    <version>1.2.4-SNAPSHOT</version>
     <documentation/>
     <installation/>
     <changes/>
