@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.grustorageelastic.service.lucene;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
@@ -61,6 +63,9 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
@@ -68,9 +73,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -255,7 +257,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @param query
      * @return a list of all customer found or null
      */
-    private static List<Customer> getCustomerSearchResult( Query queryToLaunch )
+    private static List<Customer> getCustomerSearchResult( String queryToLaunch )
     {
         List<Customer> listCustomer = new ArrayList<Customer>( );
         try
@@ -266,13 +268,10 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             if ( indexSearcher != null )
             {
                 String [ ] strTabFields = {
-                        FIELD_FIRSTNAME, FIELD_LASTNAME
+                        FIELD_FIRSTNAME, FIELD_LASTNAME, FIELD_FIXED_PHONE_NUMBER, FIELD_PHONE
                 };
                 MultiFieldQueryParser mfqp = new MultiFieldQueryParser( LUCENE_VERSION, strTabFields, getAnalyzer( ) );
-                mfqp.setAutoGeneratePhraseQueries( true );
-                mfqp.setAllowLeadingWildcard( true );
-                mfqp.setLowercaseExpandedTerms( true );
-                Query query = mfqp.parse( queryToLaunch.toString( ) );
+                Query query = mfqp.parse( queryToLaunch );
 
                 // Get results documents
                 TopDocs topDocs = indexSearcher.search( query, LuceneSearchEngine.MAX_RESPONSES );
@@ -312,26 +311,38 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strLastName ) );
         booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
 
-        return getCustomerSearchResult( booleanQueryMain );
+        return getCustomerSearchResult( booleanQueryMain.toString() );
     }
 
     /**
-     * Method used to retrun a list of customer based on a search value
+     * Method used to return a list of customer based on a search value
      * 
      * @param strSearch
      * @return the list of customer found by the search value
      */
     private static List<Customer> loadBySearch( String strSearch )
     {
-        BooleanQuery booleanQueryMain = new BooleanQuery( );
+        String strQuery = StringUtils.EMPTY;
 
-        TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strSearch ) );
-        booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.SHOULD ) );
+        try
+        {
+            // Analyzer is applied separately as wildcard queries are not analyzed.
+            TokenStream stream = _analyzer.tokenStream( null, new StringReader( strSearch ) );
+            CharTermAttribute cattr = stream.addAttribute(CharTermAttribute.class);
+            stream.reset();
+            while ( stream.incrementToken( ) ) {
+                  strQuery += " " + cattr.toString( );
+            }
+            strQuery += "*";
+            stream.end( );
+            stream.close( );
+        }
+        catch( IOException ex )
+        {
+            AppLogService.error( "Error search customer : " + ex.getMessage( ), ex );
+        }
 
-        TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strSearch ) );
-        booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.SHOULD ) );
-
-        return getCustomerSearchResult( booleanQueryMain );
+        return getCustomerSearchResult( strQuery );
     }
 
     /**
@@ -387,48 +398,15 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     {
         Document doc = new Document( );
 
-        Field fielIdname = new StringField( FIELD_ID, customer.getId( ), Field.Store.YES );
-        doc.add( fielIdname );
-
-        Field fielFirstname = new TextField( FIELD_FIRSTNAME, ( customer.getFirstname( ) == null ? StringUtils.EMPTY : customer.getFirstname( ) ),
-                Field.Store.YES );
-        doc.add( fielFirstname );
-
-        Field fielLastname = new TextField( FIELD_LASTNAME, ( customer.getLastname( ) == null ? StringUtils.EMPTY : customer.getLastname( ) ), Field.Store.YES );
-        doc.add( fielLastname );
-
-        if ( customer.getMobilePhone( ) != null )
-        {
-            Field fieldPhone = new StringField( FIELD_PHONE, customer.getMobilePhone( ), Field.Store.YES );
-            doc.add( fieldPhone );
-        }
-
-        if ( customer.getFixedPhoneNumber( ) != null )
-        {
-            Field fieldPhone = new StringField( FIELD_FIXED_PHONE_NUMBER, customer.getFixedPhoneNumber( ), Field.Store.YES );
-            doc.add( fieldPhone );
-        }
-
-        if ( customer.getEmail( ) != null )
-        {
-            Field fieldEmail = new StoredField( FIELD_EMAIL, customer.getEmail( ) );
-            doc.add( fieldEmail );
-        }
-
-        Field fieldConnectionId = new StoredField( FIELD_CONNECTION_ID, customer.getConnectionId( ) == null ? StringUtils.EMPTY : customer.getConnectionId( ) );
-        doc.add( fieldConnectionId );
-
-        if ( customer.getBirthDate( ) != null )
-        {
-            Field fieldBirthdate = new StoredField( FIELD_BIRTHDATE, customer.getBirthDate( ) );
-            doc.add( fieldBirthdate );
-        }
-
-        if ( Integer.toString( customer.getIdTitle( ) ) != null )
-        {
-            Field fieldCivility = new StoredField( FIELD_CIVILITY, Integer.toString( customer.getIdTitle( ) ) );
-            doc.add( fieldCivility );
-        }
+        doc.add( new StringField( FIELD_ID, customer.getId( ), Field.Store.YES ) );
+        doc.add( new TextField( FIELD_FIRSTNAME, manageNullValue( customer.getFirstname( ) ), Field.Store.YES ) );
+        doc.add( new TextField( FIELD_LASTNAME, manageNullValue( customer.getLastname( ) ), Field.Store.YES ) );
+        doc.add( new StringField( FIELD_PHONE, manageNullValue( customer.getMobilePhone( ) ), Field.Store.YES ) );
+        doc.add( new StringField( FIELD_FIXED_PHONE_NUMBER, manageNullValue( customer.getFixedPhoneNumber( ) ), Field.Store.YES ) );
+        doc.add( new StoredField( FIELD_EMAIL, manageNullValue( customer.getEmail( ) ) ) );
+        doc.add( new StoredField( FIELD_CONNECTION_ID, manageNullValue( customer.getConnectionId( ) ) ) );
+        doc.add( new StoredField( FIELD_BIRTHDATE, manageNullValue( customer.getBirthDate( ) ) ) );
+        doc.add( new StoredField( FIELD_CIVILITY, Integer.toString( customer.getIdTitle( ) ) ) );
 
         return doc;
     }
@@ -471,25 +449,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      */
     public static String search( String strQuery )
     {
-        if ( StringUtils.isBlank( strQuery ) || strQuery.replaceAll( " ", StringUtils.EMPTY ).equals( "*" ) )
-        {
-            return StringUtils.EMPTY;
-        }
-
-        String [ ] terms = strQuery.split( " " );
-        StringBuilder sbSearchQuery = new StringBuilder( );
-
-        for ( int i = 0; i < terms.length; i++ )
-        {
-            if ( i > 0 )
-            {
-                sbSearchQuery.append( ' ' );
-            }
-            sbSearchQuery.append( terms [i] );
-        }
-        sbSearchQuery.append( '*' );
-
-        List<Customer> listCustomers = loadBySearch( sbSearchQuery.toString( ) );
+        List<Customer> listCustomers = loadBySearch( strQuery );
         Map<AbstractMap.SimpleEntry<String, String>, Customer> mapCustomer = new LinkedHashMap<AbstractMap.SimpleEntry<String, String>, Customer>( );
         if ( listCustomers != null && !listCustomers.isEmpty( ) )
         {
@@ -520,6 +480,18 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         json.accumulate( "autocomplete", jsonAutocomplete );
 
         return json.toString( INDENT );
+    }
+
+    /**
+     * Manages the case the specified String is {@code null}
+     * 
+     * @param strValue
+     *            the String to manage
+     * @return the correct String when the specified String is {@code null}, {@code strValue} otherwise
+     */
+    private static String manageNullValue( String strValue )
+    {
+        return ( strValue == null ) ? StringUtils.EMPTY : strValue;
     }
 
 }
