@@ -305,11 +305,17 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     {
         BooleanQuery booleanQueryMain = new BooleanQuery( );
 
-        TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strFirstName ) );
-        booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.MUST ) );
+        if ( StringUtils.isNotBlank( strFirstName ) )
+        {
+            TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strFirstName ) );
+            booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.MUST ) );
+        }
 
-        TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strLastName ) );
-        booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
+        if ( StringUtils.isNotBlank( strLastName ) )
+        {
+            TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strLastName ) );
+            booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
+        }
 
         return getCustomerSearchResult( booleanQueryMain.toString() );
     }
