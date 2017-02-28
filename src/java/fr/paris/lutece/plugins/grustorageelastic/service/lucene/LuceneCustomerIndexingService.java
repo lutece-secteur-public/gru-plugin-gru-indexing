@@ -317,7 +317,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
             booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
         }
 
-        return getCustomerSearchResult( booleanQueryMain.toString() );
+        return getCustomerSearchResult( booleanQueryMain.toString( ) );
     }
 
     /**
@@ -334,10 +334,11 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
         {
             // Analyzer is applied separately as wildcard queries are not analyzed.
             TokenStream stream = _analyzer.tokenStream( null, new StringReader( strSearch ) );
-            CharTermAttribute cattr = stream.addAttribute(CharTermAttribute.class);
-            stream.reset();
-            while ( stream.incrementToken( ) ) {
-                  strQuery += " " + cattr.toString( );
+            CharTermAttribute cattr = stream.addAttribute( CharTermAttribute.class );
+            stream.reset( );
+            while ( stream.incrementToken( ) )
+            {
+                strQuery += " " + cattr.toString( );
             }
             strQuery += "*";
             stream.end( );
