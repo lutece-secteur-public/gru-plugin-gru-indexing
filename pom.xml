@@ -10,7 +10,7 @@
     <artifactId>plugin-grustorageelastic</artifactId>
     <groupId>fr.paris.lutece.plugins</groupId>
     <packaging>lutece-plugin</packaging>
-    <version>1.2.4-SNAPSHOT</version>
+    <version>1.2.4</version>
     <name>Lutece GRU elastic search storage plugin</name>
     
     <repositories>
@@ -77,7 +77,7 @@
         <connection>scm:git:https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</developerConnection>
         <url>https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</url>
-        <tag>HEAD</tag>
+        <tag>gru-plugin-grustorageelastic-1.2.4</tag>
     </scm>
     
     
