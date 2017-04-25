@@ -108,32 +108,29 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     private static Analyzer _analyzer;
     /** property index path */
     private String _strIndexPath;
-    /** property index in webapp*/
+    /** property index in webapp */
     private Boolean _bIndexInWebapp;
-    
 
     /**
-	 * @param strIndexPath
-	 * @param bIndexInWebapp
-	 */
+     * @param strIndexPath
+     * @param bIndexInWebapp
+     */
     public LuceneCustomerIndexingService( String strIndexPath, Boolean bIndexInWebapp )
     {
-	    super( );
-	    this._strIndexPath = strIndexPath;
-	    this._bIndexInWebapp = bIndexInWebapp;
+        super( );
+        this._strIndexPath = strIndexPath;
+        this._bIndexInWebapp = bIndexInWebapp;
     }
-    
-	/**
-	 * @param strIndexPath
-	 */
+
+    /**
+     * @param strIndexPath
+     */
     public LuceneCustomerIndexingService( String strIndexPath )
     {
-	    this( strIndexPath, true );
+        this( strIndexPath, true );
     }
 
-
-
-	/**
+    /**
      * {@inheritDoc }.
      *
      * @param customer
@@ -193,12 +190,12 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @return The index path
      */
     private File getIndexPath( )
-    {   
+    {
         String strIndexPath = _strIndexPath;
-        
+
         if ( _bIndexInWebapp )
         {
-        	strIndexPath = AppPathService.getAbsolutePathFromRelativePath( _strIndexPath );
+            strIndexPath = AppPathService.getAbsolutePathFromRelativePath( _strIndexPath );
         }
 
         return Paths.get( strIndexPath ).toFile( );

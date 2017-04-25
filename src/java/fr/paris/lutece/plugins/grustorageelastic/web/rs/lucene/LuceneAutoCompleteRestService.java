@@ -51,10 +51,10 @@ public class LuceneAutoCompleteRestService
     public static final String PLUGIN_NAME = "lucene/";
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
     private LuceneCustomerIndexingService _customerIndexingService;
-    
+
     public void setCustomerIndexingService( LuceneCustomerIndexingService customerIndexingService )
     {
-    	_customerIndexingService = customerIndexingService;
+        _customerIndexingService = customerIndexingService;
     }
 
     /**
