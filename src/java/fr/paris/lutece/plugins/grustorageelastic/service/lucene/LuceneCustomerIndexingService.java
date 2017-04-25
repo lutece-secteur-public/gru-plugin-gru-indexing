@@ -92,8 +92,6 @@ import net.sf.json.JSONObject;
  */
 public class LuceneCustomerIndexingService implements IIndexingService<Customer>, ICustomerDAO
 {
-
-    private static final String PATH_INDEX = "/WEB-INF/plugins/gru/modules/indexer/indexes";
     private static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     private static final int INDENT = 4;
 
@@ -108,8 +106,34 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     private static final String FIELD_CIVILITY = "civility";
 
     private static Analyzer _analyzer;
+    /** property index path */
+    private String _strIndexPath;
+    /** property index in webapp*/
+    private Boolean _bIndexInWebapp;
+    
 
     /**
+	 * @param strIndexPath
+	 * @param bIndexInWebapp
+	 */
+    public LuceneCustomerIndexingService( String strIndexPath, Boolean bIndexInWebapp )
+    {
+	    super( );
+	    this._strIndexPath = strIndexPath;
+	    this._bIndexInWebapp = bIndexInWebapp;
+    }
+    
+	/**
+	 * @param strIndexPath
+	 */
+    public LuceneCustomerIndexingService( String strIndexPath )
+    {
+	    this( strIndexPath, true );
+    }
+
+
+
+	/**
      * {@inheritDoc }.
      *
      * @param customer
@@ -168,9 +192,14 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * 
      * @return The index path
      */
-    private static File getIndexPath( )
-    {
-        String strIndexPath = AppPathService.getAbsolutePathFromRelativePath( PATH_INDEX );
+    private File getIndexPath( )
+    {   
+        String strIndexPath = _strIndexPath;
+        
+        if ( _bIndexInWebapp )
+        {
+        	strIndexPath = AppPathService.getAbsolutePathFromRelativePath( _strIndexPath );
+        }
 
         return Paths.get( strIndexPath ).toFile( );
     }
@@ -257,7 +286,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @param query
      * @return a list of all customer found or null
      */
-    private static List<Customer> getCustomerSearchResult( String queryToLaunch )
+    private List<Customer> getCustomerSearchResult( String queryToLaunch )
     {
         List<Customer> listCustomer = new ArrayList<Customer>( );
         try
@@ -326,7 +355,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @param strSearch
      * @return the list of customer found by the search value
      */
-    private static List<Customer> loadBySearch( String strSearch )
+    private List<Customer> loadBySearch( String strSearch )
     {
         String strQuery = StringUtils.EMPTY;
 
@@ -454,7 +483,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      *            The query
      * @return The JSON
      */
-    public static String search( String strQuery )
+    public String search( String strQuery )
     {
         List<Customer> listCustomers = loadBySearch( strQuery );
         Map<AbstractMap.SimpleEntry<String, String>, Customer> mapCustomer = new LinkedHashMap<AbstractMap.SimpleEntry<String, String>, Customer>( );

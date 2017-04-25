@@ -50,6 +50,12 @@ public class LuceneAutoCompleteRestService
 {
     public static final String PLUGIN_NAME = "lucene/";
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
+    private LuceneCustomerIndexingService _customerIndexingService;
+    
+    public void setCustomerIndexingService( LuceneCustomerIndexingService customerIndexingService )
+    {
+    	_customerIndexingService = customerIndexingService;
+    }
 
     /**
      * Auto complete web service
@@ -63,7 +69,7 @@ public class LuceneAutoCompleteRestService
     @Produces( MediaType.APPLICATION_JSON )
     public String autocomplete( @QueryParam( "query" ) String strQuery )
     {
-        return LuceneCustomerIndexingService.search( strQuery );
+        return _customerIndexingService.search( strQuery );
     }
 
 }
