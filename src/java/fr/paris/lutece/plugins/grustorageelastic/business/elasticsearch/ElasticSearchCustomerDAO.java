@@ -70,15 +70,15 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     private Elastic _elastic;
 
     /**
-	 * default constructor
-	 */
+     * default constructor
+     */
     public ElasticSearchCustomerDAO( )
     {
-	    super( );
-	    _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
+        super( );
+        _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
     }
 
-	/**
+    /**
      * {@inheritDoc }.
      *
      * @param strQuery
@@ -99,12 +99,12 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         {
             mapFields.put( KEY_CUSTOMER_LAST_NAME, strLastName );
         }
-        
+
         SearchRequest search = ElasticSearchParameterUtil.buildSearchRequest( mapFields );
 
         try
         {
-        	String strESResult = _elastic.search( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, search );
+            String strESResult = _elastic.search( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, search );
             JsonNode jsonESResult = ElasticSearchParameterUtil.setJsonToJsonTree( strESResult );
             List<JsonNode> listJsonCustomers = jsonESResult.findValues( "_source" );
 
@@ -137,8 +137,8 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
 
         try
         {
-        	SearchRequest search = ElasticSearchParameterUtil.buildSearchRequest( mapFields );
-            
+            SearchRequest search = ElasticSearchParameterUtil.buildSearchRequest( mapFields );
+
             String strESResult = _elastic.search( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, search );
             JsonNode jsonESResult = ElasticSearchParameterUtil.setJsonToJsonTree( strESResult );
 
@@ -162,121 +162,122 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         return customer;
     }
 
-   /**
-    * {@inheritDoc }.
-    *
-    * @param customer
-    *            the customer
-    * @throws IndexingException
-    *             indexing exception
-    */
-   @Override
-   public void index( Customer customer ) throws IndexingException
-   {
-       try
-       {
-           _elastic.create( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ), buildCustomer( customer ) );
-       }
-       catch( ElasticClientException ex )
-       {
-           AppLogService.error( ex + " :" + ex.getMessage( ), ex );
-           throw new IndexingException( ex.getMessage( ), ex );
-       }
+    /**
+     * {@inheritDoc }.
+     *
+     * @param customer
+     *            the customer
+     * @throws IndexingException
+     *             indexing exception
+     */
+    @Override
+    public void index( Customer customer ) throws IndexingException
+    {
+        try
+        {
+            _elastic.create( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ),
+                    buildCustomer( customer ) );
+        }
+        catch( ElasticClientException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
+        }
 
-   }
+    }
 
-   /**
-    * {@inheritDoc }.
-    *
-    * @param customer
-    *            the customer
-    * @throws IndexingException
-    *             indexing exception
-    */
-   @Override
-   public void deleteIndex( Customer customer ) throws IndexingException
-   {
-       try
-       {
-    	   _elastic.deleteDocument( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ) );
-       }
-       catch( ElasticClientException ex )
-       {
-           AppLogService.error( ex + " :" + ex.getMessage( ), ex );
-           throw new IndexingException( ex.getMessage( ), ex );
-       }
-   }
+    /**
+     * {@inheritDoc }.
+     *
+     * @param customer
+     *            the customer
+     * @throws IndexingException
+     *             indexing exception
+     */
+    @Override
+    public void deleteIndex( Customer customer ) throws IndexingException
+    {
+        try
+        {
+            _elastic.deleteDocument( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ) );
+        }
+        catch( ElasticClientException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
+        }
+    }
 
-   /**
-    * Build a customer to an esCustomerDTO.
-    *
-    * @param customer
-    *            the customer
-    * @return the ES customer dto
-    */
-   private ESCustomerDTO buildCustomer( Customer customer )
-   {
-       ESCustomerDTO customerDTO = new ESCustomerDTO( );
+    /**
+     * Build a customer to an esCustomerDTO.
+     *
+     * @param customer
+     *            the customer
+     * @return the ES customer dto
+     */
+    private ESCustomerDTO buildCustomer( Customer customer )
+    {
+        ESCustomerDTO customerDTO = new ESCustomerDTO( );
 
-       customerDTO.setCustomerId( customer.getId( ) );
-       customerDTO.setConnectionId( customer.getConnectionId( ) );
-       customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
-       customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
-       customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );
-       customerDTO.setBirthday( manageNullValue( customer.getBirthDate( ) ) );
-       customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
-       customerDTO.setTelephoneNumber( manageNullValue( customer.getMobilePhone( ) ) );
-       customerDTO.setFixedTelephoneNumber( manageNullValue( customer.getFixedPhoneNumber( ) ) );
-       customerDTO.setSuggest( );
+        customerDTO.setCustomerId( customer.getId( ) );
+        customerDTO.setConnectionId( customer.getConnectionId( ) );
+        customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
+        customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
+        customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );
+        customerDTO.setBirthday( manageNullValue( customer.getBirthDate( ) ) );
+        customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
+        customerDTO.setTelephoneNumber( manageNullValue( customer.getMobilePhone( ) ) );
+        customerDTO.setFixedTelephoneNumber( manageNullValue( customer.getFixedPhoneNumber( ) ) );
+        customerDTO.setSuggest( );
 
-       return customerDTO;
-   }
+        return customerDTO;
+    }
 
-   /**
-    * Build a Customer from a node.
-    *
-    * @param node
-    *            the node
-    * @return the created customer
-    */
-   private Customer buildCustomer( JsonNode node )
-   {
-       Customer customer = new Customer( );
+    /**
+     * Build a Customer from a node.
+     *
+     * @param node
+     *            the node
+     * @return the created customer
+     */
+    private Customer buildCustomer( JsonNode node )
+    {
+        Customer customer = new Customer( );
 
-       try
-       {
-           customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText( ) );
+        try
+        {
+            customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText( ) );
 
-           customer.setConnectionId( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
-                   : StringUtils.EMPTY );
-           customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
-           customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
-           customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText( ) : StringUtils.EMPTY );
-           customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText( ) : StringUtils.EMPTY );
-           customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER )
-                   .asText( ) : StringUtils.EMPTY );
-           customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText( )
-                   : StringUtils.EMPTY );
-           customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ) != null ? node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText( ) : StringUtils.EMPTY );
-       }
-       catch( NullPointerException ex )
-       {
-       	 AppLogService.error( "Parsing Customer fail " + node.toString( ) );
-       }
+            customer.setConnectionId( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
+                    : StringUtils.EMPTY );
+            customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
+            customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
+            customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText( ) : StringUtils.EMPTY );
+            customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText( ) : StringUtils.EMPTY );
+            customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER )
+                    .asText( ) : StringUtils.EMPTY );
+            customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText( )
+                    : StringUtils.EMPTY );
+            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ) != null ? node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText( ) : StringUtils.EMPTY );
+        }
+        catch( NullPointerException ex )
+        {
+            AppLogService.error( "Parsing Customer fail " + node.toString( ) );
+        }
 
-       return customer;
-   }
+        return customer;
+    }
 
-   /**
-    * Manages the case the specified String is {@code null}
-    * 
-    * @param strValue
-    *            the String to manage
-    * @return the correct String when the specified String is {@code null}, {@code strValue} otherwise
-    */
-   private static String manageNullValue( String strValue )
-   {
-       return ( strValue == null ) ? StringUtils.EMPTY : strValue;
-   }
+    /**
+     * Manages the case the specified String is {@code null}
+     * 
+     * @param strValue
+     *            the String to manage
+     * @return the correct String when the specified String is {@code null}, {@code strValue} otherwise
+     */
+    private static String manageNullValue( String strValue )
+    {
+        return ( strValue == null ) ? StringUtils.EMPTY : strValue;
+    }
 
 }

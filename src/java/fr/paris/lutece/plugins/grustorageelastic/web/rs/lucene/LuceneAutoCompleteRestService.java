@@ -54,7 +54,7 @@ public class LuceneAutoCompleteRestService
 
     public void setCustomerIndexingService( LuceneCustomerDAO customerIndexingService )
     {
-    	_luceneCustomerDAO = customerIndexingService;
+        _luceneCustomerDAO = customerIndexingService;
     }
 
     /**

@@ -61,12 +61,12 @@ public final class ElasticSearchParameterUtil
     public static final String MARKER_ITEM = "item";
     public static final String MARKER_ELEMENTS = "elements";
     public static final String MARKER_PAYLOAD = "payload";
-    
+
     // CONSTANTS
-	private static final String SIZE_ELK_SEARCH_PARAM_VALUE = "grustorage-elastics.sizeSearchParamValue";
-    
+    private static final String SIZE_ELK_SEARCH_PARAM_VALUE = "grustorage-elastics.sizeSearchParamValue";
+
     // PROPERTIES KEYS
-	private static final String URL_ELK_SERVER = "grustorage-elastics.urlElk";
+    private static final String URL_ELK_SERVER = "grustorage-elastics.urlElk";
     private static final String PATH_ELK_INDEX = "grustorage-elastics.index";
     private static final String PATH_ELK_TYPE_USER = "grustorage-elastics.typeUser";
 
@@ -97,10 +97,10 @@ public final class ElasticSearchParameterUtil
      */
     public static CompletionSuggestRequest buildAutoCompleteSearch( String champ )
     {
-    	CompletionSuggestRequest suggest = new CompletionSuggestRequest( );
-    	suggest.setMatchType( "text" );
-    	suggest.setMatchValue( champ );
-    	suggest.setSize( 15 );
+        CompletionSuggestRequest suggest = new CompletionSuggestRequest( );
+        suggest.setMatchType( "text" );
+        suggest.setMatchValue( champ );
+        suggest.setSize( 15 );
 
         return suggest;
     }
@@ -121,12 +121,12 @@ public final class ElasticSearchParameterUtil
     public static SearchRequest buildSearchRequest( Map<String, String> map )
     {
         SearchRequest root = new SearchRequest( );
-        BoolQuery query = new BoolQuery( );        
+        BoolQuery query = new BoolQuery( );
         for ( Entry<String, String> searchParam : map.entrySet( ) )
         {
-        	query.addShould( new MatchLeaf( searchParam.getKey( ), searchParam.getValue( ) ) );
+            query.addShould( new MatchLeaf( searchParam.getKey( ), searchParam.getValue( ) ) );
         }
-        
+
         root.setSearchQuery( query );
 
         if ( StringUtils.isNotBlank( AppPropertiesService.getProperty( SIZE_ELK_SEARCH_PARAM_VALUE ) ) )

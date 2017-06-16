@@ -66,10 +66,9 @@ import javax.ws.rs.core.MediaType;
 @Path( RestConstants.BASE_PATH + ElasticSearchAutoCompleteRestService.PATH_SERVICE )
 public class ElasticSearchAutoCompleteRestService
 {
-	public static final String PATH_SERVICE = "elasticsearch/";
+    public static final String PATH_SERVICE = "elasticsearch/";
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
-	
-	
+
     /**
      * Autocomplete.
      *
@@ -86,11 +85,11 @@ public class ElasticSearchAutoCompleteRestService
 
         try
         {
-        	CompletionSuggestRequest suggest = ElasticSearchParameterUtil.buildAutoCompleteSearch( strQuery );
+            CompletionSuggestRequest suggest = ElasticSearchParameterUtil.buildAutoCompleteSearch( strQuery );
 
             Elastic elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
             String jsonRetour = elastic.suggest( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, suggest );
-            
+
             JsonNode node = ElasticSearchParameterUtil.setJsonToJsonTree( jsonRetour );
             retour = getInfoAutocomplete( node );
         }
