@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorageelastic.util;
+package fr.paris.lutece.plugins.gruindexing.util;
 
 import java.io.IOException;
 import java.util.Map;
@@ -63,12 +63,12 @@ public final class ElasticSearchParameterUtil
     public static final String MARKER_PAYLOAD = "payload";
 
     // CONSTANTS
-    private static final String SIZE_ELK_SEARCH_PARAM_VALUE = "grustorage-elastics.sizeSearchParamValue";
+    private static final String SIZE_ELK_SEARCH_PARAM_VALUE = "gru-indexing.sizeSearchParamValue";
 
     // PROPERTIES KEYS
-    private static final String URL_ELK_SERVER = "grustorage-elastics.urlElk";
-    private static final String PATH_ELK_INDEX = "grustorage-elastics.index";
-    private static final String PATH_ELK_TYPE_USER = "grustorage-elastics.typeUser";
+    private static final String URL_ELK_SERVER = "gru-indexing.urlElk";
+    private static final String PATH_ELK_INDEX = "gru-indexing.index";
+    private static final String PATH_ELK_TYPE_USER = "gru-indexing.typeUser";
 
     // PATHS
     public static final String PROP_URL_ELK_SERVER = AppPropertiesService.getProperty( URL_ELK_SERVER );

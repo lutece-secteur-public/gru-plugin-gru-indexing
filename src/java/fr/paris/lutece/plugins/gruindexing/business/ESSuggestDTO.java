@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2017, Mairie de Paris
+ * Copyright (c) 2002-2015, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,45 +31,88 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorageelastic.web.rs.lucene;
+package fr.paris.lutece.plugins.gruindexing.business;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.paris.lutece.plugins.grustorageelastic.business.lucene.LuceneCustomerDAO;
-import fr.paris.lutece.plugins.rest.service.RestConstants;
-
+// TODO: Auto-generated Javadoc
 /**
- * Rest service for auto complete Lucene
+ * The Class ESSuggestDTO.
  */
-@Path( RestConstants.BASE_PATH + LuceneAutoCompleteRestService.PATH_SERVICE )
-public class LuceneAutoCompleteRestService
+public class ESSuggestDTO
 {
-    public static final String PATH_SERVICE = "lucene/";
-    public static final String PATH_AUTOCOMPLETION = "autocomplete";
-    private LuceneCustomerDAO _luceneCustomerDAO;
+    /** The _str input. */
+    private String [ ] _strInput;
 
-    public void setCustomerIndexingService( LuceneCustomerDAO customerIndexingService )
+    /** The _str output. */
+    private String _strOutput;
+
+    /** The _o payload. */
+    private ESPayload _oPayload;
+
+    /**
+     * Gets the input.
+     *
+     * @return the input
+     */
+    @JsonProperty( "input" )
+    public String [ ] getInput( )
     {
-        _luceneCustomerDAO = customerIndexingService;
+        return _strInput.clone( );
     }
 
     /**
-     * Auto complete web service
-     * 
-     * @param strQuery
-     *            The query
-     * @return Data for auto complete as JSON
+     * Sets the input.
+     *
+     * @param strInput
+     *            the new input
      */
-    @GET
-    @Path( LuceneAutoCompleteRestService.PATH_AUTOCOMPLETION )
-    @Produces( MediaType.APPLICATION_JSON )
-    public String autocomplete( @QueryParam( "query" ) String strQuery )
+    public void setInput( String [ ] strInput )
     {
-        return _luceneCustomerDAO.search( strQuery );
+        this._strInput = strInput.clone( );
     }
 
+    /**
+     * Gets the output.
+     *
+     * @return the output
+     */
+    @JsonProperty( "output" )
+    public String getOutput( )
+    {
+        return _strOutput;
+    }
+
+    /**
+     * Sets the output.
+     *
+     * @param strOutput
+     *            the new output
+     */
+    public void setOutput( String strOutput )
+    {
+        this._strOutput = strOutput;
+    }
+
+    /**
+     * Gets the payload.
+     *
+     * @return the payload
+     */
+    @JsonProperty( "payload" )
+    public ESPayload getPayload( )
+    {
+        return _oPayload;
+    }
+
+    /**
+     * Sets the payload.
+     *
+     * @param oPayload
+     *            the new payload
+     */
+    public void setPayload( ESPayload oPayload )
+    {
+        this._oPayload = oPayload;
+    }
 }

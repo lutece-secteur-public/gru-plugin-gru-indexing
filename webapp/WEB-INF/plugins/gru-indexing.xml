@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><plug-in>
     <!-- Plugin Informations -->
-    <name>grustorageelastic</name>
+    <name>gru-indexing</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
     <version>1.2.6-SNAPSHOT</version>
     <documentation/>
     <installation/>
     <changes/>
     <user-guide/>
-    <description>grustorageelastic.module.description</description>
-    <provider>grustorageelastic.module.provider</provider>
+    <description>gru-indexing.module.description</description>
+    <provider>gru-indexing.module.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
-    <icon-url>images/admin/skin/plugins/grustorageelastic/modules/elastic/gru-elastics.png</icon-url>
-    <copyright>Copyright 2001-2016 Mairie de Paris</copyright>
+    <icon-url>images/admin/skin/plugins/gruindexing/modules/elastic/gru-elastics.png</icon-url>
+    <copyright>Copyright 2001-2017 Mairie de Paris</copyright>
     <core-version-dependency>
         <min-core-version>5.0.0</min-core-version>
         <max-core-version/>

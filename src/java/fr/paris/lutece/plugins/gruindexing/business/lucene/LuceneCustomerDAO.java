@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorageelastic.business.lucene;
+package fr.paris.lutece.plugins.gruindexing.business.lucene;
 
 import java.io.File;
 import java.io.IOException;

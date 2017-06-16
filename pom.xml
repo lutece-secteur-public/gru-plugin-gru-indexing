@@ -7,11 +7,11 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>plugin-grustorageelastic</artifactId>
+    <artifactId>plugin-gru-indexing</artifactId>
     <groupId>fr.paris.lutece.plugins</groupId>
     <packaging>lutece-plugin</packaging>
     <version>1.2.6-SNAPSHOT</version>
-    <name>Lutece GRU elastic search storage plugin</name>
+    <name>Lutece GRU indexing plugin</name>
     
     <repositories>
         <repository>
@@ -74,15 +74,15 @@
 
 	
     <properties>
-        <componentName>Plugin GRU Storage Elastics</componentName>
+        <componentName>Plugin GRU indexing</componentName>
         <jiraProjectName>GRUSTOREEL</jiraProjectName>
         <jiraComponentId>12936</jiraComponentId>
     </properties>
 	
     <scm>
-        <connection>scm:git:https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</connection>
-        <developerConnection>scm:git:https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</developerConnection>
-        <url>https://github.com/lutece-secteur-public/gru-plugin-grustorageelastic.git</url>
+        <connection>scm:git:https://github.com/lutece-secteur-public/gru-plugin-gru-indexing.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-secteur-public/gru-plugin-gru-indexing.git</developerConnection>
+        <url>https://github.com/lutece-secteur-public/gru-plugin-gru-indexing.git</url>
         <tag>HEAD</tag>
     </scm>
     

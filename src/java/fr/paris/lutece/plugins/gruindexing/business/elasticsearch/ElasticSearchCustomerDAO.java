@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorageelastic.business.elasticsearch;
+package fr.paris.lutece.plugins.gruindexing.business.elasticsearch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +46,8 @@ import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
 import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
-import fr.paris.lutece.plugins.grustorageelastic.business.ESCustomerDTO;
-import fr.paris.lutece.plugins.grustorageelastic.util.ElasticSearchParameterUtil;
+import fr.paris.lutece.plugins.gruindexing.business.ESCustomerDTO;
+import fr.paris.lutece.plugins.gruindexing.util.ElasticSearchParameterUtil;
 import fr.paris.lutece.plugins.libraryelastic.business.search.SearchRequest;
 import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
 import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
