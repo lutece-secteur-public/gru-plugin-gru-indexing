@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorageelastic.web.rs;
+package fr.paris.lutece.plugins.grustorageelastic.web.rs.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -41,17 +41,17 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import fr.paris.lutece.plugins.grustorageelastic.business.ElasticConnexion;
-import fr.paris.lutece.plugins.grustorageelastic.util.constant.GRUElasticsConstants;
+import fr.paris.lutece.plugins.grustorageelastic.business.elasticsearch.ElasticSearchCustomerDAO;
+import fr.paris.lutece.plugins.grustorageelastic.util.ElasticSearchParameterUtil;
+import fr.paris.lutece.plugins.libraryelastic.business.suggest.CompletionSuggestRequest;
+import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
+import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
-import fr.paris.lutece.util.httpaccess.HttpAccessException;
-import fr.paris.lutece.util.string.StringUtil;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -63,9 +63,13 @@ import javax.ws.rs.core.MediaType;
 /**
  * The Class GRUElasticRestService.
  */
-@Path( RestConstants.BASE_PATH + GRUElasticsConstants.PLUGIN_NAME )
-public class GRUElasticRestService
+@Path( RestConstants.BASE_PATH + ElasticSearchAutoCompleteRestService.PATH_SERVICE )
+public class ElasticSearchAutoCompleteRestService
 {
+	public static final String PATH_SERVICE = "elasticsearch/";
+    public static final String PATH_AUTOCOMPLETION = "autocomplete";
+	
+	
     /**
      * Autocomplete.
      *
@@ -74,27 +78,27 @@ public class GRUElasticRestService
      * @return the string
      */
     @GET
-    @Path( GRUElasticsConstants.PATH_ELASTIC_AUTOCOMPLETION )
+    @Path( PATH_AUTOCOMPLETION )
     @Produces( MediaType.APPLICATION_JSON )
     public String autocomplete( @QueryParam( "query" ) String strQuery )
     {
-        String uri = ElasticConnexion.getESParam( StringUtils.EMPTY, GRUElasticsConstants.PATH_ELK_SUGGEST );
-        String json = StringUtils.EMPTY;
         String retour = StringUtils.EMPTY;
 
         try
         {
-            json = ElasticConnexion.formatAutoCompleteSearch( strQuery );
+        	CompletionSuggestRequest suggest = ElasticSearchParameterUtil.buildAutoCompleteSearch( strQuery );
 
-            String jsonRetour = ElasticConnexion.sentToElasticPOST( uri, json );
-            JsonNode node = ElasticConnexion.setJsonToJsonTree( jsonRetour );
+            Elastic elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
+            String jsonRetour = elastic.suggest( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, suggest );
+            
+            JsonNode node = ElasticSearchParameterUtil.setJsonToJsonTree( jsonRetour );
             retour = getInfoAutocomplete( node );
         }
         catch( IOException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
-        catch( HttpAccessException ex )
+        catch( ElasticClientException ex )
         {
             AppLogService.error( ex + " :" + ex.getMessage( ), ex );
         }
@@ -117,7 +121,7 @@ public class GRUElasticRestService
      */
     private static String getInfoAutocomplete( JsonNode nodeTree ) throws JsonGenerationException, JsonMappingException, IOException
     {
-        List<JsonNode> payload = nodeTree.findValues( GRUElasticsConstants.MARKER_PAYLOAD );
+        List<JsonNode> payload = nodeTree.findValues( ElasticSearchParameterUtil.MARKER_PAYLOAD );
 
         ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
@@ -128,44 +132,29 @@ public class GRUElasticRestService
         {
             ObjectNode item = new ObjectNode( factory );
 
-            node = node.path( GRUElasticsConstants.MARKER_ELEMENTS );
+            node = node.path( ElasticSearchParameterUtil.MARKER_ELEMENTS );
 
-            if ( !node.path( GRUElasticsConstants.MARKER_LAST_NAME ).isMissingNode( ) )
+            if ( !node.path( ElasticSearchCustomerDAO.KEY_CUSTOMER_LAST_NAME ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_LAST_NAME, node.get( GRUElasticsConstants.MARKER_LAST_NAME ).asText( ) );
+                item.put( ElasticSearchCustomerDAO.KEY_CUSTOMER_LAST_NAME, node.get( ElasticSearchCustomerDAO.KEY_CUSTOMER_LAST_NAME ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_FIRST_NAME ).isMissingNode( ) )
+            if ( !node.path( ElasticSearchCustomerDAO.KEY_CUSTOMER_FIRST_NAME ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_FIRST_NAME, node.get( GRUElasticsConstants.MARKER_FIRST_NAME ).asText( ) );
+                item.put( ElasticSearchCustomerDAO.KEY_CUSTOMER_FIRST_NAME, node.get( ElasticSearchCustomerDAO.KEY_CUSTOMER_FIRST_NAME ).asText( ) );
             }
 
-            if ( !node.path( GRUElasticsConstants.MARKER_REFERENCE ).isMissingNode( ) )
+            if ( !node.path( ElasticSearchCustomerDAO.KEY_CUSTOMER_ID ).isMissingNode( ) )
             {
-                item.put( GRUElasticsConstants.MARKER_REFERENCE, node.get( GRUElasticsConstants.MARKER_REFERENCE ).asText( ) );
-            }
-
-            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_ID ).isMissingNode( ) )
-            {
-                item.put( GRUElasticsConstants.MARKER_DEMAND_ID, node.get( GRUElasticsConstants.MARKER_DEMAND_ID ).asText( ) );
-            }
-
-            if ( !node.path( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).isMissingNode( ) )
-            {
-                item.put( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID, node.get( GRUElasticsConstants.MARKER_DEMAND_TYPE_ID ).asText( ) );
-            }
-
-            if ( !node.path( GRUElasticsConstants.MARKER_USER_CID ).isMissingNode( ) )
-            {
-                item.put( GRUElasticsConstants.MARKER_USER_CID, node.get( GRUElasticsConstants.MARKER_USER_CID ).asText( ) );
+                item.put( ElasticSearchCustomerDAO.KEY_CUSTOMER_ID, node.get( ElasticSearchCustomerDAO.KEY_CUSTOMER_ID ).asText( ) );
             }
 
             ObjectNode tmp = new ObjectNode( factory );
-            tmp.set( GRUElasticsConstants.MARKER_ITEM, item );
+            tmp.set( ElasticSearchParameterUtil.MARKER_ITEM, item );
             autocomplete.add( tmp );
         }
 
-        root.set( GRUElasticsConstants.MARKER_AUTOCOMPLETE, autocomplete );
+        root.set( ElasticSearchParameterUtil.MARKER_AUTOCOMPLETE, autocomplete );
 
         String test = mapper.writeValueAsString( root );
 

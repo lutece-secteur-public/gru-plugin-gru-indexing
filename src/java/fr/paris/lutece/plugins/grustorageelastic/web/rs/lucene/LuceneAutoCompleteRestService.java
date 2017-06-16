@@ -39,22 +39,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import fr.paris.lutece.plugins.grustorageelastic.service.lucene.LuceneCustomerIndexingService;
+import fr.paris.lutece.plugins.grustorageelastic.business.lucene.LuceneCustomerDAO;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 
 /**
  * Rest service for auto complete Lucene
  */
-@Path( RestConstants.BASE_PATH + LuceneAutoCompleteRestService.PLUGIN_NAME )
+@Path( RestConstants.BASE_PATH + LuceneAutoCompleteRestService.PATH_SERVICE )
 public class LuceneAutoCompleteRestService
 {
-    public static final String PLUGIN_NAME = "lucene/";
+    public static final String PATH_SERVICE = "lucene/";
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
-    private LuceneCustomerIndexingService _customerIndexingService;
+    private LuceneCustomerDAO _luceneCustomerDAO;
 
-    public void setCustomerIndexingService( LuceneCustomerIndexingService customerIndexingService )
+    public void setCustomerIndexingService( LuceneCustomerDAO customerIndexingService )
     {
-        _customerIndexingService = customerIndexingService;
+    	_luceneCustomerDAO = customerIndexingService;
     }
 
     /**
@@ -69,7 +69,7 @@ public class LuceneAutoCompleteRestService
     @Produces( MediaType.APPLICATION_JSON )
     public String autocomplete( @QueryParam( "query" ) String strQuery )
     {
-        return _customerIndexingService.search( strQuery );
+        return _luceneCustomerDAO.search( strQuery );
     }
 
 }

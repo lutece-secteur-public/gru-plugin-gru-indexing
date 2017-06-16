@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.grustorageelastic.service.lucene;
+package fr.paris.lutece.plugins.grustorageelastic.business.lucene;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +44,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -62,8 +65,8 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.BooleanClause;
@@ -84,13 +87,11 @@ import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
 import fr.paris.lutece.portal.service.search.LuceneSearchEngine;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
- * The Class LuceneCustomerService.
+ * DAO and indexer implementation with Lucene for Customer
  */
-public class LuceneCustomerIndexingService implements IIndexingService<Customer>, ICustomerDAO
+public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
 {
     private static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     private static final int INDENT = 4;
@@ -115,7 +116,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
      * @param strIndexPath
      * @param bIndexInWebapp
      */
-    public LuceneCustomerIndexingService( String strIndexPath, Boolean bIndexInWebapp )
+    public LuceneCustomerDAO( String strIndexPath, Boolean bIndexInWebapp )
     {
         super( );
         this._strIndexPath = strIndexPath;
@@ -125,7 +126,7 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     /**
      * @param strIndexPath
      */
-    public LuceneCustomerIndexingService( String strIndexPath )
+    public LuceneCustomerDAO( String strIndexPath )
     {
         this( strIndexPath, true );
     }
@@ -526,5 +527,4 @@ public class LuceneCustomerIndexingService implements IIndexingService<Customer>
     {
         return ( strValue == null ) ? StringUtils.EMPTY : strValue;
     }
-
 }

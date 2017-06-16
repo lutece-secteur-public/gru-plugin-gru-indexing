@@ -67,35 +67,6 @@
                     "payloads": true
                 }
             }
-        },
-        "demand": {
-            "dynamic": true,
-            "properties": {
-                "demand_type_id": {
-                    "type": "long"
-                },
-                "demand_id": {
-                    "type": "long"
-                },
-                "utilisateur": {
-                    "dynamic": true,
-                    "properties": {
-                        "user_cid": {
-                            "type": "string",
-                            "index" : "not_analyzed"
-                        }
-                    }
-                },
-                "demand_reference": {
-                    "type": "string"
-                },
-                "suggest": {
-                    "type": "completion",
-                    "analyzer": "standard",
-                    "search_analyzer": "standard",
-                    "payloads": true
-                }
-            }
         }
     },
     "settings": {
