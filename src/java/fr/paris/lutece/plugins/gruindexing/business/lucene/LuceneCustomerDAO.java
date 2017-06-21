@@ -106,7 +106,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private static final String FIELD_BIRTHDATE = "birthdate";
     private static final String FIELD_CIVILITY = "civility";
 
-    private static Analyzer _analyzer;
+    private Analyzer _analyzer;
     /** property index path */
     private String _strIndexPath;
     /** property index in webapp */
@@ -121,6 +121,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         super( );
         this._strIndexPath = strIndexPath;
         this._bIndexInWebapp = bIndexInWebapp;
+        this._analyzer = new CustomAnalyzer( );
     }
 
     /**
@@ -146,7 +147,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         try
         {
             Directory dir = FSDirectory.open( getIndexPath( ) );
-            IndexWriterConfig iwc = new IndexWriterConfig( Version.LUCENE_4_9, getAnalyzer( ) );
+            IndexWriterConfig iwc = new IndexWriterConfig( Version.LUCENE_4_9, _analyzer );
 
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
@@ -203,20 +204,6 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
-     * Returns the analyzer
-     * 
-     * @return The analyzer
-     */
-    private static Analyzer getAnalyzer( )
-    {
-        if ( _analyzer == null )
-        {
-            _analyzer = new CustomAnalyzer( );
-        }
-        return _analyzer;
-    }
-
-    /**
      * The Class CustomAnalyzer.
      */
     private static class CustomAnalyzer extends Analyzer
@@ -248,7 +235,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         try
         {
             Directory dir = FSDirectory.open( getIndexPath( ) );
-            IndexWriterConfig iwc = new IndexWriterConfig( Version.LUCENE_4_9, getAnalyzer( ) );
+            IndexWriterConfig iwc = new IndexWriterConfig( Version.LUCENE_4_9, _analyzer );
 
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
@@ -297,7 +284,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
                 String [ ] strTabFields = {
                         FIELD_FIRSTNAME, FIELD_LASTNAME, FIELD_FIXED_PHONE_NUMBER, FIELD_PHONE
                 };
-                MultiFieldQueryParser mfqp = new MultiFieldQueryParser( LUCENE_VERSION, strTabFields, getAnalyzer( ) );
+                MultiFieldQueryParser mfqp = new MultiFieldQueryParser( LUCENE_VERSION, strTabFields, _analyzer );
                 Query query = mfqp.parse( queryToLaunch );
 
                 // Get results documents
