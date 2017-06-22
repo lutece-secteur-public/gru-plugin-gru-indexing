@@ -477,6 +477,7 @@ public class ESCustomerDTO
 
     /**
      * Sets the suggest.
+     * WARNING this suggest is only compliant with ES < 5.0
      */
     public void setSuggest( )
     {
