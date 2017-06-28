@@ -61,6 +61,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     public static final String KEY_CUSTOMER_ID = "user_cid";
     public static final String KEY_CUSTOMER_CIVILITY = "civility";
     public static final String KEY_CUSTOMER_LAST_NAME = "last_name";
+    public static final String KEY_CUSTOMER_FAMILY_NAME = "family_name";
     public static final String KEY_CUSTOMER_FIRST_NAME = "first_name";
     public static final String KEY_CUSTOMER_EMAIL = "email";
     public static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
@@ -223,6 +224,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         customerDTO.setConnectionId( customer.getConnectionId( ) );
         customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
         customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
+        customerDTO.setFamilyName(manageNullValue( customer.getFamilyname( ) ) );
         customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );
         customerDTO.setBirthday( manageNullValue( customer.getBirthDate( ) ) );
         customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
@@ -252,6 +254,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
                     : StringUtils.EMPTY );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
             customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
+            customer.setFamilyname( node.findValue( KEY_CUSTOMER_FAMILY_NAME ) != null ? node.findValue( KEY_CUSTOMER_FAMILY_NAME ).asText( ) : StringUtils.EMPTY );
             customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText( ) : StringUtils.EMPTY );
             customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText( ) : StringUtils.EMPTY );
             customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER )

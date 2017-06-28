@@ -58,6 +58,9 @@ public class ESCustomerDTO
 
     /** The _str name. */
     private String _strName;
+    
+    /** The _str familyName. */
+	private String _strFamilyName;
 
     /** The _str first name. */
     private String _strFirstName;
@@ -94,6 +97,7 @@ public class ESCustomerDTO
 
     /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
+
 
     /**
      * Instantiates a new ES customer dto.
@@ -135,13 +139,14 @@ public class ESCustomerDTO
      * @param oSuggest
      *            the suggest
      */
-    public ESCustomerDTO( String strCustomerId, String strName, String strFirstName, String strEmail, String strBirthday, String strCivility, String strStreet,
+    public ESCustomerDTO( String strCustomerId, String strName, String strFamilyName, String strFirstName, String strEmail, String strBirthday, String strCivility, String strStreet,
             String strCityOfBirth, boolean bStayConnected, String strCity, String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber,
             ESSuggestDTO oSuggest )
     {
         super( );
         this._strCustomerId = strCustomerId;
         this._strName = strName;
+        this._strFamilyName = strFamilyName;
         this._strFirstName = strFirstName;
         this._strEmail = strEmail;
         this._strBirthday = strBirthday;
@@ -222,6 +227,28 @@ public class ESCustomerDTO
         _strName = strName;
     }
 
+    /**
+     * Returns the FamilyName.
+     *
+     * @return The FamilyName
+     */
+    @JsonProperty( "family_name" )
+    public String getFamilyName( )
+    {
+        return _strFamilyName;
+    }
+
+    /**
+     * Sets the FamilyName.
+     *
+     * @param strFamilyName
+     *            The FamilyName
+     */
+    public void setFamilyName( String strFamilyName )
+    {
+    	_strFamilyName = strFamilyName;
+    }
+    
     /**
      * Returns the FirstName.
      *
@@ -500,6 +527,7 @@ public class ESCustomerDTO
         payload.put( "user_cid", _strCustomerId );
         payload.put( "connection_id", _strConnectionId );
         payload.put( "last_name", _strName );
+        payload.put( "family_name", _strFamilyName );
         payload.put( "first_name", _strFirstName );
         payload.put( "birthday", _strBirthday );
         payload.put( "telephoneNumber", _strTelephoneNumber );

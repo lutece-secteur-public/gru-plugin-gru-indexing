@@ -100,6 +100,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private static final String FIELD_CONNECTION_ID = "connection_id";
     private static final String FIELD_FIRSTNAME = "firstname";
     private static final String FIELD_LASTNAME = "lastname";
+    private static final String FIELD_FAMILYNAME = "familyname";
     private static final String FIELD_EMAIL = "email";
     private static final String FIELD_PHONE = "phone";
     private static final String FIELD_FIXED_PHONE_NUMBER = "fixed_phone_phone";
@@ -422,6 +423,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         doc.add( new StringField( FIELD_ID, customer.getId( ), Field.Store.YES ) );
         doc.add( new TextField( FIELD_FIRSTNAME, manageNullValue( customer.getFirstname( ) ), Field.Store.YES ) );
         doc.add( new TextField( FIELD_LASTNAME, manageNullValue( customer.getLastname( ) ), Field.Store.YES ) );
+        doc.add( new TextField( FIELD_FAMILYNAME, manageNullValue( customer.getFamilyname( )), Field.Store.YES ) );
         doc.add( new StringField( FIELD_PHONE, manageNullValue( customer.getMobilePhone( ) ), Field.Store.YES ) );
         doc.add( new StringField( FIELD_FIXED_PHONE_NUMBER, manageNullValue( customer.getFixedPhoneNumber( ) ), Field.Store.YES ) );
         doc.add( new StoredField( FIELD_EMAIL, manageNullValue( customer.getEmail( ) ) ) );
@@ -447,6 +449,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             customer.setId( document.get( FIELD_ID ) );
             customer.setConnectionId( document.get( FIELD_CONNECTION_ID ) );
             customer.setFirstname( document.get( FIELD_FIRSTNAME ) );
+            customer.setFamilyname( document.get( FIELD_FAMILYNAME ) );
             customer.setLastname( document.get( FIELD_LASTNAME ) );
             customer.setEmail( document.get( FIELD_EMAIL ) );
             customer.setMobilePhone( document.get( FIELD_PHONE ) );
