@@ -205,6 +205,19 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void indexList( List<Customer> listCustomers ) throws IndexingException
+    {
+        //Bulk indexing for Lucene is TODO.
+        for ( Customer customer : listCustomers )
+        {
+            index( customer );
+        }
+    }
+
+    /**
      * The Class CustomAnalyzer.
      */
     private static class CustomAnalyzer extends Analyzer

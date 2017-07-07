@@ -48,6 +48,9 @@ import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
 import fr.paris.lutece.plugins.gruindexing.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.gruindexing.util.ElasticSearchParameterUtil;
+import fr.paris.lutece.plugins.libraryelastic.business.bulk.AbstractSubRequest;
+import fr.paris.lutece.plugins.libraryelastic.business.bulk.BulkRequest;
+import fr.paris.lutece.plugins.libraryelastic.business.bulk.IndexSubRequest;
 import fr.paris.lutece.plugins.libraryelastic.business.search.SearchRequest;
 import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
 import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
@@ -178,6 +181,34 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         {
             _elastic.create( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ),
                     buildCustomer( customer ) );
+        }
+        catch( ElasticClientException ex )
+        {
+            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            throw new IndexingException( ex.getMessage( ), ex );
+        }
+
+    }
+    
+    /**
+     *{@inheritDoc }.
+     */
+    @Override
+    public void indexList( List<Customer> listCustomer ) throws IndexingException
+    {
+        try
+        {
+            BulkRequest bulkRequest = new BulkRequest();
+            
+            Map<AbstractSubRequest,Object> mapSubRequest = new HashMap<AbstractSubRequest,Object>();
+            for ( Customer customer : listCustomer )
+            {
+                mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), customer );
+            }
+            bulkRequest.setMapSubAction( mapSubRequest );
+            
+            _elastic.createByBulk( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, bulkRequest );
+            
         }
         catch( ElasticClientException ex )
         {
