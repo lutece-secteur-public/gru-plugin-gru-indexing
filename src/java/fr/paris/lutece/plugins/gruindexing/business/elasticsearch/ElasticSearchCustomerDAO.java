@@ -203,7 +203,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
             Map<AbstractSubRequest,Object> mapSubRequest = new HashMap<AbstractSubRequest,Object>();
             for ( Customer customer : listCustomer )
             {
-                mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), customer );
+                mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomer( customer ) );
             }
             bulkRequest.setMapSubAction( mapSubRequest );
             
