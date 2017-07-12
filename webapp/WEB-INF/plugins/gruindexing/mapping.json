@@ -13,6 +13,11 @@
                       "analyzer": "standard"
                            
                 },
+                "family_name": {
+                    "type": "string",
+                      "analyzer": "standard"
+                           
+                },
                 "first_name": {
                     "type": "string",
                       "analyzer": "standard"
