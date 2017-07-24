@@ -33,10 +33,9 @@
  */
 package fr.paris.lutece.plugins.gruindexing.business.lucene;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -44,9 +43,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -65,12 +61,13 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BooleanQuery.Builder;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -78,7 +75,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
 import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
@@ -87,13 +83,14 @@ import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
 import fr.paris.lutece.portal.service.search.LuceneSearchEngine;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * DAO and indexer implementation with Lucene for Customer
  */
 public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
 {
-    private static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     private static final int INDENT = 4;
 
     private static final String FIELD_ID = "id";
@@ -148,7 +145,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         try
         {
             Directory dir = FSDirectory.open( getIndexPath( ) );
-            IndexWriterConfig iwc = new IndexWriterConfig( Version.LUCENE_4_9, _analyzer );
+            IndexWriterConfig iwc = new IndexWriterConfig( _analyzer );
 
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
@@ -192,7 +189,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
      * 
      * @return The index path
      */
-    private File getIndexPath( )
+    private Path getIndexPath( )
     {
         String strIndexPath = _strIndexPath;
 
@@ -201,7 +198,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             strIndexPath = AppPathService.getAbsolutePathFromRelativePath( _strIndexPath );
         }
 
-        return Paths.get( strIndexPath ).toFile( );
+        return Paths.get( strIndexPath );
     }
 
     /**
@@ -223,12 +220,12 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private static class CustomAnalyzer extends Analyzer
     {
         @Override
-        protected TokenStreamComponents createComponents( String fieldName, Reader reader )
+        protected TokenStreamComponents createComponents( String fieldName )
         {
-            final Tokenizer source = new StandardTokenizer( LUCENE_VERSION, reader );
+            final Tokenizer source = new StandardTokenizer( );
 
             TokenStream tokenStream = source;
-            tokenStream = new LowerCaseFilter( LUCENE_VERSION, tokenStream );
+            tokenStream = new LowerCaseFilter( tokenStream );
             tokenStream = new ASCIIFoldingFilter( tokenStream );
             return new TokenStreamComponents( source, tokenStream );
         }
@@ -249,7 +246,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         try
         {
             Directory dir = FSDirectory.open( getIndexPath( ) );
-            IndexWriterConfig iwc = new IndexWriterConfig( Version.LUCENE_4_9, _analyzer );
+            IndexWriterConfig iwc = new IndexWriterConfig( _analyzer );
 
             iwc.setOpenMode( OpenMode.CREATE_OR_APPEND );
 
@@ -298,7 +295,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
                 String [ ] strTabFields = {
                         FIELD_FIRSTNAME, FIELD_LASTNAME, FIELD_FIXED_PHONE_NUMBER, FIELD_PHONE
                 };
-                MultiFieldQueryParser mfqp = new MultiFieldQueryParser( LUCENE_VERSION, strTabFields, _analyzer );
+                MultiFieldQueryParser mfqp = new MultiFieldQueryParser( strTabFields, _analyzer );
                 Query query = mfqp.parse( queryToLaunch );
 
                 // Get results documents
@@ -331,21 +328,21 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     @Override
     public List<Customer> loadByName( String strFirstName, String strLastName )
     {
-        BooleanQuery booleanQueryMain = new BooleanQuery( );
+        Builder booleanQueryMainBuilder = new BooleanQuery.Builder( );
 
         if ( StringUtils.isNotBlank( strFirstName ) )
         {
             TermQuery termQueryFirstName = new TermQuery( new Term( FIELD_FIRSTNAME, strFirstName ) );
-            booleanQueryMain.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.MUST ) );
+            booleanQueryMainBuilder.add( new BooleanClause( termQueryFirstName, BooleanClause.Occur.MUST ) );
         }
 
         if ( StringUtils.isNotBlank( strLastName ) )
         {
             TermQuery termQueryLastName = new TermQuery( new Term( FIELD_LASTNAME, strLastName ) );
-            booleanQueryMain.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
+            booleanQueryMainBuilder.add( new BooleanClause( termQueryLastName, BooleanClause.Occur.MUST ) );
         }
 
-        return getCustomerSearchResult( booleanQueryMain.toString( ) );
+        return getCustomerSearchResult( booleanQueryMainBuilder.build( ).toString( ) );
     }
 
     /**
@@ -386,9 +383,9 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     @Override
     public Customer load( String strCustomerId )
     {
-        BooleanQuery booleanQueryMain = new BooleanQuery( );
+        Builder booleanQueryMainBuilder = new BooleanQuery.Builder( );
         TermQuery termQueryId = new TermQuery( new Term( FIELD_ID, strCustomerId ) );
-        booleanQueryMain.add( new BooleanClause( termQueryId, BooleanClause.Occur.MUST ) );
+        booleanQueryMainBuilder.add( new BooleanClause( termQueryId, BooleanClause.Occur.MUST ) );
 
         List<Customer> listCustomer = new ArrayList<Customer>( );
         try
@@ -399,7 +396,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             if ( indexSearcher != null )
             {
                 // Get results documents
-                TopDocs topDocs = indexSearcher.search( booleanQueryMain, LuceneSearchEngine.MAX_RESPONSES );
+                TopDocs topDocs = indexSearcher.search( booleanQueryMainBuilder.build( ), LuceneSearchEngine.MAX_RESPONSES );
                 ScoreDoc [ ] hits = topDocs.scoreDocs;
 
                 for ( int i = 0; i < hits.length; i++ )
