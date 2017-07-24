@@ -58,9 +58,9 @@ public class ESCustomerDTO
 
     /** The _str name. */
     private String _strName;
-    
+
     /** The _str familyName. */
-	private String _strFamilyName;
+    private String _strFamilyName;
 
     /** The _str first name. */
     private String _strFirstName;
@@ -97,7 +97,6 @@ public class ESCustomerDTO
 
     /** The _o suggest. */
     private ESSuggestDTO _oSuggest;
-
 
     /**
      * Instantiates a new ES customer dto.
@@ -139,9 +138,9 @@ public class ESCustomerDTO
      * @param oSuggest
      *            the suggest
      */
-    public ESCustomerDTO( String strCustomerId, String strName, String strFamilyName, String strFirstName, String strEmail, String strBirthday, String strCivility, String strStreet,
-            String strCityOfBirth, boolean bStayConnected, String strCity, String strPostalCode, String strTelephoneNumber, String strFixedPhoneNumber,
-            ESSuggestDTO oSuggest )
+    public ESCustomerDTO( String strCustomerId, String strName, String strFamilyName, String strFirstName, String strEmail, String strBirthday,
+            String strCivility, String strStreet, String strCityOfBirth, boolean bStayConnected, String strCity, String strPostalCode,
+            String strTelephoneNumber, String strFixedPhoneNumber, ESSuggestDTO oSuggest )
     {
         super( );
         this._strCustomerId = strCustomerId;
@@ -246,9 +245,9 @@ public class ESCustomerDTO
      */
     public void setFamilyName( String strFamilyName )
     {
-    	_strFamilyName = strFamilyName;
+        _strFamilyName = strFamilyName;
     }
-    
+
     /**
      * Returns the FirstName.
      *
@@ -503,8 +502,7 @@ public class ESCustomerDTO
     }
 
     /**
-     * Sets the suggest.
-     * WARNING this suggest is only compliant with ES < 5.0
+     * Sets the suggest. WARNING this suggest is only compliant with ES < 5.0
      */
     public void setSuggest( )
     {

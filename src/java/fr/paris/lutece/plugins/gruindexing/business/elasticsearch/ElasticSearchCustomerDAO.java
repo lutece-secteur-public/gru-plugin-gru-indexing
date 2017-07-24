@@ -189,26 +189,26 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         }
 
     }
-    
+
     /**
-     *{@inheritDoc }.
+     * {@inheritDoc }.
      */
     @Override
     public void indexList( List<Customer> listCustomer ) throws IndexingException
     {
         try
         {
-            BulkRequest bulkRequest = new BulkRequest();
-            
-            Map<AbstractSubRequest,Object> mapSubRequest = new HashMap<AbstractSubRequest,Object>();
+            BulkRequest bulkRequest = new BulkRequest( );
+
+            Map<AbstractSubRequest, Object> mapSubRequest = new HashMap<AbstractSubRequest, Object>( );
             for ( Customer customer : listCustomer )
             {
                 mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomer( customer ) );
             }
             bulkRequest.setMapSubAction( mapSubRequest );
-            
+
             _elastic.createByBulk( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, bulkRequest );
-            
+
         }
         catch( ElasticClientException ex )
         {
@@ -255,7 +255,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         customerDTO.setConnectionId( customer.getConnectionId( ) );
         customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
         customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
-        customerDTO.setFamilyName(manageNullValue( customer.getFamilyname( ) ) );
+        customerDTO.setFamilyName( manageNullValue( customer.getFamilyname( ) ) );
         customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );
         customerDTO.setBirthday( manageNullValue( customer.getBirthDate( ) ) );
         customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
@@ -285,7 +285,8 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
                     : StringUtils.EMPTY );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
             customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
-            customer.setFamilyname( node.findValue( KEY_CUSTOMER_FAMILY_NAME ) != null ? node.findValue( KEY_CUSTOMER_FAMILY_NAME ).asText( ) : StringUtils.EMPTY );
+            customer.setFamilyname( node.findValue( KEY_CUSTOMER_FAMILY_NAME ) != null ? node.findValue( KEY_CUSTOMER_FAMILY_NAME ).asText( )
+                    : StringUtils.EMPTY );
             customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText( ) : StringUtils.EMPTY );
             customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText( ) : StringUtils.EMPTY );
             customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER )

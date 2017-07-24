@@ -207,7 +207,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     @Override
     public void indexList( List<Customer> listCustomers ) throws IndexingException
     {
-        //Bulk indexing for Lucene is TODO.
+        // Bulk indexing for Lucene is TODO.
         for ( Customer customer : listCustomers )
         {
             index( customer );
@@ -433,7 +433,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
         doc.add( new StringField( FIELD_ID, customer.getId( ), Field.Store.YES ) );
         doc.add( new TextField( FIELD_FIRSTNAME, manageNullValue( customer.getFirstname( ) ), Field.Store.YES ) );
         doc.add( new TextField( FIELD_LASTNAME, manageNullValue( customer.getLastname( ) ), Field.Store.YES ) );
-        doc.add( new TextField( FIELD_FAMILYNAME, manageNullValue( customer.getFamilyname( )), Field.Store.YES ) );
+        doc.add( new TextField( FIELD_FAMILYNAME, manageNullValue( customer.getFamilyname( ) ), Field.Store.YES ) );
         doc.add( new StringField( FIELD_PHONE, manageNullValue( customer.getMobilePhone( ) ), Field.Store.YES ) );
         doc.add( new StringField( FIELD_FIXED_PHONE_NUMBER, manageNullValue( customer.getFixedPhoneNumber( ) ), Field.Store.YES ) );
         doc.add( new StoredField( FIELD_EMAIL, manageNullValue( customer.getEmail( ) ) ) );
