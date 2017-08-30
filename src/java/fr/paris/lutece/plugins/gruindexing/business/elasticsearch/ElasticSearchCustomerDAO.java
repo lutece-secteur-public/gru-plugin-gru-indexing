@@ -196,26 +196,28 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     @Override
     public void indexList( List<Customer> listCustomer ) throws IndexingException
     {
-        try
+        if ( listCustomer != null && !listCustomer.isEmpty( ) )
         {
-            BulkRequest bulkRequest = new BulkRequest( );
-
-            Map<AbstractSubRequest, Object> mapSubRequest = new HashMap<AbstractSubRequest, Object>( );
-            for ( Customer customer : listCustomer )
+            try
             {
-                mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomer( customer ) );
+                BulkRequest bulkRequest = new BulkRequest( );
+
+                Map<AbstractSubRequest, Object> mapSubRequest = new HashMap<AbstractSubRequest, Object>( );
+                for ( Customer customer : listCustomer )
+                {
+                    mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomer( customer ) );
+                }
+                bulkRequest.setMapSubAction( mapSubRequest );
+
+                _elastic.createByBulk( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, bulkRequest );
+
             }
-            bulkRequest.setMapSubAction( mapSubRequest );
-
-            _elastic.createByBulk( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, bulkRequest );
-
+            catch( ElasticClientException ex )
+            {
+                AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+                throw new IndexingException( ex.getMessage( ), ex );
+            }
         }
-        catch( ElasticClientException ex )
-        {
-            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
-            throw new IndexingException( ex.getMessage( ), ex );
-        }
-
     }
 
     /**
