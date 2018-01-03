@@ -78,7 +78,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
 
     private static final String FILE_CUSTOMER_INDEXING_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_customer_indexing.template";
 
-    private Elastic _elastic;
+    private final Elastic _elastic;
     private final ElasticSearchTemplate _esTemplateCustomerIndexing;
 
     /**
@@ -300,27 +300,18 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     {
         Customer customer = new Customer( );
 
-        try
+        if ( node != null )
         {
-            customer.setId( node.findValue( KEY_CUSTOMER_ID ).asText( ) );
-
-            customer.setConnectionId( node.findValue( KEY_CUSTOMER_CONNECTION_ID ) != null ? node.findValue( KEY_CUSTOMER_CONNECTION_ID ).asText( )
-                    : StringUtils.EMPTY );
+            customer.setId( findNodeValue( node, KEY_CUSTOMER_ID ) );
+            customer.setConnectionId( findNodeValue( node, KEY_CUSTOMER_CONNECTION_ID ) );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
-            customer.setLastname( node.findValue( KEY_CUSTOMER_LAST_NAME ) != null ? node.findValue( KEY_CUSTOMER_LAST_NAME ).asText( ) : StringUtils.EMPTY );
-            customer.setFamilyname( node.findValue( KEY_CUSTOMER_FAMILY_NAME ) != null ? node.findValue( KEY_CUSTOMER_FAMILY_NAME ).asText( )
-                    : StringUtils.EMPTY );
-            customer.setFirstname( node.findValue( KEY_CUSTOMER_FIRST_NAME ) != null ? node.findValue( KEY_CUSTOMER_FIRST_NAME ).asText( ) : StringUtils.EMPTY );
-            customer.setEmail( node.findValue( KEY_CUSTOMER_EMAIL ) != null ? node.findValue( KEY_CUSTOMER_EMAIL ).asText( ) : StringUtils.EMPTY );
-            customer.setFixedPhoneNumber( node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_FIXED_PHONE_NUMBER )
-                    .asText( ) : StringUtils.EMPTY );
-            customer.setMobilePhone( node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) != null ? node.findValue( KEY_CUSTOMER_MOBILE_PHONE_NUMBER ).asText( )
-                    : StringUtils.EMPTY );
-            customer.setBirthDate( node.findValue( KEY_CUSTOMER_BIRTHDATE ) != null ? node.findValue( KEY_CUSTOMER_BIRTHDATE ).asText( ) : StringUtils.EMPTY );
-        }
-        catch( NullPointerException ex )
-        {
-            AppLogService.error( "Parsing Customer fail " + node.toString( ) );
+            customer.setLastname( findNodeValue( node, KEY_CUSTOMER_LAST_NAME ) );
+            customer.setFamilyname( findNodeValue( node, KEY_CUSTOMER_FAMILY_NAME ) );
+            customer.setFirstname( findNodeValue( node, KEY_CUSTOMER_FIRST_NAME ) );
+            customer.setEmail( findNodeValue( node, KEY_CUSTOMER_EMAIL ) );
+            customer.setFixedPhoneNumber( findNodeValue( node, KEY_CUSTOMER_FIXED_PHONE_NUMBER ) );
+            customer.setMobilePhone( findNodeValue( node, KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) );
+            customer.setBirthDate( findNodeValue( node, KEY_CUSTOMER_BIRTHDATE ) );
         }
 
         return customer;
@@ -336,6 +327,28 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     private static String manageNullValue( String strValue )
     {
         return ( strValue == null ) ? StringUtils.EMPTY : strValue;
+    }
+
+    /**
+     * Finds a node value
+     * 
+     * @param node
+     *            the node containing the value
+     * @param strKey
+     *            the key associated to the value
+     * @return the value of an empty String if not found
+     */
+    private static String findNodeValue( JsonNode node, String strKey )
+    {
+        String strResult = StringUtils.EMPTY;
+        JsonNode nodeValue = node.findValue( strKey );
+
+        if ( nodeValue != null )
+        {
+            strResult = nodeValue.asText( );
+        }
+
+        return strResult;
     }
 
     /**

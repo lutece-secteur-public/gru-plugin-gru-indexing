@@ -113,6 +113,8 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private static final String KEY_FIRSTNAME = FIELD_FIRSTNAME;
     private static final String KEY_LASTNAME = FIELD_LASTNAME;
 
+    private static final String LUCENE_WILDCARD = "*";
+
     private Analyzer _analyzer;
     /** property index path */
     private String _strIndexPath;
@@ -120,8 +122,12 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private Boolean _bIndexInWebapp;
 
     /**
+     * Constructor
+     * 
      * @param strIndexPath
+     *            the index path
      * @param bIndexInWebapp
+     *            {@code true} if the index folder is in the webapp, {@code false} otherwise
      */
     public LuceneCustomerDAO( String strIndexPath, Boolean bIndexInWebapp )
     {
@@ -132,7 +138,10 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
+     * Constructor
+     * 
      * @param strIndexPath
+     *            the index path
      */
     public LuceneCustomerDAO( String strIndexPath )
     {
@@ -288,7 +297,8 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     /**
      * Method which returns a list of all customer found from the specified query
      * 
-     * @param query
+     * @param queryToLaunch
+     *            the query to launch
      * @return a list of all customer found or null
      */
     private List<Customer> getCustomerSearchResult( String queryToLaunch )
@@ -302,7 +312,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             if ( indexSearcher != null )
             {
                 String [ ] strTabFields = {
-                        FIELD_FIRSTNAME, FIELD_LASTNAME, FIELD_FIXED_PHONE_NUMBER, FIELD_PHONE
+                        FIELD_FIRSTNAME, FIELD_LASTNAME, FIELD_FIXED_PHONE_NUMBER, FIELD_PHONE,
                 };
                 MultiFieldQueryParser mfqp = new MultiFieldQueryParser( strTabFields, _analyzer );
                 Query query = mfqp.parse( queryToLaunch );
@@ -370,11 +380,12 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
      * Method used to return a list of customer based on a search value
      * 
      * @param strSearch
+     *            the search value
      * @return the list of customer found by the search value
      */
     private List<Customer> selectBySearch( String strSearch )
     {
-        String strQuery = StringUtils.EMPTY;
+        StringBuilder sbQuery = new StringBuilder( );
 
         try
         {
@@ -382,11 +393,14 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             TokenStream stream = _analyzer.tokenStream( null, new StringReader( strSearch ) );
             CharTermAttribute cattr = stream.addAttribute( CharTermAttribute.class );
             stream.reset( );
+
             while ( stream.incrementToken( ) )
             {
-                strQuery += " " + cattr.toString( );
+                sbQuery.append( ' ' ).append( cattr.toString( ) );
             }
-            strQuery += "*";
+
+            sbQuery.append( LUCENE_WILDCARD );
+
             stream.end( );
             stream.close( );
         }
@@ -395,7 +409,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             AppLogService.error( "Error search customer : " + ex.getMessage( ), ex );
         }
 
-        return getCustomerSearchResult( strQuery );
+        return getCustomerSearchResult( sbQuery.toString( ) );
     }
 
     /**
@@ -486,10 +500,12 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
             customer.setMobilePhone( document.get( FIELD_PHONE ) );
             customer.setFixedPhoneNumber( document.get( FIELD_FIXED_PHONE_NUMBER ) );
             customer.setBirthDate( document.get( FIELD_BIRTHDATE ) );
+
             if ( document.get( FIELD_CIVILITY ) != null )
             {
-                customer.setIdTitle( Integer.valueOf( document.get( FIELD_CIVILITY ) ) );
+                customer.setIdTitle( Integer.parseInt( document.get( FIELD_CIVILITY ) ) );
             }
+
             return customer;
         }
         return null;

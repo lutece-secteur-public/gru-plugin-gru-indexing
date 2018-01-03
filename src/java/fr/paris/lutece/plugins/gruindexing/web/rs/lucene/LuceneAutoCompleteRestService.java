@@ -52,6 +52,12 @@ public class LuceneAutoCompleteRestService
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
     private LuceneCustomerDAO _luceneCustomerDAO;
 
+    /**
+     * Sets the customer indexing service to use
+     * 
+     * @param customerIndexingService
+     *            the customer indexing service
+     */
     public void setCustomerIndexingService( LuceneCustomerDAO customerIndexingService )
     {
         _luceneCustomerDAO = customerIndexingService;
