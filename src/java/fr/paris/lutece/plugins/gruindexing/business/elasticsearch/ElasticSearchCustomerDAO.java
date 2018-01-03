@@ -33,45 +33,53 @@
  */
 package fr.paris.lutece.plugins.gruindexing.business.elasticsearch;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
 import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
-import fr.paris.lutece.plugins.gruindexing.business.ESCustomerDTO;
 import fr.paris.lutece.plugins.gruindexing.util.ElasticSearchParameterUtil;
 import fr.paris.lutece.plugins.libraryelastic.business.bulk.AbstractSubRequest;
 import fr.paris.lutece.plugins.libraryelastic.business.bulk.BulkRequest;
 import fr.paris.lutece.plugins.libraryelastic.business.bulk.IndexSubRequest;
+import fr.paris.lutece.plugins.libraryelastic.business.search.BoolQuery;
+import fr.paris.lutece.plugins.libraryelastic.business.search.MatchLeaf;
 import fr.paris.lutece.plugins.libraryelastic.business.search.SearchRequest;
 import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
 import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 
 /**
  * DAO and indexer implementation with Elasticsearch for Customer
  */
 public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
 {
-    public static final String KEY_CUSTOMER_ID = "user_cid";
-    public static final String KEY_CUSTOMER_CIVILITY = "civility";
-    public static final String KEY_CUSTOMER_LAST_NAME = "last_name";
-    public static final String KEY_CUSTOMER_FAMILY_NAME = "family_name";
-    public static final String KEY_CUSTOMER_FIRST_NAME = "first_name";
-    public static final String KEY_CUSTOMER_EMAIL = "email";
-    public static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
-    public static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
-    public static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
-    public static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
+    private static final String KEY_SOURCE = "_source";
+    private static final String KEY_CUSTOMER_ID = "user_cid";
+    private static final String KEY_CUSTOMER_CIVILITY = "civility";
+    private static final String KEY_CUSTOMER_LAST_NAME = "last_name";
+    private static final String KEY_CUSTOMER_FAMILY_NAME = "family_name";
+    private static final String KEY_CUSTOMER_FIRST_NAME = "first_name";
+    private static final String KEY_CUSTOMER_EMAIL = "email";
+    private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
+    private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
+    private static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
+    private static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
+
+    private static final String FILE_CUSTOMER_INDEXING_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_customer_indexing.template";
+
     private Elastic _elastic;
+    private final ElasticSearchTemplate _esTemplateCustomerIndexing;
 
     /**
      * default constructor
@@ -80,37 +88,25 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     {
         super( );
         _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
+
+        _esTemplateCustomerIndexing = new ElasticSearchTemplate( Paths.get( AppPathService.getWebAppPath( ) + FILE_CUSTOMER_INDEXING_TEMPLATE ) );
     }
 
     /**
-     * {@inheritDoc }.
-     *
-     * @param strQuery
-     *            the str query
-     * @return the list
+     * {@inheritDoc }
      */
     @Override
-    public List<Customer> loadByName( String strFirstName, String strLastName )
+    public List<Customer> selectByFilter( Map<String, String> mapFilter )
     {
-        List<Customer> listCustomer = new ArrayList<Customer>( );
+        List<Customer> listCustomer = new ArrayList<>( );
 
-        Map<String, String> mapFields = new HashMap<String, String>( );
-        if ( StringUtils.isNotEmpty( strFirstName ) )
-        {
-            mapFields.put( KEY_CUSTOMER_FIRST_NAME, strFirstName );
-        }
-        if ( StringUtils.isNotEmpty( strLastName ) )
-        {
-            mapFields.put( KEY_CUSTOMER_LAST_NAME, strLastName );
-        }
-
-        SearchRequest search = ElasticSearchParameterUtil.buildSearchRequest( mapFields );
+        SearchRequest search = buildSearchRequest( mapFilter );
 
         try
         {
             String strESResult = _elastic.search( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, search );
             JsonNode jsonESResult = ElasticSearchParameterUtil.setJsonToJsonTree( strESResult );
-            List<JsonNode> listJsonCustomers = jsonESResult.findValues( "_source" );
+            List<JsonNode> listJsonCustomers = jsonESResult.findValues( KEY_SOURCE );
 
             for ( JsonNode jsonCustomer : listJsonCustomers )
             {
@@ -122,10 +118,31 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         }
         catch( ElasticClientException ex )
         {
-            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            AppLogService.error( "Error during searching customers from Elasticsearch", ex );
         }
 
         return listCustomer;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public List<Customer> selectByName( String strFirstName, String strLastName )
+    {
+        Map<String, String> mapFilter = new HashMap<String, String>( );
+
+        if ( StringUtils.isNotEmpty( strFirstName ) )
+        {
+            mapFilter.put( KEY_CUSTOMER_FIRST_NAME, strFirstName );
+        }
+
+        if ( StringUtils.isNotEmpty( strLastName ) )
+        {
+            mapFilter.put( KEY_CUSTOMER_LAST_NAME, strLastName );
+        }
+
+        return selectByFilter( mapFilter );
     }
 
     /**
@@ -141,7 +158,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
 
         try
         {
-            SearchRequest search = ElasticSearchParameterUtil.buildSearchRequest( mapFields );
+            SearchRequest search = buildSearchRequest( mapFields );
 
             String strESResult = _elastic.search( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, search );
             JsonNode jsonESResult = ElasticSearchParameterUtil.setJsonToJsonTree( strESResult );
@@ -180,7 +197,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         try
         {
             _elastic.create( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ),
-                    buildCustomer( customer ) );
+                    buildCustomerIndex( customer ) );
         }
         catch( ElasticClientException ex )
         {
@@ -205,7 +222,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
                 Map<AbstractSubRequest, Object> mapSubRequest = new HashMap<AbstractSubRequest, Object>( );
                 for ( Customer customer : listCustomer )
                 {
-                    mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomer( customer ) );
+                    mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomerIndex( customer ) );
                 }
                 bulkRequest.setMapSubAction( mapSubRequest );
 
@@ -243,29 +260,33 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     }
 
     /**
-     * Build a customer to an esCustomerDTO.
-     *
+     * Builds the index request from the specified customer
+     * 
      * @param customer
-     *            the customer
-     * @return the ES customer dto
+     *            the customer to index
+     * @return the index request
      */
-    private ESCustomerDTO buildCustomer( Customer customer )
+    private String buildCustomerIndex( Customer customer )
     {
-        ESCustomerDTO customerDTO = new ESCustomerDTO( );
+        Map<String, String> mapPlaceholderValues = new HashMap<>( );
+        mapPlaceholderValues.put( KEY_CUSTOMER_ID, customer.getId( ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_CONNECTION_ID, customer.getConnectionId( ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_LAST_NAME, manageNullValue( customer.getLastname( ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_FIRST_NAME, manageNullValue( customer.getFirstname( ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_FAMILY_NAME, manageNullValue( customer.getFamilyname( ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_EMAIL, manageNullValue( customer.getEmail( ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_BIRTHDATE, manageNullValue( customer.getBirthDate( ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_CIVILITY, manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_MOBILE_PHONE_NUMBER, manageNullValue( customer.getMobilePhone( ) ) );
+        mapPlaceholderValues.put( KEY_CUSTOMER_FIXED_PHONE_NUMBER, manageNullValue( customer.getFixedPhoneNumber( ) ) );
 
-        customerDTO.setCustomerId( customer.getId( ) );
-        customerDTO.setConnectionId( customer.getConnectionId( ) );
-        customerDTO.setName( manageNullValue( customer.getLastname( ) ) );
-        customerDTO.setFirstName( manageNullValue( customer.getFirstname( ) ) );
-        customerDTO.setFamilyName( manageNullValue( customer.getFamilyname( ) ) );
-        customerDTO.setEmail( manageNullValue( customer.getEmail( ) ) );
-        customerDTO.setBirthday( manageNullValue( customer.getBirthDate( ) ) );
-        customerDTO.setCivility( manageNullValue( Integer.toString( customer.getIdTitle( ) ) ) );
-        customerDTO.setTelephoneNumber( manageNullValue( customer.getMobilePhone( ) ) );
-        customerDTO.setFixedTelephoneNumber( manageNullValue( customer.getFixedPhoneNumber( ) ) );
-        customerDTO.setSuggest( );
+        for ( String strAttribute : customer.getAttributeNames( ) )
+        {
+            mapPlaceholderValues.put( strAttribute, customer.getAttribute( strAttribute ) );
+        }
 
-        return customerDTO;
+        return _esTemplateCustomerIndexing.build( mapPlaceholderValues );
+
     }
 
     /**
@@ -315,6 +336,33 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     private static String manageNullValue( String strValue )
     {
         return ( strValue == null ) ? StringUtils.EMPTY : strValue;
+    }
+
+    /**
+     * Builds a search request for Elasticsearch.
+     *
+     * @param mapFields
+     *            the fields to search
+     * @return the search request
+     */
+    private static SearchRequest buildSearchRequest( Map<String, String> mapFields )
+    {
+        SearchRequest root = new SearchRequest( );
+        BoolQuery query = new BoolQuery( );
+
+        for ( Entry<String, String> searchParam : mapFields.entrySet( ) )
+        {
+            query.addMust( new MatchLeaf( searchParam.getKey( ), searchParam.getValue( ) ) );
+        }
+
+        root.setSearchQuery( query );
+
+        if ( StringUtils.isNotBlank( ElasticSearchParameterUtil.PROPERTY_SIZE_ELK_SEARCH ) )
+        {
+            root.setSize( Integer.parseInt( ElasticSearchParameterUtil.PROPERTY_SIZE_ELK_SEARCH ) );
+        }
+
+        return root;
     }
 
 }

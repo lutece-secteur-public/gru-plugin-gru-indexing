@@ -33,26 +33,28 @@
  */
 package fr.paris.lutece.plugins.gruindexing.web.rs.elasticsearch;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchCustomerDAO;
+import fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchTemplate;
 import fr.paris.lutece.plugins.gruindexing.util.ElasticSearchParameterUtil;
-import fr.paris.lutece.plugins.libraryelastic.business.suggest.CompletionSuggestRequest;
 import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
 import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -68,6 +70,27 @@ public class ElasticSearchAutoCompleteRestService
 {
     public static final String PATH_SERVICE = "elasticsearch/";
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
+
+    private static final String FILE_AUTOCOMPLETE_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template";
+
+    // Markers
+    private static final String MARK_QUERY = "query";
+
+    // Keys
+    private static final String KEY_PAYLOAD = "payload";
+    private static final String KEY_AUTOCOMPLETE = "autocomplete";
+
+    private final ElasticSearchTemplate _esTemplateAutocomplete;
+
+    /**
+     * Constructor
+     */
+    public ElasticSearchAutoCompleteRestService( )
+    {
+        super( );
+
+        _esTemplateAutocomplete = new ElasticSearchTemplate( Paths.get( AppPathService.getWebAppPath( ) + FILE_AUTOCOMPLETE_TEMPLATE ) );
+    }
 
     /**
      * Autocomplete.
@@ -85,10 +108,11 @@ public class ElasticSearchAutoCompleteRestService
 
         try
         {
-            CompletionSuggestRequest suggest = ElasticSearchParameterUtil.buildAutoCompleteSearch( strQuery );
+            Map<String, String> mapPlaceholderValues = new HashMap<>( );
+            mapPlaceholderValues.put( MARK_QUERY, strQuery );
 
             Elastic elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
-            String jsonRetour = elastic.suggest( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, suggest );
+            String jsonRetour = elastic.suggest( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, _esTemplateAutocomplete.build( mapPlaceholderValues ) );
 
             JsonNode node = ElasticSearchParameterUtil.setJsonToJsonTree( jsonRetour );
             retour = getInfoAutocomplete( node );
@@ -108,55 +132,25 @@ public class ElasticSearchAutoCompleteRestService
     /**
      * Method which permit to find and format the result of an autocomplete.
      *
-     * @param nodeTree
-     *            the node tree
+     * @param nodeESAutocomplete
+     *            the autocomplete node from Elasticsearch
      * @return the info autocomplete
-     * @throws JsonGenerationException
-     *             the json generation exception
-     * @throws JsonMappingException
-     *             the json mapping exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws JsonProcessingException
+     *             if the JSON result cannot be processed
      */
-    private static String getInfoAutocomplete( JsonNode nodeTree ) throws JsonGenerationException, JsonMappingException, IOException
+    private static String getInfoAutocomplete( JsonNode nodeESAutocomplete ) throws JsonProcessingException
     {
-        List<JsonNode> payload = nodeTree.findValues( ElasticSearchParameterUtil.MARKER_PAYLOAD );
+        List<JsonNode> listPayloads = nodeESAutocomplete.findValues( KEY_PAYLOAD );
 
         ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;
-        ObjectNode root = new ObjectNode( factory );
+        ObjectNode nodeRoot = new ObjectNode( factory );
         ArrayNode autocomplete = new ArrayNode( factory );
 
-        for ( JsonNode node : payload )
-        {
-            ObjectNode item = new ObjectNode( factory );
+        autocomplete.addAll( listPayloads );
 
-            node = node.path( ElasticSearchParameterUtil.MARKER_ELEMENTS );
+        nodeRoot.set( KEY_AUTOCOMPLETE, autocomplete );
 
-            if ( !node.path( ElasticSearchCustomerDAO.KEY_CUSTOMER_LAST_NAME ).isMissingNode( ) )
-            {
-                item.put( ElasticSearchCustomerDAO.KEY_CUSTOMER_LAST_NAME, node.get( ElasticSearchCustomerDAO.KEY_CUSTOMER_LAST_NAME ).asText( ) );
-            }
-
-            if ( !node.path( ElasticSearchCustomerDAO.KEY_CUSTOMER_FIRST_NAME ).isMissingNode( ) )
-            {
-                item.put( ElasticSearchCustomerDAO.KEY_CUSTOMER_FIRST_NAME, node.get( ElasticSearchCustomerDAO.KEY_CUSTOMER_FIRST_NAME ).asText( ) );
-            }
-
-            if ( !node.path( ElasticSearchCustomerDAO.KEY_CUSTOMER_ID ).isMissingNode( ) )
-            {
-                item.put( ElasticSearchCustomerDAO.KEY_CUSTOMER_ID, node.get( ElasticSearchCustomerDAO.KEY_CUSTOMER_ID ).asText( ) );
-            }
-
-            ObjectNode tmp = new ObjectNode( factory );
-            tmp.set( ElasticSearchParameterUtil.MARKER_ITEM, item );
-            autocomplete.add( tmp );
-        }
-
-        root.set( ElasticSearchParameterUtil.MARKER_AUTOCOMPLETE, autocomplete );
-
-        String test = mapper.writeValueAsString( root );
-
-        return test;
+        return mapper.writeValueAsString( nodeRoot );
     }
 }

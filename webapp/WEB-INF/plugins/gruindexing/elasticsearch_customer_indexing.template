@@ -1,0 +1,28 @@
+{
+  "user_cid":"${user_cid}",
+  "connection_id":"${connection_id}",
+  "email":"${email}",
+  "last_name":"${last_name}",
+  "family_name":"${family_name}",
+  "first_name":"${first_name}",
+  "stayConnected":false,
+  "telephoneNumber":"${telephoneNumber}",
+  "fixed_telephone_number":"${fixed_telephone_number}",
+  "birthday":"${birthday}",
+  "civility":"${civility}",
+  "suggest":{
+    "input":[
+      "${first_name} ${last_name}",
+      "${last_name} ${first_name}",
+      "${telephoneNumber}",
+      "${fixed_telephone_number}"
+    ],
+    "payload":{
+      "output":"${first_name} ${last_name}",
+      "search":{
+        "first_name":"${first_name}",
+        "last_name":"${last_name}"
+      }
+    }
+  }
+}

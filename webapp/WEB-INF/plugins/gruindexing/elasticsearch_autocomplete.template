@@ -1,0 +1,12 @@
+{
+   "suggest":{
+      "lutece-suggest":{
+         "text":"${query}",
+         "completion":{
+            "field":"suggest",
+            "size":"15"
+         }
+      }
+   },
+   "size":0
+}

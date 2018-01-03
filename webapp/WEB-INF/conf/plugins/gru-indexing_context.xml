@@ -4,7 +4,21 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
     
-    <!-- REST -->
+    <!-- Indexer -->
+    <bean id="gru-indexing.luceneCustomerIndexer" class="fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO">
+        <constructor-arg type="java.lang.String" value="/WEB-INF/index/plugins/identitystore/identity" />
+        <constructor-arg type="java.lang.Boolean" value="true" />
+    </bean>
+    <!--
+    <bean id="gru-indexing.ESCustomerIndexer" class="fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchCustomerDAO"/>
+    -->
+
+    <!-- Autocomplete -->
+    <bean id="gru-indexing.autocomplete" class="fr.paris.lutece.plugins.gruindexing.web.rs.lucene.LuceneAutoCompleteRestService">
+        <property name="customerIndexingService" ref="gru-indexing.luceneCustomerIndexer"/>
+    </bean>
+    <!--
     <bean id="gru-indexing.autocomplete" class="fr.paris.lutece.plugins.gruindexing.web.rs.elasticsearch.ElasticSearchAutoCompleteRestService"/>
+    -->
     
 </beans>

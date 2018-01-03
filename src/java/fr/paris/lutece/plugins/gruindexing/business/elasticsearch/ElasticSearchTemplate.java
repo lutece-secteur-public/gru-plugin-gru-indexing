@@ -31,62 +31,64 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.gruindexing.util;
+package fr.paris.lutece.plugins.gruindexing.business.elasticsearch;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 import fr.paris.lutece.portal.service.util.AppLogService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 /**
- * Util class for elastic request
+ * <p>
+ * This class represents a content template for Elasticsearch request.
+ * </p>
+ * <p>
+ * The template contains placeholders which are replaced by the {@code build} method.
+ * </p>
+ *
  */
-public final class ElasticSearchParameterUtil
+public class ElasticSearchTemplate
 {
-    // PROPERTIES KEYS
-    public static final String URL_ELK_SERVER = "gru-indexing.urlElk";
-    public static final String PATH_ELK_INDEX = "gru-indexing.index";
-    public static final String PATH_ELK_TYPE_USER = "gru-indexing.typeUser";
-    public static final String SIZE_ELK_SEARCH = "gru-indexing.sizeSearchParamValue";
+    private static final String REGEXP_NEWLINE = "\\r\\n|\\r|\\n";
 
-    // PATHS
-    public static final String PROP_URL_ELK_SERVER = AppPropertiesService.getProperty( URL_ELK_SERVER );
-    public static final String PROP_PATH_ELK_INDEX = AppPropertiesService.getProperty( PATH_ELK_INDEX );
-    public static final String PROP_PATH_ELK_TYPE_USER = AppPropertiesService.getProperty( PATH_ELK_TYPE_USER );
-    public static final String PROPERTY_SIZE_ELK_SEARCH = AppPropertiesService.getProperty( SIZE_ELK_SEARCH );
+    private String _strTemplate;
 
     /**
-     * Instantiates a new GRU elastics constants.
+     * Constructs an {@code ElasticSearchTemplate} instance from the specified path
+     * 
+     * @param pathTemplate
+     *            the path containing the request content template
      */
-    private ElasticSearchParameterUtil( )
+    public ElasticSearchTemplate( Path pathTemplate )
     {
-    }
-
-    /**
-     * Sets the json to json tree.
-     *
-     * @param strJson
-     *            the str json
-     * @return the json node
-     */
-    public static JsonNode setJsonToJsonTree( String strJson )
-    {
-        ObjectMapper mapper = new ObjectMapper( );
-        JsonNode tmp = null;
-
         try
         {
-            tmp = mapper.readTree( strJson );
+            _strTemplate = new String( Files.readAllBytes( pathTemplate ), StandardCharsets.UTF_8 ).replaceAll( REGEXP_NEWLINE, StringUtils.EMPTY );
         }
-        catch( IOException ex )
+        catch( IOException e )
         {
-            AppLogService.error( ex + " :" + ex.getMessage( ), ex );
+            AppLogService.error( "Cannot open the template file : " + pathTemplate.getFileName( ), e );
+            _strTemplate = StringUtils.EMPTY;
         }
-
-        return tmp;
     }
 
+    /**
+     * Builds the final request content by replacing the placeholders in the template with the specified values
+     * 
+     * @param mapPlaceholderValues
+     *            the values used to replace the placeholders in the template
+     * @return the final request content
+     */
+    public String build( Map<String, String> mapPlaceholderValues )
+    {
+        StrSubstitutor sub = new StrSubstitutor( mapPlaceholderValues );
+
+        return sub.replace( _strTemplate );
+    }
 }

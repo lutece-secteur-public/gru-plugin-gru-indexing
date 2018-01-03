@@ -39,10 +39,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -76,6 +76,12 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
 import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
@@ -83,16 +89,12 @@ import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
 import fr.paris.lutece.portal.service.search.LuceneSearchEngine;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * DAO and indexer implementation with Lucene for Customer
  */
 public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
 {
-    private static final int INDENT = 4;
-
     private static final String FIELD_ID = "id";
     private static final String FIELD_CONNECTION_ID = "connection_id";
     private static final String FIELD_FIRSTNAME = "firstname";
@@ -103,6 +105,13 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private static final String FIELD_FIXED_PHONE_NUMBER = "fixed_phone_phone";
     private static final String FIELD_BIRTHDATE = "birthdate";
     private static final String FIELD_CIVILITY = "civility";
+
+    // Keys
+    private static final String KEY_AUTOCOMPLETE = "autocomplete";
+    private static final String KEY_OUTPUT = "output";
+    private static final String KEY_SEARCH = "search";
+    private static final String KEY_FIRSTNAME = FIELD_FIRSTNAME;
+    private static final String KEY_LASTNAME = FIELD_LASTNAME;
 
     private Analyzer _analyzer;
     /** property index path */
@@ -326,7 +335,19 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
      * {@inheritDoc }.
      */
     @Override
-    public List<Customer> loadByName( String strFirstName, String strLastName )
+    public List<Customer> selectByFilter( Map<String, String> mapFilter )
+    {
+        String strFirstName = mapFilter.get( FIELD_FIRSTNAME );
+        String strLastName = mapFilter.get( FIELD_LASTNAME );
+
+        return selectByName( strFirstName, strLastName );
+    }
+
+    /**
+     * {@inheritDoc }.
+     */
+    @Override
+    public List<Customer> selectByName( String strFirstName, String strLastName )
     {
         Builder booleanQueryMainBuilder = new BooleanQuery.Builder( );
 
@@ -351,7 +372,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
      * @param strSearch
      * @return the list of customer found by the search value
      */
-    private List<Customer> loadBySearch( String strSearch )
+    private List<Customer> selectBySearch( String strSearch )
     {
         String strQuery = StringUtils.EMPTY;
 
@@ -483,37 +504,52 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
      */
     public String search( String strQuery )
     {
-        List<Customer> listCustomers = loadBySearch( strQuery );
-        Map<AbstractMap.SimpleEntry<String, String>, Customer> mapCustomer = new LinkedHashMap<AbstractMap.SimpleEntry<String, String>, Customer>( );
+        String strResult = StringUtils.EMPTY;
+        List<Customer> listCustomers = selectBySearch( strQuery );
+
+        // In order to display distinct first name + last name
+        Set<AbstractMap.SimpleEntry<String, String>> setCustomers = new HashSet<>( );
+
         if ( listCustomers != null && !listCustomers.isEmpty( ) )
         {
             for ( Customer customer : listCustomers )
             {
-                mapCustomer.put( new AbstractMap.SimpleEntry<String, String>( customer.getFirstname( ), customer.getLastname( ) ), customer );
+                setCustomers.add( new AbstractMap.SimpleEntry<String, String>( customer.getFirstname( ), customer.getLastname( ) ) );
             }
         }
 
-        JSONObject json = new JSONObject( );
+        ObjectMapper mapper = new ObjectMapper( );
+        JsonNodeFactory factory = JsonNodeFactory.instance;
+        ObjectNode nodeRoot = new ObjectNode( factory );
+        ArrayNode nodeAutocomplete = new ArrayNode( factory );
 
-        JSONArray jsonAutocomplete = new JSONArray( );
-
-        for ( Entry<AbstractMap.SimpleEntry<String, String>, Customer> entryCustomer : mapCustomer.entrySet( ) )
+        for ( AbstractMap.SimpleEntry<String, String> entryCustomer : setCustomers )
         {
-            if ( entryCustomer != null && entryCustomer.getValue( ) != null )
-            {
-                JSONObject jsonItem = new JSONObject( );
-                JSONObject jsonItemContent = new JSONObject( );
+            ObjectNode nodeItem = new ObjectNode( factory );
+            ObjectNode nodeSearch = new ObjectNode( factory );
 
-                jsonItemContent.accumulate( "first_name", entryCustomer.getValue( ).getFirstname( ) );
-                jsonItemContent.accumulate( "last_name", entryCustomer.getValue( ).getLastname( ) );
-                jsonItem.accumulate( "item", jsonItemContent );
-                jsonAutocomplete.add( jsonItem );
-            }
+            nodeItem.put( KEY_OUTPUT, entryCustomer.getKey( ) + " " + entryCustomer.getValue( ) );
+
+            nodeSearch.put( KEY_FIRSTNAME, entryCustomer.getKey( ) );
+            nodeSearch.put( KEY_LASTNAME, entryCustomer.getValue( ) );
+
+            nodeItem.set( KEY_SEARCH, nodeSearch );
+
+            nodeAutocomplete.add( nodeItem );
         }
 
-        json.accumulate( "autocomplete", jsonAutocomplete );
+        nodeRoot.set( KEY_AUTOCOMPLETE, nodeAutocomplete );
 
-        return json.toString( INDENT );
+        try
+        {
+            strResult = mapper.writeValueAsString( nodeRoot );
+        }
+        catch( JsonProcessingException e )
+        {
+            AppLogService.error( "Cannot convert the customers to JSON" );
+        }
+
+        return strResult;
     }
 
     /**
