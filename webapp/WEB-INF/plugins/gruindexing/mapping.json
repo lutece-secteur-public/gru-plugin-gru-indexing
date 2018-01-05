@@ -23,7 +23,7 @@
                       "analyzer": "standard"
                    
                 },
-                "user_cid": {
+                "customer_id": {
                     "index": "not_analyzed",
                     "type": "string"
                 },
@@ -55,12 +55,12 @@
                     "index": "not_analyzed",
                     "type": "string"
                 },
-                "telephoneNumber": {
+                "mobile_phone_number": {
                     "type": "string",
                       "analyzer": "standard"
                    
                 },
-                "fixed_telephone_number": {
+                "fixed_phone_number": {
                     "type": "string",
                       "analyzer": "standard"
                       

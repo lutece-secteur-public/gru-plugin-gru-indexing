@@ -1,13 +1,13 @@
 {
-  "user_cid":"${user_cid}",
+  "customer_id":"${customer_id}",
   "connection_id":"${connection_id}",
   "email":"${email}",
   "last_name":"${last_name}",
   "family_name":"${family_name}",
   "first_name":"${first_name}",
   "stayConnected":false,
-  "telephoneNumber":"${telephoneNumber}",
-  "fixed_telephone_number":"${fixed_telephone_number}",
+  "mobile_phone_number":"${mobile_phone_number}",
+  "fixed_phone_number":"${fixed_phone_number}",
   "birthday":"${birthday}",
   "civility":"${civility}",
   "suggest":{

@@ -65,14 +65,14 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
 {
     private static final String KEY_SOURCE = "_source";
-    private static final String KEY_CUSTOMER_ID = "user_cid";
+    private static final String KEY_CUSTOMER_ID = "customer_id";
     private static final String KEY_CUSTOMER_CIVILITY = "civility";
     private static final String KEY_CUSTOMER_LAST_NAME = "last_name";
     private static final String KEY_CUSTOMER_FAMILY_NAME = "family_name";
     private static final String KEY_CUSTOMER_FIRST_NAME = "first_name";
     private static final String KEY_CUSTOMER_EMAIL = "email";
-    private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "telephoneNumber";
-    private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_telephone_number";
+    private static final String KEY_CUSTOMER_MOBILE_PHONE_NUMBER = "mobile_phone_number";
+    private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_phone_number";
     private static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
     private static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
 
