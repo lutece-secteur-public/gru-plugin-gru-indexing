@@ -1,12 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<properties>
-		<title>Module GRU indexing</title>
-	</properties>
-	<body>
-		<section name="Module gru indexing">
-			<subsection name="Introduction">
-			</subsection>
-		</section>
-	</body>
+    <properties>
+        <title>Module GRU indexing</title>
+    </properties>
+    <body>
+        <section name="Module gru indexing">
+            <subsection name="Introduction">
+             <p>Ce plugin permet d'indexer des objets <code>fr.paris.lutece.plugins.grubusiness.business.customer.Customer</code> de la librairie <code>gru-library-grubusiness</code>. Une recherche sur les usagers peut alors être effectuée.
+             </p>
+             <p>Ce plugin contient deux implémentations de l'indexation :
+                <ul>
+                    <li>indexation avec Lucene : la recherche ne peut s'effectuer que sur le nom et/ou prénom de l'usager. C'est l'implémentation par défaut.</li>
+                    <li>indexation avec Elasticsearch : la recherche peut s'effectuer sur l'ensemble des champs indexés.</li>
+                </ul>
+             </p>
+            </subsection>
+            
+            <subsection name="Utiliser Lucene">
+                <p><strong>Indexation</strong></p>
+                <p>La classe gérant l'indexation est <code>fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO</code>.
+                Elle est également configurée en tant que bean dans le contexte Spring.
+                Elle peut être configurée :
+                <ul>
+                    <li>Le premier argument du constructeur donne le chemin du dossier d'index. Par défaut, le dossier d'index est dans la webapp.</li>
+                    <li>Le second argument du constructeur indique si le dossier d'index est dans la webapp (valeur = <code>true</code>) or non (valeur = <code>false</code>). Par défaut, la valeur est <code>true</code>.</li>
+                </ul>
+                </p>
+                
+                <p><strong>Recherche</strong></p>
+                <p>La classe gérant la recherche est <code>fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO</code>.
+                Voir la section <strong>Indexing</strong> ci-dessus pour configurer la classe.
+                </p>
+                <p>Seuls le nom et/ou le prénom peuvent être recherchés.
+                </p>
+                
+                <p><strong>Recherche avec autocomplétion</strong></p>
+                <p>La classe gérant la recherche avec autocomplétion est <code>fr.paris.lutece.plugins.gruindexing.web.rs.lucene.LuceneAutoCompleteRestService</code>.
+                Elle est également configurée en tant que bean dans le contexte Spring.
+                C'est un service web qui peut être appelé à l'URL <code>/rest/lucene/autocomplete</code> avec la méthode GET. Le paramètre <code>query</code> doit contenir les termes à rechercher.
+                </p>
+                <p>Seuls le nom et/ou le prénom peuvent être recherchés.
+                </p>
+                <p>L'autocomplétion retourne une chaîne de caractères JSON avec les champs suivants :
+                <ul>
+                    <li><code>output</code> : le texte affiché par l'autocomplétion. C'est toujours le prénom + nom de l'usager.</li>
+                    <li><code>search</code> : la liste des champs utilisés par la recherche. Pourquoi ce champ est présent : l'autocomplétion supprime les résultats en doublons. Par conséquent, quand un résultat est sélectionné, une seconde recherche peut être nécessaire pour afficher les résultats en doublons. La seconde recherche se base sur cette liste de champs.
+                    Il contient toujours le champ <code>first_name</code> et le champ <code>last_name</code>.
+                    </li>
+                </ul>
+                Voici un exemple :
+                <pre>
+{
+  "autocomplete": [{
+    "output": "John Doe",
+    "search":{
+      "first_name":"John",
+      "last_name":"Doe"
+    }
+  }, {
+    "output": "John Black",
+    "search":{
+      "first_name":"John",
+      "last_name":"Black"
+    }
+  }]
+}
+                </pre>
+                </p>
+            </subsection>
+            
+            <subsection name="Utiliser Elasticsearch">
+                <p>Avant d'utiliser Elasticsearch, il faut modifier les clés suivantes dans le fichier de propriétés :
+                <ul>
+                    <li><code>gru-indexing.urlElk</code> : l'URL du serveur Elasticsearch</li>
+                    <li><code>gru-indexing.index</code> : le nom de l'index Elasticsearch</li>
+                    <li><code>gru-indexing.typeUser</code> : le type d'index Elasticsearch pour les usagers</li>
+                </ul>
+                </p>
+                
+                <p><strong>Indexation</strong></p>
+                <p>La classe gérant l'indexation est <code>fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchCustomerDAO</code>.
+                Elle est également configurée en tant que bean dans le contexte Spring.
+                </p>
+                <p>La requête d'indexation est définie dans le fichier <code>WEB-INF/plugins/gruindexing/elasticsearch_customer_indexing.template</code>.
+                Elle contient des marques (comme <code>${user_cid}</code>) qui sont remplacées par les valeurs réelles au moment de l'indexation. Certaines marques sont prédéfinies :
+                <ul>
+                    <li><code>${customer_id}</code> : l'id de l'usager</li>
+                    <li><code>${connection_id}</code> : l'id de connexion de l'usager</li>
+                    <li><code>${email}</code> : l'adresse email de l'usager</li>
+                    <li><code>${last_name}</code> : le nom de famille de l'usager</li>
+                    <li><code>${family_name}</code> : le nom de jeune fille de l'usager</li>
+                    <li><code>${first_name}</code> : le prénom de l'usager</li>
+                    <li><code>${mobile_phone_number}</code> : le numéro de téléphone mobile de l'usager</li>
+                    <li><code>${fixed_phone_number}</code> : le numéro de téléphone fixe de l'usager</li>
+                    <li><code>${birthday}</code> : la date d'anniversaire de l'usager</li>
+                    <li><code>${civility}</code> : la civilité de l'usager</li>
+                </ul>
+                Les autres marques sont retrouvées à partir des attributs supplémentaires de l'objet <code>fr.paris.lutece.plugins.grubusiness.business.customer.Customer</code>.
+                </p>
+                <p>De la même façon, certains champs indexés sont prédéfinis :
+                <ul>
+                    <li><code>customer_id</code> : l'id de l'usager</li>
+                    <li><code>connection_id</code> : l'id de connexion de l'usager</li>
+                    <li><code>email</code> : l'adresse email de l'usager</li>
+                    <li><code>last_name</code> : le nom de famille de l'usager</li>
+                    <li><code>family_name</code> : le nom de jeune fille de l'usager</li>
+                    <li><code>first_name</code> : le prénom de l'usager</li>
+                    <li><code>mobile_phone_number</code> : le numéro de téléphone mobile de l'usager</li>
+                    <li><code>fixed_phone_number</code> : le numéro de téléphone fixe de l'usager</li>
+                    <li><code>birthday</code> : la date d'anniversaire de l'usager</li>
+                    <li><code>civility</code> : la civilité de l'usager</li>
+                </ul>
+                Les autres champs indexés peuvent être ajoutés selon les besoins.
+                </p>
+                <p>Afin d'utiliser l'autocomplétion, le template doit contenir un champ <code>suggest</code> et un champ <code>payload</code>.
+                Le champ <code>suggest</code> est un champ de complétion standard Elasticsearch.
+                Le champ <code>payload</code> doit contenir les champs suivants :
+                <ul>
+                    <li><code>output</code>: le texte affiché par l'autocomplétion</li>
+                    <li><code>search</code>: la liste des champs utilisés par la recherche. Pourquoi ce champ est présent : l'autocomplétion supprime les résultats en doublons. Par conséquent, quand un résultat est sélectionné, une seconde recherche peut être nécessaire pour afficher les résultats en doublons. La seconde recherche se base sur cette liste de champs.</li>
+                </ul>
+                Avant la version 5.0 d'Elasticsearch, le champ <code>payload</code> doit être contenu dans le champ <code>suggest</code>. Voici un exemple :
+                <pre>
+"suggest":{
+  "input":[
+    "${first_name} ${last_name}",
+    "${last_name} ${first_name}",
+    "${telephoneNumber}",
+    "${fixed_telephone_number}"
+  ],
+  "payload":{
+    "output":"${first_name} ${last_name}",
+    "search":{
+      "first_name":"${first_name}",
+      "last_name":"${last_name}"
+    }
+  }
+}
+                </pre>
+                Après la version 5.0 d'Elasticsearch, le champ <code>payload</code> doit être un champ du document, comme les autres champs. Voici un exemple :
+                <pre>
+"suggest":{
+  "input":[
+    "${first_name} ${last_name}",
+    "${last_name} ${first_name}",
+    "${telephoneNumber}",
+    "${fixed_telephone_number}"
+  ]
+},
+"payload":{
+  "output":"${first_name} ${last_name}",
+  "search":{
+    "first_name":"${first_name}",
+    "last_name":"${last_name}"
+  }
+}
+                </pre>
+                </p>
+                
+                <p><strong>Recherche</strong></p>
+                <p>La classe gérant la recherche est <code>fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchCustomerDAO</code>.
+                Elle est également configurée en tant que bean dans le contexte Spring.
+                </p>
+                <p>La recherche peut être configurée en modifiant les clés suivantes dans le fichier de propriétés :
+                <ul>
+                    <li><code>gru-indexing.sizeSearchParamValue</code>: le nombre de résultats retournés par la recherche</li>
+                </ul>
+                </p>
+                
+                <p><strong>Recherche avec autocomplétion</strong></p>
+                <p>La classe gérant la recherche avec autocomplétion est <code>fr.paris.lutece.plugins.gruindexing.web.rs.elasticsearch.ElasticSearchAutoCompleteRestService</code>.
+                Elle est également configurée en tant que bean dans le contexte Spring.
+                C'est un service web qui peut être appelé à l'URL <code>/rest/elasticsearch/autocomplete</code> avec la méthode GET. Le paramètre <code>query</code> doit contenir les termes à rechercher.
+                </p>
+                <p>La requête d'autocomplétion est définie dans le fichier <code>WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template</code>.
+                Elle contient une marque <code>${query}</code> qui est remplacée par les termes à compléter au moment de la recherche.
+                </p>
+                <p>L'autocomplétion retourne une chaîne de caractères JSON avec les champs suivants :
+                <ul>
+                    <li><code>output</code> : le champ <code>output</code> défini dans le fichier template d'indexation</li>
+                    <li><code>search</code> : le champ <code>search</code> défini dans le fichier template d'indexation</li>
+                </ul>
+                Voici un exemple :
+                <pre>
+{
+  "autocomplete": [{
+    "output": "John Doe",
+    "search":{
+      "first_name":"John",
+      "last_name":"Doe"
+    }
+  }, {
+    "output": "John Black",
+    "search":{
+      "first_name":"John",
+      "last_name":"Black"
+    }
+  }]
+}
+                </pre>
+                </p>
+            </subsection>
+        </section>
+    </body>
 </document>

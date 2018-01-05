@@ -6,7 +6,201 @@
 	<body>
 		<section name="Module gru indexing">
 			<subsection name="Introduction">
-			</subsection>
+			 <p>This plugin enables to index objects <code>fr.paris.lutece.plugins.grubusiness.business.customer.Customer</code> of the library <code>gru-library-grubusiness</code>. A search on customers can be then performed.
+             </p>
+             <p>This plugin contains two indexing implementations:
+                <ul>
+                    <li>indexing with Lucene: the search can only be done on the first name and/or the last name of the customers. It is the default implementation.</li>
+                    <li>indexing with Elasticsearch: the search can be done on every indexed fields.</li>
+                </ul>
+             </p>
+            </subsection>
+            
+            <subsection name="Using Lucene">
+                <p><strong>Indexing</strong></p>
+                <p>The class managing the indexing is <code>fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO</code>. 
+                It is also configured as a bean in the Spring context. 
+                It can be configured:
+                <ul>
+                    <li>The first constructor argument gives the path of the index folder. By default, the index folder is in the webapp.</li>
+                    <li>The second constructor argument indicates whether the index folder is in the webapp (value = <code>true</code>) or not (value = <code>false</code>). By default, the value is <code>true</code>.</li>
+                </ul>
+                </p>
+                
+                <p><strong>Search</strong></p>
+                <p>The class managing the search is <code>fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO</code>. 
+                See the above section <strong>Indexing</strong> to configure the class.
+                </p>
+                <p>Only the first name and/or the last name can be searched.
+                </p>
+                
+                <p><strong>Autocomplete search</strong></p>
+                <p>The class managing the autocomplete search is <code>fr.paris.lutece.plugins.gruindexing.web.rs.lucene.LuceneAutoCompleteRestService</code>. 
+                It is also configured as a bean in the Spring context. 
+                It is a web service which can be called at the URL <code>/rest/lucene/autocomplete</code> with a GET method. The parameter <code>query</code> must contain the term(s) to search.
+                </p>
+                <p>Only the first name and/or the last name can be searched.
+                </p>
+                <p>The autocomplete search returns a JSON string with the following fields:
+                <ul>
+                    <li><code>output</code>: the text displayed by the autocomplete search. It is always the first name + the last name of the customer.</li>
+                    <li><code>search</code>: the list of fields used to execute a search. Why this field is present: the autocomplete search removes the duplicate results. Thus, when a result is selected, a second search can be needed to display the duplicate results. The second search is based on this list of fields.
+                    It always contains the field <code>first_name</code> and the field <code>last_name</code>.
+                    </li>
+                </ul>
+                Here is an example:
+                <pre>
+{
+  "autocomplete": [{
+    "output": "John Doe",
+    "search":{
+      "first_name":"John",
+      "last_name":"Doe"
+    }
+  }, {
+    "output": "John Black",
+    "search":{
+      "first_name":"John",
+      "last_name":"Black"
+    }
+  }]
+}
+                </pre>
+                </p>
+            </subsection>
+            
+            <subsection name="Using Elasticsearch">
+                <p>Before using Elasticsearch, please modify the following keys in the properties file:
+                <ul>
+                    <li><code>gru-indexing.urlElk</code>: the URL of the Elasticsearch server</li>
+                    <li><code>gru-indexing.index</code>: the name of the Elasticsearch index</li>
+                    <li><code>gru-indexing.typeUser</code>: the Elasticsearch index type for customers</li>
+                </ul>
+                </p>
+                
+                <p><strong>Indexing</strong></p>
+                <p>The class managing the indexing is <code>fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchCustomerDAO</code>. 
+                It is also configured as a bean in the Spring context.
+                </p>
+                <p>The indexing query is defined in the file <code>WEB-INF/plugins/gruindexing/elasticsearch_customer_indexing.template</code>. 
+                It contains placeholders (like <code>${user_cid}</code>) which are replaced with actual values at index-time. Some placeholders are pre-defined:
+                <ul>
+                    <li><code>${customer_id}</code>: the customer id</li>
+                    <li><code>${connection_id}</code>: the connection id of the customer</li>
+                    <li><code>${email}</code>: the email of the customer</li>
+                    <li><code>${last_name}</code>: the last name of the customer</li>
+                    <li><code>${family_name}</code>: the family name of the customer. It corresponds to the name a person has before getting married.</li>
+                    <li><code>${first_name}</code>: the first name of the customer</li>
+                    <li><code>${mobile_phone_number}</code>: the mobile phone number of the customer</li>
+                    <li><code>${fixed_phone_number}</code>: the fixed phone number of the customer</li>
+                    <li><code>${birthday}</code>: the birthday of the customer</li>
+                    <li><code>${civility}</code>: the civility of the customer</li>
+                </ul>
+                Other placeholders are retrieved from extra attributes of the object <code>fr.paris.lutece.plugins.grubusiness.business.customer.Customer</code>.
+                </p>
+                <p>In the same way, some indexed fields are pre-defined:
+                <ul>
+                    <li><code>customer_id</code>: the customer id</li>
+                    <li><code>connection_id</code>: the connection id of the customer</li>
+                    <li><code>email</code>: the email of the customer</li>
+                    <li><code>last_name</code>: the last name of the customer</li>
+                    <li><code>family_name</code>: the family name of the customer. It corresponds to the name a person has before getting married.</li>
+                    <li><code>first_name</code>: the first name of the customer</li>
+                    <li><code>mobile_phone_number</code>: the mobile phone number of the customer</li>
+                    <li><code>fixed_phone_number</code>: the fixed phone number of the customer</li>
+                    <li><code>birthday</code>: the birthday of the customer</li>
+                    <li><code>civility</code>: the civility of the customer</li>
+                </ul>
+                Other indexed fields can be added as desired.
+                </p>
+                <p>In order to use autocomplete search, the template must contain a field <code>suggest</code> and a field <code>payload</code>. 
+                The field <code>suggest</code> is an Elasticsearch standard completion field. 
+                The field <code>payload</code> must contain the following fields:
+                <ul>
+                    <li><code>output</code>: the text displayed by the autocomplete search</li>
+                    <li><code>search</code>: the list of fields used to execute a search. Why this field is present: the autocomplete search removes the duplicate results. Thus, when a result is selected, a second search can be needed to display the duplicate results. The second search is based on this list of fields.</li>
+                </ul>
+                Before the version 5.0 of Elasticsearch, the field <code>payload</code> must be contained in the field <code>suggest</code>. Here is an example:
+                <pre>
+"suggest":{
+  "input":[
+    "${first_name} ${last_name}",
+    "${last_name} ${first_name}",
+    "${telephoneNumber}",
+    "${fixed_telephone_number}"
+  ],
+  "payload":{
+    "output":"${first_name} ${last_name}",
+    "search":{
+      "first_name":"${first_name}",
+      "last_name":"${last_name}"
+    }
+  }
+}
+                </pre>
+                After the version 5.0 of Elasticsearch, the field <code>payload</code> must be a field of the document, as other fields. Here is an example:
+                <pre>
+"suggest":{
+  "input":[
+    "${first_name} ${last_name}",
+    "${last_name} ${first_name}",
+    "${telephoneNumber}",
+    "${fixed_telephone_number}"
+  ]
+},
+"payload":{
+  "output":"${first_name} ${last_name}",
+  "search":{
+    "first_name":"${first_name}",
+    "last_name":"${last_name}"
+  }
+}
+                </pre>
+                </p>
+                
+                <p><strong>Search</strong></p>
+                <p>The class managing the search is <code>fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchCustomerDAO</code>. 
+                It is also configured as a bean in the Spring context.
+                </p>
+                <p>The search can be configured by modifying the following keys in the properties file:
+                <ul>
+                    <li><code>gru-indexing.sizeSearchParamValue</code>: the number of results returned by the search</li>
+                </ul>
+                </p>
+                
+                <p><strong>Autocomplete search</strong></p>
+                <p>The class managing the autocomplete search is <code>fr.paris.lutece.plugins.gruindexing.web.rs.elasticsearch.ElasticSearchAutoCompleteRestService</code>. 
+                It is also configured as a bean in the Spring context. 
+                It is a web service which can be called at the URL <code>/rest/elasticsearch/autocomplete</code> with a GET method. The parameter <code>query</code> must contain the term(s) to search.
+                </p>
+                <p>The autocomplete search query is defined in the file <code>WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template</code>. 
+                It contains a placeholder <code>${query}</code> which is replaced with the actual search query at search-time.
+                </p>
+                <p>The autocomplete search returns a JSON string with the following fields:
+                <ul>
+                    <li><code>output</code>: the field <code>output</code> defined in the indexing template file</li>
+                    <li><code>search</code>: the field <code>search</code> defined in the indexing template file</li>
+                </ul>
+                Here is an example:
+                <pre>
+{
+  "autocomplete": [{
+    "output": "John Doe",
+    "search":{
+      "first_name":"John",
+      "last_name":"Doe"
+    }
+  }, {
+    "output": "John Black",
+    "search":{
+      "first_name":"John",
+      "last_name":"Black"
+    }
+  }]
+}
+                </pre>
+                </p>
+            </subsection>
 		</section>
 	</body>
 </document>
