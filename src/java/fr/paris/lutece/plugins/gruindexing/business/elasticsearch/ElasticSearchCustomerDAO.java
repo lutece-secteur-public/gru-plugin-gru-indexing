@@ -58,6 +58,7 @@ import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
 import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
+import java.util.Collection;
 
 /**
  * DAO and indexer implementation with Elasticsearch for Customer
@@ -75,6 +76,7 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     private static final String KEY_CUSTOMER_FIXED_PHONE_NUMBER = "fixed_phone_number";
     private static final String KEY_CUSTOMER_BIRTHDATE = "birthday";
     private static final String KEY_CUSTOMER_CONNECTION_ID = "connection_id";
+    private static final String KEY_SUGGEST = "suggest";
 
     private static final String FILE_CUSTOMER_INDEXING_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_customer_indexing.template";
 
@@ -302,6 +304,25 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
 
         if ( node != null )
         {
+            List<String> listAttributesKeys = new ArrayList<>( );
+            Collection<String> listCustomerKeys = new ArrayList<>();
+            listCustomerKeys.add(KEY_CUSTOMER_ID);
+            listCustomerKeys.add(KEY_CUSTOMER_CONNECTION_ID);
+            listCustomerKeys.add(KEY_CUSTOMER_CIVILITY);
+            listCustomerKeys.add(KEY_CUSTOMER_LAST_NAME);
+            listCustomerKeys.add(KEY_CUSTOMER_FAMILY_NAME);
+            listCustomerKeys.add(KEY_CUSTOMER_FIRST_NAME);
+            listCustomerKeys.add(KEY_CUSTOMER_EMAIL);
+            listCustomerKeys.add(KEY_CUSTOMER_FIXED_PHONE_NUMBER);
+            listCustomerKeys.add(KEY_CUSTOMER_MOBILE_PHONE_NUMBER);
+            listCustomerKeys.add(KEY_CUSTOMER_BIRTHDATE);
+            listCustomerKeys.add(KEY_SUGGEST);
+            node.fieldNames( ).forEachRemaining( key -> {
+                if ( !listCustomerKeys.contains( key) )
+                {
+                    listAttributesKeys.add( key );
+                }
+            });
             customer.setId( findNodeValue( node, KEY_CUSTOMER_ID ) );
             customer.setConnectionId( findNodeValue( node, KEY_CUSTOMER_CONNECTION_ID ) );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
@@ -312,6 +333,11 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
             customer.setFixedPhoneNumber( findNodeValue( node, KEY_CUSTOMER_FIXED_PHONE_NUMBER ) );
             customer.setMobilePhone( findNodeValue( node, KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) );
             customer.setBirthDate( findNodeValue( node, KEY_CUSTOMER_BIRTHDATE ) );
+            
+            for ( String strAttributeName : listAttributesKeys )
+            {
+                customer.addAttributes( strAttributeName, findNodeValue( node, strAttributeName) );
+            }
         }
 
         return customer;
