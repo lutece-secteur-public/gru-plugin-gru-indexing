@@ -305,24 +305,24 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         if ( node != null )
         {
             List<String> listAttributesKeys = new ArrayList<>( );
-            Collection<String> listCustomerKeys = new ArrayList<>();
-            listCustomerKeys.add(KEY_CUSTOMER_ID);
-            listCustomerKeys.add(KEY_CUSTOMER_CONNECTION_ID);
-            listCustomerKeys.add(KEY_CUSTOMER_CIVILITY);
-            listCustomerKeys.add(KEY_CUSTOMER_LAST_NAME);
-            listCustomerKeys.add(KEY_CUSTOMER_FAMILY_NAME);
-            listCustomerKeys.add(KEY_CUSTOMER_FIRST_NAME);
-            listCustomerKeys.add(KEY_CUSTOMER_EMAIL);
-            listCustomerKeys.add(KEY_CUSTOMER_FIXED_PHONE_NUMBER);
-            listCustomerKeys.add(KEY_CUSTOMER_MOBILE_PHONE_NUMBER);
-            listCustomerKeys.add(KEY_CUSTOMER_BIRTHDATE);
-            listCustomerKeys.add(KEY_SUGGEST);
+            Collection<String> listCustomerKeys = new ArrayList<>( );
+            listCustomerKeys.add( KEY_CUSTOMER_ID );
+            listCustomerKeys.add( KEY_CUSTOMER_CONNECTION_ID );
+            listCustomerKeys.add( KEY_CUSTOMER_CIVILITY );
+            listCustomerKeys.add( KEY_CUSTOMER_LAST_NAME );
+            listCustomerKeys.add( KEY_CUSTOMER_FAMILY_NAME );
+            listCustomerKeys.add( KEY_CUSTOMER_FIRST_NAME );
+            listCustomerKeys.add( KEY_CUSTOMER_EMAIL );
+            listCustomerKeys.add( KEY_CUSTOMER_FIXED_PHONE_NUMBER );
+            listCustomerKeys.add( KEY_CUSTOMER_MOBILE_PHONE_NUMBER );
+            listCustomerKeys.add( KEY_CUSTOMER_BIRTHDATE );
+            listCustomerKeys.add( KEY_SUGGEST );
             node.fieldNames( ).forEachRemaining( key -> {
-                if ( !listCustomerKeys.contains( key) )
+                if ( !listCustomerKeys.contains( key ) )
                 {
                     listAttributesKeys.add( key );
                 }
-            });
+            } );
             customer.setId( findNodeValue( node, KEY_CUSTOMER_ID ) );
             customer.setConnectionId( findNodeValue( node, KEY_CUSTOMER_CONNECTION_ID ) );
             customer.setIdTitle( node.findValue( KEY_CUSTOMER_CIVILITY ) != null ? node.findValue( KEY_CUSTOMER_CIVILITY ).asInt( ) : 0 );
@@ -333,10 +333,10 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
             customer.setFixedPhoneNumber( findNodeValue( node, KEY_CUSTOMER_FIXED_PHONE_NUMBER ) );
             customer.setMobilePhone( findNodeValue( node, KEY_CUSTOMER_MOBILE_PHONE_NUMBER ) );
             customer.setBirthDate( findNodeValue( node, KEY_CUSTOMER_BIRTHDATE ) );
-            
+
             for ( String strAttributeName : listAttributesKeys )
             {
-                customer.addAttributes( strAttributeName, findNodeValue( node, strAttributeName) );
+                customer.addAttributes( strAttributeName, findNodeValue( node, strAttributeName ) );
             }
         }
 
