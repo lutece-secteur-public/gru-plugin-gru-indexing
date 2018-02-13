@@ -176,6 +176,9 @@
                 <p>The autocomplete search query is defined in the file <code>WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template</code>. 
                 It contains a placeholder <code>${query}</code> which is replaced with the actual search query at search-time.
                 </p>
+                <p>One can add customized placeholders in this template. In order to replace these placeholders by their actual values, one has to implement the interface <code>fr.paris.lutece.plugins.gruindexing.web.elasticsearch.template.IAutocompletePlaceholderFilter</code>
+                and to declare the implementation as a bean in the Spring context.
+                </p>
                 <p>The autocomplete search returns a JSON string with the following fields:
                 <ul>
                     <li><code>output</code>: the field <code>output</code> defined in the indexing template file</li>

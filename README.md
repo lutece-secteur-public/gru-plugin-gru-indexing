@@ -161,6 +161,8 @@ The class managing the autocomplete search is `fr.paris.lutece.plugins.gruindexi
 
 The autocomplete search query is defined in the file `WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template` . It contains a placeholder `${query}` which is replaced with the actual search query at search-time.
 
+One can add customized placeholders in this template. In order to replace these placeholders by their actual values, one has to implement the interface `fr.paris.lutece.plugins.gruindexing.web.elasticsearch.template.IAutocompletePlaceholderFilter` and to declare the implementation as a bean in the Spring context.
+
 The autocomplete search returns a JSON string with the following fields:
  
 *  `output` : the field `output` defined in the indexing template file

@@ -42,6 +42,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fr.paris.lutece.plugins.gruindexing.business.elasticsearch.ElasticSearchTemplate;
 import fr.paris.lutece.plugins.gruindexing.util.ElasticSearchParameterUtil;
+import fr.paris.lutece.plugins.gruindexing.web.elasticsearch.template.AutocompletePlaceholderFilterChain;
+import fr.paris.lutece.plugins.gruindexing.web.elasticsearch.template.AutocompletePlaceholderFilterChainFactory;
 import fr.paris.lutece.plugins.libraryelastic.util.Elastic;
 import fr.paris.lutece.plugins.libraryelastic.util.ElasticClientException;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
@@ -56,10 +58,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -72,9 +75,6 @@ public class ElasticSearchAutoCompleteRestService
     public static final String PATH_AUTOCOMPLETION = "autocomplete";
 
     private static final String FILE_AUTOCOMPLETE_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template";
-
-    // Markers
-    private static final String MARK_QUERY = "query";
 
     // Keys
     private static final String KEY_PAYLOAD = "payload";
@@ -95,21 +95,23 @@ public class ElasticSearchAutoCompleteRestService
     /**
      * Autocomplete.
      *
-     * @param strQuery
-     *            the str query
+     * @param request
+     *            the request
      * @return the string
      */
     @GET
     @Path( PATH_AUTOCOMPLETION )
     @Produces( MediaType.APPLICATION_JSON )
-    public String autocomplete( @QueryParam( "query" ) String strQuery )
+    public String autocomplete( @Context HttpServletRequest request )
     {
         String retour = StringUtils.EMPTY;
 
         try
         {
             Map<String, String> mapPlaceholderValues = new HashMap<>( );
-            mapPlaceholderValues.put( MARK_QUERY, strQuery );
+
+            AutocompletePlaceholderFilterChain placeholderFilterChain = AutocompletePlaceholderFilterChainFactory.getInstance( ).createFilterChain( );
+            placeholderFilterChain.doFilter( request, mapPlaceholderValues );
 
             Elastic elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
             String jsonRetour = elastic.suggest( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, _esTemplateAutocomplete.build( mapPlaceholderValues ) );

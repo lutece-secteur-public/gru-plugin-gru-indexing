@@ -21,4 +21,6 @@
     <bean id="gru-indexing.autocomplete" class="fr.paris.lutece.plugins.gruindexing.web.rs.elasticsearch.ElasticSearchAutoCompleteRestService"/>
     -->
     
+    <bean id="gru-indexing.queryAutocompletePlaceholderFilter" class="fr.paris.lutece.plugins.gruindexing.web.elasticsearch.template.impl.QueryAutocompletePlaceholderFilter"/>
+
 </beans>

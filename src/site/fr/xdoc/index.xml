@@ -176,6 +176,9 @@
                 <p>La requête d'autocomplétion est définie dans le fichier <code>WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template</code>.
                 Elle contient une marque <code>${query}</code> qui est remplacée par les termes à compléter au moment de la recherche.
                 </p>
+                <p>On peut ajouter des marques personnalisées dans ce template. Afin de remplacer ces marques par leurs valeurs réelles, il suffit d'implémenter l'interface <code>fr.paris.lutece.plugins.gruindexing.web.elasticsearch.template.IAutocompletePlaceholderFilter</code>
+                et de déclarer l'implémentation en tant que bean dans le contexte Spring.
+                </p>
                 <p>L'autocomplétion retourne une chaîne de caractères JSON avec les champs suivants :
                 <ul>
                     <li><code>output</code> : le champ <code>output</code> défini dans le fichier template d'indexation</li>
