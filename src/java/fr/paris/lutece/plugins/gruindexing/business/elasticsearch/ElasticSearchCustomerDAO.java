@@ -44,9 +44,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
-import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
-import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
+import fr.paris.lutece.plugins.gruindexing.business.IIndexCustomerDAO;
 import fr.paris.lutece.plugins.gruindexing.util.ElasticSearchParameterUtil;
 import fr.paris.lutece.plugins.libraryelastic.business.bulk.AbstractSubRequest;
 import fr.paris.lutece.plugins.libraryelastic.business.bulk.BulkRequest;
@@ -63,7 +62,7 @@ import java.util.Collection;
 /**
  * DAO and indexer implementation with Elasticsearch for Customer
  */
-public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
+public class ElasticSearchCustomerDAO implements IIndexCustomerDAO
 {
     private static final String KEY_SOURCE = "_source";
     private static final String KEY_CUSTOMER_ID = "customer_id";
@@ -79,9 +78,11 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     private static final String KEY_SUGGEST = "suggest";
 
     private static final String FILE_CUSTOMER_INDEXING_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_customer_indexing.template";
+    private static final String FILE_MAPPING = "/WEB-INF/plugins/gruindexing/mapping.json";
 
     private final Elastic _elastic;
     private final ElasticSearchTemplate _esTemplateCustomerIndexing;
+    private final ElasticSearchMapping _esMapping;
 
     /**
      * default constructor
@@ -90,8 +91,8 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     {
         super( );
         _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
-
         _esTemplateCustomerIndexing = new ElasticSearchTemplate( Paths.get( AppPathService.getWebAppPath( ) + FILE_CUSTOMER_INDEXING_TEMPLATE ) );
+        _esMapping = new ElasticSearchMapping( Paths.get( AppPathService.getWebAppPath( ) + FILE_MAPPING ) );
     }
 
     /**
@@ -186,15 +187,10 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     }
 
     /**
-     * {@inheritDoc }.
-     *
-     * @param customer
-     *            the customer
-     * @throws IndexingException
-     *             indexing exception
+     * {@inheritDoc }
      */
     @Override
-    public void index( Customer customer ) throws IndexingException
+    public void insert( Customer customer ) throws IndexingException
     {
         try
         {
@@ -210,10 +206,10 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     }
 
     /**
-     * {@inheritDoc }.
+     * {@inheritDoc }
      */
     @Override
-    public void indexList( List<Customer> listCustomer ) throws IndexingException
+    public void insert( List<Customer> listCustomer ) throws IndexingException
     {
         if ( listCustomer != null && !listCustomer.isEmpty( ) )
         {
@@ -240,15 +236,10 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
     }
 
     /**
-     * {@inheritDoc }.
-     *
-     * @param customer
-     *            the customer
-     * @throws IndexingException
-     *             indexing exception
+     * {@inheritDoc }
      */
     @Override
-    public void deleteIndex( Customer customer ) throws IndexingException
+    public void delete( Customer customer ) throws IndexingException
     {
         try
         {
@@ -402,6 +393,23 @@ public class ElasticSearchCustomerDAO implements IIndexingService<Customer>, ICu
         }
 
         return root;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void deleteAll( ) throws IndexingException
+    {
+        try
+        {
+            _elastic.deleteIndex( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX );
+            _elastic.createMappings( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, _esMapping.get( ) );
+        }
+        catch( ElasticClientException e )
+        {
+            throw new IndexingException( "Error during the deletion of the ElasticSearch index", e );
+        }
     }
 
 }

@@ -83,9 +83,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
-import fr.paris.lutece.plugins.grubusiness.business.customer.ICustomerDAO;
-import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
 import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
+import fr.paris.lutece.plugins.gruindexing.business.IIndexCustomerDAO;
 import fr.paris.lutece.portal.service.search.LuceneSearchEngine;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
@@ -93,7 +92,7 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 /**
  * DAO and indexer implementation with Lucene for Customer
  */
-public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerDAO
+public class LuceneCustomerDAO implements IIndexCustomerDAO
 {
     private static final String FIELD_ID = "id";
     private static final String FIELD_CONNECTION_ID = "connection_id";
@@ -149,15 +148,10 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
-     * {@inheritDoc }.
-     *
-     * @param customer
-     *            the customer
-     * @throws IndexingException
-     *             indexing exception
+     * {@inheritDoc}
      */
     @Override
-    public void index( Customer customer ) throws IndexingException
+    public void insert( Customer customer ) throws IndexingException
     {
         IndexWriter writer = null;
         try
@@ -223,12 +217,12 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
      * {@inheritDoc}
      */
     @Override
-    public void indexList( List<Customer> listCustomers ) throws IndexingException
+    public void insert( List<Customer> listCustomers ) throws IndexingException
     {
         // Bulk indexing for Lucene is TODO.
         for ( Customer customer : listCustomers )
         {
-            index( customer );
+            insert( customer );
         }
     }
 
@@ -250,15 +244,10 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
-     * {@inheritDoc }.
-     *
-     * @param customer
-     *            the customer
-     * @throws IndexingException
-     *             indexing exception
+     * {@inheritDoc}
      */
     @Override
-    public void deleteIndex( Customer customer ) throws IndexingException
+    public void delete( Customer customer ) throws IndexingException
     {
         IndexWriter writer = null;
         try
@@ -342,7 +331,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
-     * {@inheritDoc }.
+     * {@inheritDoc}
      */
     @Override
     public List<Customer> selectByFilter( Map<String, String> mapFilter )
@@ -354,7 +343,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
-     * {@inheritDoc }.
+     * {@inheritDoc}
      */
     @Override
     public List<Customer> selectByName( String strFirstName, String strLastName )
@@ -413,7 +402,7 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     }
 
     /**
-     * {@inheritDoc }.
+     * {@inheritDoc}
      */
     @Override
     public Customer load( String strCustomerId )
@@ -578,5 +567,15 @@ public class LuceneCustomerDAO implements IIndexingService<Customer>, ICustomerD
     private static String manageNullValue( String strValue )
     {
         return ( strValue == null ) ? StringUtils.EMPTY : strValue;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteAll( ) throws IndexingException
+    {
+        // TODO Auto-generated method stub
+
     }
 }

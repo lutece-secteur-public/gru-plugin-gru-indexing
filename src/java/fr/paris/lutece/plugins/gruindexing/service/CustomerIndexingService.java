@@ -31,51 +31,71 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.gruindexing.web.rs.lucene;
+package fr.paris.lutece.plugins.gruindexing.service;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import java.util.List;
 
-import fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO;
-import fr.paris.lutece.plugins.rest.service.RestConstants;
+import javax.inject.Inject;
+
+import fr.paris.lutece.plugins.grubusiness.business.customer.Customer;
+import fr.paris.lutece.plugins.grubusiness.business.indexing.IIndexingService;
+import fr.paris.lutece.plugins.grubusiness.business.indexing.IndexingException;
+import fr.paris.lutece.plugins.gruindexing.business.IIndexCustomerDAO;
 
 /**
- * Rest service for auto complete Lucene
+ * This class represents a service to index a customer
+ *
  */
-@Path( RestConstants.BASE_PATH + LuceneAutoCompleteRestService.PATH_SERVICE )
-public class LuceneAutoCompleteRestService
+public class CustomerIndexingService implements IIndexingService<Customer>
 {
-    public static final String PATH_SERVICE = "lucene/";
-    public static final String PATH_AUTOCOMPLETION = "autocomplete";
-    private LuceneCustomerDAO _luceneCustomerDAO;
+    private final IIndexCustomerDAO _indexCustomerDAO;
 
     /**
-     * Sets the Lucene customer DAO to use
+     * Constructor
      * 
-     * @param luceneCustomerDAO
-     *            the Lucene customer DAO
+     * @param indexCustomerDAO
+     *            the index customer DAO
      */
-    public void setLuceneCustomerDAO( LuceneCustomerDAO luceneCustomerDAO )
+    @Inject
+    public CustomerIndexingService( IIndexCustomerDAO indexCustomerDAO )
     {
-        _luceneCustomerDAO = luceneCustomerDAO;
+        _indexCustomerDAO = indexCustomerDAO;
     }
 
     /**
-     * Auto complete web service
-     * 
-     * @param strQuery
-     *            The query
-     * @return Data for auto complete as JSON
+     * {@inheritDoc}
      */
-    @GET
-    @Path( LuceneAutoCompleteRestService.PATH_AUTOCOMPLETION )
-    @Produces( MediaType.APPLICATION_JSON )
-    public String autocomplete( @QueryParam( "query" ) String strQuery )
+    @Override
+    public void index( Customer customer ) throws IndexingException
     {
-        return _luceneCustomerDAO.search( strQuery );
+        _indexCustomerDAO.insert( customer );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void indexList( List<Customer> listCustomer ) throws IndexingException
+    {
+        _indexCustomerDAO.insert( listCustomer );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteIndex( Customer customer ) throws IndexingException
+    {
+        _indexCustomerDAO.delete( customer );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteAllIndexes( ) throws IndexingException
+    {
+        _indexCustomerDAO.deleteAll( );
     }
 
 }

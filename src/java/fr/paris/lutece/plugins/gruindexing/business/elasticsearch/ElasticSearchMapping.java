@@ -31,51 +31,51 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.gruindexing.web.rs.lucene;
+package fr.paris.lutece.plugins.gruindexing.business.elasticsearch;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import fr.paris.lutece.plugins.gruindexing.business.lucene.LuceneCustomerDAO;
-import fr.paris.lutece.plugins.rest.service.RestConstants;
+import org.apache.commons.lang3.StringUtils;
+
+import fr.paris.lutece.portal.service.util.AppLogService;
 
 /**
- * Rest service for auto complete Lucene
+ * This class represents a mapping for ElasticSearch.
+ *
  */
-@Path( RestConstants.BASE_PATH + LuceneAutoCompleteRestService.PATH_SERVICE )
-public class LuceneAutoCompleteRestService
+public class ElasticSearchMapping
 {
-    public static final String PATH_SERVICE = "lucene/";
-    public static final String PATH_AUTOCOMPLETION = "autocomplete";
-    private LuceneCustomerDAO _luceneCustomerDAO;
+    private String _strMapping;
 
     /**
-     * Sets the Lucene customer DAO to use
+     * Constructs an {@code ElasticSearchMapping} instance from the specified path
      * 
-     * @param luceneCustomerDAO
-     *            the Lucene customer DAO
+     * @param pathMapping
+     *            the path of the mapping file
      */
-    public void setLuceneCustomerDAO( LuceneCustomerDAO luceneCustomerDAO )
+    public ElasticSearchMapping( Path pathMapping )
     {
-        _luceneCustomerDAO = luceneCustomerDAO;
+        try
+        {
+            _strMapping = new String( Files.readAllBytes( pathMapping ), StandardCharsets.UTF_8 );
+        }
+        catch( IOException e )
+        {
+            AppLogService.error( "Cannot open the mapping file : " + pathMapping.getFileName( ), e );
+            _strMapping = StringUtils.EMPTY;
+        }
     }
 
     /**
-     * Auto complete web service
+     * Gives the mapping
      * 
-     * @param strQuery
-     *            The query
-     * @return Data for auto complete as JSON
+     * @return the mapping
      */
-    @GET
-    @Path( LuceneAutoCompleteRestService.PATH_AUTOCOMPLETION )
-    @Produces( MediaType.APPLICATION_JSON )
-    public String autocomplete( @QueryParam( "query" ) String strQuery )
+    public String get( )
     {
-        return _luceneCustomerDAO.search( strQuery );
+        return _strMapping;
     }
-
 }
