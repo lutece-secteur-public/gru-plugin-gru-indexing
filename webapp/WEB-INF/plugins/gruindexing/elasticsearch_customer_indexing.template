@@ -14,8 +14,8 @@
     "input":[
       "${first_name} ${last_name}",
       "${last_name} ${first_name}",
-      "${telephoneNumber}",
-      "${fixed_telephone_number}"
+      "${mobile_phone_number}",
+      "${fixed_phone_number}"
     ],
     "payload":{
       "output":"${first_name} ${last_name}",
