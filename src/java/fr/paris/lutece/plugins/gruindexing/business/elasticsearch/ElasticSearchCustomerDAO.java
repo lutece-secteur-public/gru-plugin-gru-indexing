@@ -194,7 +194,7 @@ public class ElasticSearchCustomerDAO implements IIndexCustomerDAO
     {
         try
         {
-            _elastic.create( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ),
+            _elastic.create( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, customer.getId( ),
                     buildCustomerIndex( customer ) );
         }
         catch( ElasticClientException ex )
@@ -223,8 +223,7 @@ public class ElasticSearchCustomerDAO implements IIndexCustomerDAO
                     mapSubRequest.put( new IndexSubRequest( customer.getId( ) ), buildCustomerIndex( customer ) );
                 }
                 bulkRequest.setMapSubAction( mapSubRequest );
-
-                _elastic.createByBulk( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, bulkRequest );
+                _elastic.createByBulk( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, bulkRequest );
 
             }
             catch( ElasticClientException ex )
@@ -243,7 +242,7 @@ public class ElasticSearchCustomerDAO implements IIndexCustomerDAO
     {
         try
         {
-            _elastic.deleteDocument( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, ElasticSearchParameterUtil.PROP_PATH_ELK_TYPE_USER, customer.getId( ) );
+            _elastic.deleteDocument( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, customer.getId( ) );
         }
         catch( ElasticClientException ex )
         {
