@@ -55,7 +55,6 @@ public final class ElasticSearchParameterUtil
     // PATHS
     public static final String PROP_URL_ELK_SERVER = AppPropertiesService.getProperty( URL_ELK_SERVER );
     public static final String PROP_PATH_ELK_INDEX = AppPropertiesService.getProperty( PATH_ELK_INDEX );
-    public static final String PROP_PATH_ELK_TYPE_USER = AppPropertiesService.getProperty( PATH_ELK_TYPE_USER );
     public static final String PROPERTY_SIZE_ELK_SEARCH = AppPropertiesService.getProperty( SIZE_ELK_SEARCH );
 
     /**
