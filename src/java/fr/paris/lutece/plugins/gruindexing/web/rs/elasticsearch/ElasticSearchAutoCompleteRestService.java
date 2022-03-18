@@ -113,7 +113,15 @@ public class ElasticSearchAutoCompleteRestService
             AutocompletePlaceholderFilterChain placeholderFilterChain = AutocompletePlaceholderFilterChainFactory.getInstance( ).createFilterChain( );
             placeholderFilterChain.doFilter( request, mapPlaceholderValues );
 
-            Elastic elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
+            Elastic elastic = null;
+            if ( StringUtils.isNotEmpty( ElasticSearchParameterUtil.PROP_URL_ELK_LOGIN ) && StringUtils.isNotEmpty( ElasticSearchParameterUtil.PROP_URL_ELK_PWD ) )
+            {
+                elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER , ElasticSearchParameterUtil.PROP_URL_ELK_LOGIN, ElasticSearchParameterUtil.PROP_URL_ELK_PWD );
+            }
+            else
+            {
+                elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER  );
+            }
             String jsonRetour = elastic.suggest( ElasticSearchParameterUtil.PROP_PATH_ELK_INDEX, _esTemplateAutocomplete.build( mapPlaceholderValues ) );
 
             JsonNode node = ElasticSearchParameterUtil.setJsonToJsonTree( jsonRetour );

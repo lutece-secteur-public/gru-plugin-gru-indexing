@@ -49,11 +49,15 @@ public final class ElasticSearchParameterUtil
     // PROPERTIES KEYS
     public static final String URL_ELK_SERVER = "gru-indexing.urlElk";
     public static final String PATH_ELK_INDEX = "gru-indexing.index";
-    public static final String PATH_ELK_TYPE_USER = "gru-indexing.typeUser";
+    public static final String ELK_LOGIN = "gru-indexing.login";
+    public static final String ELK_PWD = "gru-indexing.pwd";
+
     public static final String SIZE_ELK_SEARCH = "gru-indexing.sizeSearchParamValue";
 
     // PATHS
     public static final String PROP_URL_ELK_SERVER = AppPropertiesService.getProperty( URL_ELK_SERVER );
+    public static final String PROP_URL_ELK_LOGIN = AppPropertiesService.getProperty( ELK_LOGIN );
+    public static final String PROP_URL_ELK_PWD = AppPropertiesService.getProperty( ELK_PWD );
     public static final String PROP_PATH_ELK_INDEX = AppPropertiesService.getProperty( PATH_ELK_INDEX );
     public static final String PROPERTY_SIZE_ELK_SEARCH = AppPropertiesService.getProperty( SIZE_ELK_SEARCH );
 

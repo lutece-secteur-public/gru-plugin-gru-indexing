@@ -89,8 +89,15 @@ public class ElasticSearchCustomerDAO implements IIndexCustomerDAO
      */
     public ElasticSearchCustomerDAO( )
     {
-        super( );
-        _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER );
+        super( );        
+        if ( StringUtils.isNotEmpty( ElasticSearchParameterUtil.PROP_URL_ELK_LOGIN ) && StringUtils.isNotEmpty( ElasticSearchParameterUtil.PROP_URL_ELK_PWD ) )
+        {
+            _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER , ElasticSearchParameterUtil.PROP_URL_ELK_LOGIN, ElasticSearchParameterUtil.PROP_URL_ELK_PWD );
+        }
+        else
+        {
+            _elastic = new Elastic( ElasticSearchParameterUtil.PROP_URL_ELK_SERVER  );
+        }
         _esTemplateCustomerIndexing = new ElasticSearchTemplate( Paths.get( AppPathService.getWebAppPath( ) + FILE_CUSTOMER_INDEXING_TEMPLATE ) );
         _esMapping = new ElasticSearchMapping( Paths.get( AppPathService.getWebAppPath( ) + FILE_MAPPING ) );
     }
