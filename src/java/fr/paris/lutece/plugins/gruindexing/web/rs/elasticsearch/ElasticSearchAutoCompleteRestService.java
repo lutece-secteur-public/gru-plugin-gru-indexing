@@ -77,7 +77,7 @@ public class ElasticSearchAutoCompleteRestService
     private static final String FILE_AUTOCOMPLETE_TEMPLATE = "/WEB-INF/plugins/gruindexing/elasticsearch_autocomplete.template";
 
     // Keys
-    private static final String KEY_PAYLOAD = "payload";
+    private static final String KEY_SOURCE = "_source";
     private static final String KEY_AUTOCOMPLETE = "autocomplete";
 
     private final ElasticSearchTemplate _esTemplateAutocomplete;
@@ -150,7 +150,7 @@ public class ElasticSearchAutoCompleteRestService
      */
     private static String getInfoAutocomplete( JsonNode nodeESAutocomplete ) throws JsonProcessingException
     {
-        List<JsonNode> listPayloads = nodeESAutocomplete.findValues( KEY_PAYLOAD );
+        List<JsonNode> listPayloads = nodeESAutocomplete.findValues( KEY_SOURCE );
 
         ObjectMapper mapper = new ObjectMapper( );
         JsonNodeFactory factory = JsonNodeFactory.instance;

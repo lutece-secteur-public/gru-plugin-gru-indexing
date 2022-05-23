@@ -16,13 +16,6 @@
       "${last_name} ${first_name}",
       "${mobile_phone_number}",
       "${fixed_phone_number}"
-    ],
-    "payload":{
-      "output":"${first_name} ${last_name}",
-      "search":{
-        "first_name":"${first_name}",
-        "last_name":"${last_name}"
-      }
-    }
+    ]
   }
 }
